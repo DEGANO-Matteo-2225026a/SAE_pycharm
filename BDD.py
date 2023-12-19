@@ -18,35 +18,47 @@ S1But1Info = BUT1Info[FeuilleInfoBut1]
 
 
 
-"""with sqlite3.connect("SAE.db") as connection:
+with sqlite3.connect("SAE.db") as connection:
     cursor = connection.cursor()
 
-# cursor.execute(
-#    "CREATE TABLE PROF (cle_prof INTEGER PRIMARY KEY,TITULAIRE BOOLEAN)")
+cursor.execute(
+   "CREATE TABLE IF NOT EXISTS PROF (cle_prof INTEGER PRIMARY KEY,TITULAIRE BOOLEAN)")
 
-# cursor.execute(
-#    "CREATE TABLE RESSOURCE (code_apogee TEXT PRIMARY KEY,cle_prof INTEGER, libelle TEXT, total_cm INTEGER, total_td INTEGER, total_tp INTEGER, HETD INTEGER, FOREIGN KEY (cle_prof) REFERENCES PROF (cle_prof))")
+cursor.execute(
+   "CREATE TABLE IF NOT EXISTS RESSOURCE (code_apogee TEXT PRIMARY KEY,cle_prof INTEGER, libelle TEXT, total_cm INTEGER, total_td INTEGER, total_tp INTEGER, HETD INTEGER, FOREIGN KEY (cle_prof) REFERENCES PROF (cle_prof))")
 
-# cursor.execute(
-#    "CREATE TABLE ENSEIGNE (cle_prof INTEGER, code_apogee TEXT, nombre_cm INTEGER, nombre_td INTEGER, nombre_tp INTEGER, FOREIGN KEY (cle_prof) REFERENCES PROF(cle_prof), FOREIGN KEY (code_apogee) REFERENCES RESSOURCE(code_apogee))")
+cursor.execute(
+   "CREATE TABLE IF NOT EXISTS ENSEIGNE (cle_prof INTEGER, code_apogee TEXT, nombre_cm INTEGER, nombre_td INTEGER, nombre_tp INTEGER, FOREIGN KEY (cle_prof) REFERENCES PROF(cle_prof), FOREIGN KEY (code_apogee) REFERENCES RESSOURCE(code_apogee))")
+
+#supprime les données actuelle de la table pour ne pas faire de doublon lors de l'insertion des données ci-dessous
+cursor.execute(f"DELETE FROM 'ENSEIGNE'")
+
+cursor.execute(f"DELETE FROM 'PROF'")
+
+cursor.execute(f"DELETE FROM 'RESSOURCE'")
 
 #
 # Suppretion des tables
 # cursor.execute(
 #    "DROP TABLE ENSEIGNE;")
-connection.close()"""
 
-connexion = sqlite3.connect("SAE.db")
-
-S1codeApogee = S1But1Info.iloc[8:33, 0]
+# récuperation des données
+S1codeApogee = S1But1Info.iloc[10:33, 0]
 S2codeApogee  = S1But1Info.iloc[34:60, 0]
 
-S1codeApo = np.array(S1codeApogee)
-data_to_insert = {'code_apogee': S2codeApogee}
+#fonction d'insertion des données
+def inserer_donnees(data, table_name):
+    for index, value in enumerate(data):
+        if value != "NULL":
+            cursor.execute(f"INSERT INTO {table_name} (code_apogee) VALUES (?)", (value,))
+
+#liste des insertions
+#TODO: mettre toutes les données dans la BDD grâce au code de récuperation des données fait par UGO le prolo
+inserer_donnees(S1codeApogee, 'RESSOURCE')
+
+connection.commit()
+connection.close()
 
 
-# METTRE LES DONNEES COMME IL FAUT
-data_to_insert.to_sql('RESSOURCE', connexion, if_exists='append', index=False)
 
-connexion.commit()
-connexion.close()
+

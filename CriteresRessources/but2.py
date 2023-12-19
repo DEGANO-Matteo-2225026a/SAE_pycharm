@@ -59,14 +59,43 @@ S3AL1 = S3But1Info.iloc[25, [0,2,17,18,19,22,23]]
 S3R16X = S3But1InfoB.iloc[24, [0,2,17,18,19,22,23]]
 S3P1BX = S3But1InfoB.iloc[25, [0,2,17,18,19,22,23]]
 
-# Sae S3
-
 
 
 # Ressources S4
 
+S4R401 = S3But1Info.iloc[34, [0,2,17,18,19,22,23]]
+S4R402 = S3But1Info.iloc[35, [0,2,17,18,19,22,23]]
+S4R403 = S3But1Info.iloc[36, [0,2,17,18,19,22,23]]
+S4R404 = S3But1Info.iloc[37, [0,2,17,18,19,22,23]]
+S4R405 = S3But1Info.iloc[38, [0,2,17,18,19,22,23]]
+S4R406 = S3But1Info.iloc[39, [0,2,17,18,19,22,23]]
+S4R407 = S3But1Info.iloc[40, [0,2,17,18,19,22,23]]
 
-print(S3AL1)
+
+# Projets tutorés S4
+
+SProjet = S3But1Info.iloc[48, [0,2,17,18,19,22,23]]
+SPortfolio = S3But1Info.iloc[49, [0,2,17,18,19,22,23]]
+Stage = S3But1Info.iloc[50, [0,2,17,18,19,22,23]]
+
+# Ressources Parcours A 
+S4R4A08 = S3But1Info.iloc[41, [0,2,17,18,19,22,23]]
+S4R4A09 = S3But1Info.iloc[42, [0,2,17,18,19,22,23]]
+S4R4A10 = S3But1Info.iloc[43, [0,2,17,18,19,22,23]]
+S4R4A11 = S3But1Info.iloc[44, [0,2,17,18,19,22,23]]
+S4R4A12 = S3But1Info.iloc[45, [0,2,17,18,19,22,23]]
+S4AL1 = S3But1Info.iloc[46, [0,2,17,18,19,22,23]]
+SAE4A01 = S3But1Info.iloc[47, [0,2,17,18,19,22,23]]
+
+# Ressources Parcours B
+S4R1BX = S3But1InfoB.iloc[40, [0,2,17,18,19,22,23]]
+S4R2BX = S3But1InfoB.iloc[41, [0,2,17,18,19,22,23]]
+S4R3BX = S3But1InfoB.iloc[42, [0,2,17,18,19,22,23]]
+S4R4BX = S3But1InfoB.iloc[43, [0,2,17,18,19,22,23]]
+S4R5BX = S3But1InfoB.iloc[44, [0,2,17,18,19,22,23]]
+S4R9BX = S3But1InfoB.iloc[45, [0,2,17,18,19,22,23]]
+S4R10BX = S3But1InfoB.iloc[46, [0,2,17,18,19,22,23]]
+
 
 
 

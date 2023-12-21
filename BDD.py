@@ -21,14 +21,51 @@ S1But1Info = BUT1Info[FeuilleInfoBut1]
 with sqlite3.connect("SAE.db") as connection:
     cursor = connection.cursor()
 
+# suppretion des tables pour mettre a jour les données dedans si il y a des modifs
 cursor.execute(
-   "CREATE TABLE IF NOT EXISTS PROF (cle_prof INTEGER PRIMARY KEY,TITULAIRE BOOLEAN)")
+   "DROP TABLE IF EXISTS ENSEIGNE")
+cursor.execute(
+   "DROP TABLE IF EXISTS RESSOURCE")
+cursor.execute(
+   "DROP TABLE IF EXISTS PROF")
 
 cursor.execute(
-   "CREATE TABLE IF NOT EXISTS RESSOURCE (code_apogee TEXT PRIMARY KEY,cle_prof INTEGER, libelle TEXT, total_cm INTEGER, total_td INTEGER, total_tp INTEGER, HETD INTEGER, FOREIGN KEY (cle_prof) REFERENCES PROF (cle_prof))")
+   "CREATE TABLE IF NOT EXISTS PROF ("
+       "cle_prof INTEGER PRIMARY KEY,"
+       "TITULAIRE BOOLEAN)")
 
 cursor.execute(
-   "CREATE TABLE IF NOT EXISTS ENSEIGNE (cle_prof INTEGER, code_apogee TEXT, nombre_cm INTEGER, nombre_td INTEGER, nombre_tp INTEGER, FOREIGN KEY (cle_prof) REFERENCES PROF(cle_prof), FOREIGN KEY (code_apogee) REFERENCES RESSOURCE(code_apogee))")
+   "CREATE TABLE IF NOT EXISTS RESSOURCE ("
+       "code_apogee TEXT,"
+       "cle_prof INTEGER,"
+       "libelle TEXT,"
+       "total_cm INTEGER,"
+       "total_td INTEGER,"
+       "total_tp INTEGER,"
+       "HETD INTEGER,"
+       "FOREIGN KEY (cle_prof) REFERENCES PROF (cle_prof))")
+
+cursor.execute(
+   "CREATE TABLE IF NOT EXISTS ENSEIGNE ("
+       "cle_prof INTEGER,"
+       "code_apogee TEXT,"
+       "nombre_cm INTEGER,"
+       "nombre_td INTEGER,"
+       "nombre_tp INTEGER,"
+       "FOREIGN KEY (cle_prof) REFERENCES PROF(cle_prof),"
+       "FOREIGN KEY (code_apogee) REFERENCES RESSOURCE(code_apogee),"
+       "PRIMARY KEY (cle_prof,code_apogee))")
+
+cursor.execute(
+   "CREATE TABLE IF NOT EXISTS BIBLE ("
+       "code_apogee TEXT,"
+       "cle_prof INTEGER,"
+       "libelle TEXT,"
+       "total_cm INTEGER,"
+       "total_td INTEGER,"
+       "total_tp INTEGER,"
+       "HETD INTEGER,"
+       "NOMBRE_GROUPE INTEGER)")
 
 #supprime les données actuelle de la table pour ne pas faire de doublon lors de l'insertion des données ci-dessous
 cursor.execute(f"DELETE FROM 'ENSEIGNE'")
@@ -37,10 +74,6 @@ cursor.execute(f"DELETE FROM 'PROF'")
 
 cursor.execute(f"DELETE FROM 'RESSOURCE'")
 
-#
-# Suppretion des tables
-# cursor.execute(
-#    "DROP TABLE ENSEIGNE;")
 
 # récuperation des données
 S1codeApogee = S1But1Info.iloc[10:33, 0]

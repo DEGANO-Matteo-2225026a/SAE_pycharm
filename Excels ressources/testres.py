@@ -35,7 +35,7 @@ ligne_insertion = 9
 feuille.insert_rows(ligne_insertion)
 feuille.cell(row=ligne_insertion, column=1, value='prof3')
 
-# à finir avec bdd
+# TODO : à finir avec bdd
 
 # Enregistrer le classeur modifié dans un nouveau fichier
 classeur_existant.save('fichier_modifie.xlsx')

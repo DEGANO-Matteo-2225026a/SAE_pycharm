@@ -89,4 +89,4 @@ S6R3BX = S5But1InfoB.iloc[36, [0,2,17,18,19,22,23]]
 
 
 
-print(S6R3BX)
+# print(S6R3BX)

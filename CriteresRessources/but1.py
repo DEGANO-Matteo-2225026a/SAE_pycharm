@@ -37,9 +37,8 @@ S2codeApogee  = S1But1Info.iloc[34:60, 0]
 S1LibelleCompletApogee = S1But1Info.iloc[8:33, 2]
 S2LibelleCompletApogee = S1But1Info.iloc[34:60, 2]
 
-
 # Donnée Volume horaire total
-
+#TODO: ajout TP
 S1volumeHoraireTotal = S1But1Info.iloc[8:33, 17:19]
 S2volumeHoraireTotal = S1But1Info.iloc[34:60, 17:19]
 
@@ -53,8 +52,8 @@ S2HETD = S1But1Info.iloc[34:60, 23]
 
 # Donnée nombre groupe td
 
-S1nbGroupeTD = S1But1Info.iloc[8:33, 17:19]
-S2nbGroupeTD = S1But1Info.iloc[34:60, 17:19]
+S1nbGroupeTD = S1But1Info.iloc[24, 26]
+S2nbGroupeTD = S1But1Info.iloc[49, 26]
 
 
 # ----------------- LIGNE -----------------
@@ -72,6 +71,8 @@ S1R110 = S1But1Info.iloc[19, [0,2,17,18,19,22,23]]
 S1R111 = S1But1Info.iloc[20, [0,2,17,18,19,22,23]]
 S1R112 = S1But1Info.iloc[21, [0,2,17,18,19,22,23]]
 S1RL1 = S1But1Info.iloc[22, [0,2,17,18,19,22,23]]
+
+
 
 # Sae S1
 S1S101 = S1But1Info.iloc[23, [0,2,17,18,19,22,23]]
@@ -113,12 +114,10 @@ S2S206 = S1But1Info.iloc[55, [0,2,17,18,19,22,23]]
 S2ProjetTutoree = S1But1Info.iloc[56, [0,2,17,18,19,22,23]]
 S2Portfolio = S1But1Info.iloc[57, [0,2,17,18,19,22,23]]
 
-print(S2R201)
-
-
 
 # ---- TEST ----
 
+#print(S2nbGroupeTD)
 
 
 """

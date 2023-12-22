@@ -73,22 +73,15 @@ def ajouterDonneesToRESSOURCE(ligne_donnees,table_name):
     valeurs = ', '.join(['?'] * len(column_list_RESSOURCE))
     cursor.execute(f"INSERT INTO {table_name} ({colonnes}) VALUES ({valeurs})", tuple(ligne_donnees))
 
-#liste des insertions
-#TODO: mettre toutes les données dans la BDD grâce au code de récuperation des données fait par UGO le prolo
-ajouterDonneesToRESSOURCE(S1R101,'RESSOURCE')
-ajouterDonneesToRESSOURCE(S1R102,'RESSOURCE')
-ajouterDonneesToRESSOURCE(S1R103,'RESSOURCE')
-ajouterDonneesToRESSOURCE(S1R104,'RESSOURCE')
-ajouterDonneesToRESSOURCE(S1R105,'RESSOURCE')
-ajouterDonneesToRESSOURCE(S1R106,'RESSOURCE')
-ajouterDonneesToRESSOURCE(S1R107,'RESSOURCE')
-ajouterDonneesToRESSOURCE(S1R108,'RESSOURCE')
-ajouterDonneesToRESSOURCE(S1R109,'RESSOURCE')
-ajouterDonneesToRESSOURCE(S1R110,'RESSOURCE')
-ajouterDonneesToRESSOURCE(S1R111,'RESSOURCE')
-ajouterDonneesToRESSOURCE(S1R112,'RESSOURCE')
-ajouterDonneesToRESSOURCE(S1RL1,'RESSOURCE')
+liste_S1R1 = ['S1R101', 'S1R102', 'S1R103', 'S1R104', 'S1R105', 'S1R106', 'S1R107', 'S1R108', 'S1R109', 'S1R110', 'S1R111', 'S1R112']
+liste_S2R2 = ['S2R201', 'S2R202', 'S2R203', 'S2R204', 'S2R205', 'S2R206', 'S2R207', 'S2R208', 'S2R209', 'S2R210', 'S2R211', 'S2R212', 'S2R213', 'S2R214']
+def remplissageInRESSOURCE(numeroListeSemestre):
+    for S1R1 in numeroListeSemestre:
+        # Appelez la fonction avec les paramètres appropriés
+        ajouterDonneesToRESSOURCE(globals()[S1R1], 'RESSOURCE')
 
+remplissageInRESSOURCE(liste_S1R1)
+remplissageInRESSOURCE(liste_S2R2)
 
 #TODO: ajouter le NOMBRE_GROUPE et BUT dans la fonction de recuperation de donnée pour pouvoir la recuperer ici plus simplement
 column_list_BIBLE = ['code_apogee', 'libelle', 'total_cm', 'total_td', 'total_tp', 'HETD', 'HETD_PACOME', 'NOMBRE_GROUPE', 'BUT']
@@ -103,8 +96,7 @@ def ajouterDonneesToENSEIGNE(ligne_donnees, GroupeTD, BUT,table_name):
 
 
 # Supposons que vous avez une liste de valeurs S1R1..
-liste_S1R1 = ['S1R101', 'S1R102', 'S1R103', 'S1R104', 'S1R105', 'S1R106', 'S1R107', 'S1R108', 'S1R109', 'S1R110', 'S1R111', 'S1R112']
-liste_S2R2 = ['S2R201', 'S2R202', 'S2R203', 'S2R204', 'S2R205', 'S2R206', 'S2R207', 'S2R208', 'S2R209', 'S2R210', 'S2R211', 'S2R212', 'S2R213', 'S2R214']
+
 def remplissageInENSEIGNE(numeroListeSemestre,nombreGroupe,BUT):
     for S1R1 in numeroListeSemestre:
         # Appelez la fonction avec les paramètres appropriés

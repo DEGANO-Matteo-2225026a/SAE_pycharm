@@ -2,6 +2,8 @@ import openpyxl
 from openpyxl import load_workbook
 from pathlib import Path
 
+# IMPORTANT : INSTALLEZ OPENPYXL EN RENTRANT DANS LE TERMINAL "pip install openpyxl"
+
 #récupérer un fichier excel de ressource de base créé par un autre code
 base = Path('base.xlsx')
 #si le fichier ecxel résultant de ce code existe déjà on l'utilise directement

@@ -1,4 +1,5 @@
 import pandas as pd
+import openpyxl as op
 
 """
 Les données du document planning nous apparaissent avec cette logique :
@@ -22,12 +23,24 @@ On possède par les info suivantes :
 - Heures Totales
 """
 
-"""
-Table de données planning :
--
-"""
+def LocateRessources():
 
-Planning = pd.read_excel('Planning 2023-2024.xlsx', sheet_name=None)
-ListeFeuillesPlanning = xls.sheet_names
+
+# Automatise le changement de feuilles
+def RecuperationParFeuille(ListeFeuilles):
+    for Feuille in ListeFeuilles:
+        f
+    Planning.close()
+
+
+# On charge le classeur Excel
+Planning = pd.ExcelFile('../Planning_2023-2024.xlsx')
+
+# On établie la liste des feuilles qui nous intéressent
+ListeFeuillesPlanning = sorted(Planning.sheet_names)
+ListeFeuillesPlanning.pop(0)
+ListeFeuillesPlanning.pop(0)
+
+RecuperationParFeuille(ListeFeuillesPlanning)
+
 print(ListeFeuillesPlanning)
-rn

@@ -1,8 +1,18 @@
 import openpyxl
 from openpyxl import load_workbook
+from pathlib import Path
 
-# Charger le classeur Excel existant
-classeur_existant = load_workbook('base.xlsx')
+#récupérer un fichier excel de ressource de base créé par un autre code
+base = Path('base.xlsx')
+#si le fichier ecxel résultant de ce code existe déjà on l'utilise directement
+if base.is_file():
+    # Charger le classeur Excel existant
+    classeur_existant = load_workbook('base.xlsx')
+# si il n'existe pas on éxécute le code qui va créer le fichier de base
+else:
+    exec(open('baseRessources.py').read())
+    classeur_existant = load_workbook('base.xlsx')
+
 
 # Sélectionner la feuille existante (ou créer une nouvelle feuille si elle n'existe pas)
 nom_feuille = 'Sheet'  # Remplacez par le nom de votre feuille
@@ -35,7 +45,7 @@ ligne_insertion = 9
 feuille.insert_rows(ligne_insertion)
 feuille.cell(row=ligne_insertion, column=1, value='prof3')
 
-# TODO : à finir avec bdd
+# à finir avec bdd
 
 # Enregistrer le classeur modifié dans un nouveau fichier
 classeur_existant.save('fichier_modifie.xlsx')

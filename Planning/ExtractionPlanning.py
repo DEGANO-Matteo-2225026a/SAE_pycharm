@@ -29,12 +29,12 @@ def LocateRessources():
 # Automatise le changement de feuilles
 def RecuperationParFeuille(ListeFeuilles):
     for Feuille in ListeFeuilles:
-        f
+        print(i)
     Planning.close()
 
 
 # On charge le classeur Excel
-Planning = pd.ExcelFile('../Planning_2023-2024.xlsx')
+Planning = pd.ExcelFile('../Documents/Planning_2023-2024.xlsx')
 
 # On établie la liste des feuilles qui nous intéressent
 ListeFeuillesPlanning = sorted(Planning.sheet_names)

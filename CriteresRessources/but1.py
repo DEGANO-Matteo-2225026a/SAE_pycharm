@@ -21,7 +21,7 @@ En l'occurrence on récupère :
 """
 
 # Indique le bon document et la bonne feuille du document
-BUT1Info = pd.read_excel('BUT1_INFO_AIX.xlsx', sheet_name=None)
+BUT1Info = pd.read_excel('../Documents/BUT1_INFO_AIX.xlsx', sheet_name=None)
 FeuilleInfoBut1 = 'BUT 1'
 
 # Récupère la feuille
@@ -31,7 +31,7 @@ S1But1Info = BUT1Info[FeuilleInfoBut1]
 
 # Donnée code Apogée
 S1codeApogee = S1But1Info.iloc[8:33, 0]
-S2codeApogee  = S1But1Info.iloc[34:60, 0]
+S2codeApogee = S1But1Info.iloc[34:60, 0]
 
 # Donnée Libellé complet Apogée
 S1LibelleCompletApogee = S1But1Info.iloc[8:33, 2]
@@ -58,6 +58,7 @@ S2nbGroupeTD = S1But1Info.iloc[49, 26]
 
 # ----------------- LIGNE -----------------
 # Ressources S1
+#premier_element correspond au premier element du libelle pour nous facilité la tache lors de la recuperation des couleurs dans le fichier Planning
 S1R101 = S1But1Info.iloc[10, [0,2,17,18,19,22,23]]
 S1R102 = S1But1Info.iloc[11, [0,2,17,18,19,22,23]]
 S1R103 = S1But1Info.iloc[12, [0,2,17,18,19,22,23]]
@@ -71,7 +72,6 @@ S1R110 = S1But1Info.iloc[19, [0,2,17,18,19,22,23]]
 S1R111 = S1But1Info.iloc[20, [0,2,17,18,19,22,23]]
 S1R112 = S1But1Info.iloc[21, [0,2,17,18,19,22,23]]
 S1RL1 = S1But1Info.iloc[22, [0,2,17,18,19,22,23]]
-
 
 
 # Sae S1
@@ -117,7 +117,7 @@ S2Portfolio = S1But1Info.iloc[57, [0,2,17,18,19,22,23]]
 
 # ---- TEST ----
 
-#print(S2nbGroupeTD)
+#print(S1R101)
 
 
 """

@@ -21,7 +21,7 @@ En l'occurrence on récupère :
 """
 
 # Indique le bon document et la bonne feuille du document
-BUT2Info = pd.read_excel('BUT2_INFO_AIX.xlsx', sheet_name=None)
+BUT2Info = pd.read_excel('../Documents/BUT2_INFO_AIX.xlsx', sheet_name=None)
 FeuilleInfoBut2 = 'BUT 2 Parcours A FI'
 FeuilleInfoBut2b = 'BUT 2 Parcours B FI'
 

@@ -16,7 +16,14 @@ FeuilleInfoBut3b = 'BUT 3 Parcours B FI'
 S5But1Info = BUT3Info[FeuilleInfoBut3a]
 S5But1InfoB = BUT3Info[FeuilleInfoBut3b]
 
+
 # ----------------- LIGNE -----------------
+
+S5nbGroupeTDA = S5But1Info.iloc[22, 26]
+S6nbGroupeTDA = S5But1Info.iloc[45, 26]
+S5nbGroupeTDB = S5But1InfoB.iloc[22, 26]
+S6nbGroupeTDB = S5But1InfoB.iloc[43, 26]
+
 # Ressources S5 TRONC COMMUN
 S5R501 = S5But1Info.iloc[9, [0,2,17,18,19,22,23]]
 S5R502 = S5But1Info.iloc[10, [0,2,17,18,19,22,23]]

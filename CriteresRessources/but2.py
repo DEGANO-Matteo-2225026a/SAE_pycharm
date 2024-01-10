@@ -32,6 +32,13 @@ S3But1InfoB = BUT2Info[FeuilleInfoBut2b]
 
 
 # ----------------- LIGNE -----------------
+
+
+S3nbGroupeTDA = S3But1Info.iloc[24, 26]
+S4nbGroupeTDA = S3But1Info.iloc[48, 26]
+S3nbGroupeTDB = S3But1InfoB.iloc[23, 26]
+S4nbGroupeTDB = S3But1InfoB.iloc[47, 26]
+
 # Ressources S3 TRONC COMMUN
 S3R301 = S3But1Info.iloc[11, [0,2,17,18,19,22,23]]
 S3R302 = S3But1Info.iloc[12, [0,2,17,18,19,22,23]]
@@ -101,7 +108,10 @@ S4R10BX = S3But1InfoB.iloc[46, [0,2,17,18,19,22,23]]
 
 # ---- TEST ----
 
-
+"""print(S3nbGroupeTDA)
+print(S4nbGroupeTDA)
+print(S3nbGroupeTDB)
+print(S4nbGroupeTDB)"""
 
 """
 TO-DO :

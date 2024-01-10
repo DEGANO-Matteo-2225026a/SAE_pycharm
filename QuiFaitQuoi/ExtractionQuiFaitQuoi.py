@@ -4,7 +4,7 @@ import openpyxl as op
 """
 Le premier Intervenant renseigné dans chaque ressources est considéré par convention comme le responsable de celle-ci.
 
-TableauDonnées = [[S1][R1.01][Responsable Oui/Non][Nom + Prenom][Acronyme][Titulaire Oui/Non][NombreGroupes][TDNonD][TPD][Test],
+TableauDonnées = [[S1,Nom Ressource,Responsable True/False,Titulaire ,Acronyme, Titulaire True/False, NombreGroupes, TDNonD, TPD, Test],
                   [S2][R1.02][Responsable Oui/Non][Nom + Prenom][Acronyme][Titulaire Oui/Non][NombreGroupes][TDNonD][TPD][Test],
                   [S2][R2.01][Responsable Oui/Non][Nom + Prenom][Acronyme][Titulaire Oui/Non][NombreGroupes][TDNonD][TPD][Test]]
 """
@@ -68,7 +68,7 @@ def RecuperationProfMatiere(FeuilleActuelle,TableauDonnées):
         """
 
         # On remplis le tableau avec les données sur notre nouveau prof
-        TableauDonnées.append([Feuille.title,MatiereActuelle,AlerteProf,Intervenant,Acronyme,Titulaire,NombreGroupes,TDNonD,TPD,Test])
+        TableauDonnées.append([Feuille.title,MatiereActuelle,AlerteProf,Intervenant,Acronyme,Titulaire,NombreGroupes,CM,TDNonD,TPD,Test])
 
         # On se rappel de remettre l'alerte à 0
         AlerteProf = False

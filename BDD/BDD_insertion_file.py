@@ -10,6 +10,10 @@ from but1 import *
 from but2 import *
 from but3 import *
 
+import sys
+sys.path.insert(0, '../QuiFaitQuoi')  # Ajoute le chemin relatif vers le dossier
+from ExtractionQuiFaitQuoi import *
+
 
 with sqlite3.connect("../SAE.db") as connection:
     cursor = connection.cursor()
@@ -17,7 +21,7 @@ with sqlite3.connect("../SAE.db") as connection:
 #creation des tables etc ....
 exec(open('BDD_file.py').read())
 
-# Fonction d'insertion des données:
+# PARTIE d'insertion des données
 
 # liste des colonnes de la table à inserer
 column_list_RESSOURCE = ['code_apogee', 'libelle', 'total_cm', 'total_td', 'total_tp', 'HETD', 'HETD_PACOME']
@@ -67,6 +71,16 @@ def remplissageInBIBLE(numeroListeSemestre, nombreGroupe,BUT):
 remplissageInBIBLE(liste_S1R1, S1nbGroupeTD, 'BUT1')
 remplissageInBIBLE(liste_S2R2, S2nbGroupeTD, 'BUT1')
 
+# PARTIE QuiFaitQuoi
+
+column_list_DONNEEPROF = ['Feuille_title','MatiereActuelle','AlerteProf','Intervenant','Acronyme','Titulaire','NombreGroupes','CM','TDNonD','TPD','Test']
+def ajouterDonneesToDONNEEPROF(ligne_donnees,table_name):
+    colonnes = ', '.join(column_list_DONNEEPROF)
+    valeurs = ', '.join(['?'] * len(column_list_DONNEEPROF))
+    for i in range(len(ligne_donnees)):
+        cursor.execute(f"INSERT INTO {table_name} ({colonnes}) VALUES ({valeurs})", tuple(ligne_donnees[i]))
+
+ajouterDonneesToDONNEEPROF(DonneesQuiFaitQuoi,'DONNEEPROF')
 
 connection.commit()
 connection.close()

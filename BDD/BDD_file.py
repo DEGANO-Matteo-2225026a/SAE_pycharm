@@ -7,6 +7,8 @@ with sqlite3.connect("../SAE.db") as connection:
 cursor.execute(
    "DROP TABLE IF EXISTS ENSEIGNE")
 cursor.execute(
+   "DROP TABLE IF EXISTS DONNEEPROF")
+cursor.execute(
    "DROP TABLE IF EXISTS RESSOURCE")
 cursor.execute(
    "DROP TABLE IF EXISTS PROF")
@@ -19,6 +21,21 @@ cursor.execute(
        "cle_prof INTEGER PRIMARY KEY,"
        "acronyme TEXT,"
        "TITULAIRE BOOLEAN)")
+
+cursor.execute(
+   "CREATE TABLE IF NOT EXISTS DONNEEPROF ("
+       "Id INTEGER PRIMARY KEY,"
+       "Feuille_title TEXT,"
+       "MatiereActuelle TEXT,"
+       "AlerteProf BOOLEAN,"
+       "Intervenant TEXT,"
+       "Acronyme TEXT,"
+       "Titulaire TEXT,"
+       "NombreGroupes INTEGER,"
+       "CM FLOAT,"
+       "TDNonD INTEGER,"
+       "TPD INTEGER,"
+       "Test INTEGER)")
 
 cursor.execute(
    "CREATE TABLE IF NOT EXISTS RESSOURCE ("

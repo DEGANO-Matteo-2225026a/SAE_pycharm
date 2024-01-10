@@ -3,6 +3,10 @@ import openpyxl as op
 
 """
 Le premier Intervenant renseigné dans chaque ressources est considéré par convention comme le responsable de celle-ci.
+
+TableauDonnées = [[S1][R1.01][Responsable Oui/Non][Nom + Prenom][Acronyme][Titulaire Oui/Non][NombreGroupes][TDNonD][TPD][Test],
+                  [S2][R1.02][Responsable Oui/Non][Nom + Prenom][Acronyme][Titulaire Oui/Non][NombreGroupes][TDNonD][TPD][Test],
+                  [S2][R2.01][Responsable Oui/Non][Nom + Prenom][Acronyme][Titulaire Oui/Non][NombreGroupes][TDNonD][TPD][Test]]
 """
 
 # On charge le classeur Excel
@@ -14,12 +18,12 @@ ListeFeuillesQuiFaitQuoi = sorted(QuiFaitQuoi.sheet_names)
 
 print(ListeFeuillesQuiFaitQuoi)
 
-def RecuperationProfMatiere(FeuilleActuelle):
+def RecuperationProfMatiere(FeuilleActuelle,TableauDonnées):
 
     # Active la page pour openPYXL
     Feuille = QuiFaitQuoiInfo[FeuilleActuelle]
 
-    # Compteur maximum Lignes et Colonnes
+    # Indice maximum Lignes et Colonnes
     CompteurLigne = Feuille.max_row
     CompteurColonne = Feuille.max_column
 
@@ -35,42 +39,66 @@ def RecuperationProfMatiere(FeuilleActuelle):
     for IndexLigne in range(2,CompteurLigne):
         if (Feuille.cell(IndexLigne, IndexColonne).fill.start_color.index) != '00000000':
             MatiereActuelle = Feuille.cell(IndexLigne, IndexColonne-1).internal_value
-            AlerteProf = 1
-            print("ALERTE NOUVELLE MATIERE")
-            print("VOICI LE NOM DE LA MATIERE : ", MatiereActuelle)
-            IndexLigne += 1
+            """
+            print("NOUVELLE MATIERE : ", MatiereActuelle)
+            """
+            AlerteProf = True
 
+
+        # Si nouvelle ligne de matière on ignore, si absence d'intervenant on ignore
+        if (Feuille.cell(IndexLigne, IndexColonne).internal_value == None):
+            continue
+
+        # Récupère les données
         Intervenant = Feuille.cell(IndexLigne, IndexColonne).internal_value
         Acronyme = Feuille.cell(IndexLigne, IndexColonne+1).internal_value
-        Titulaire = Feuille.cell(IndexLigne, IndexColonne+2).internal_value
+        if Feuille.cell(IndexLigne, IndexColonne+2).internal_value == "Oui":
+            Titulaire = True
+        else:
+            Titulaire = False
         NombreGroupes = Feuille.cell(IndexLigne, IndexColonne+3).internal_value
         CM = Feuille.cell(IndexLigne, IndexColonne+4).internal_value
         TDNonD = Feuille.cell(IndexLigne, IndexColonne+5).internal_value
         TPD = Feuille.cell(IndexLigne, IndexColonne+6).internal_value
         Test = Feuille.cell(IndexLigne, IndexColonne+7).internal_value
 
+        """
+        if AlerteProf is not False:
+            print(Intervenant,"est responsable de", MatiereActuelle)
+        """
+
+        # On remplis le tableau avec les données sur notre nouveau prof
+        TableauDonnées.append([Feuille.title,MatiereActuelle,AlerteProf,Intervenant,Acronyme,Titulaire,NombreGroupes,TDNonD,TPD,Test])
+
+        # On se rappel de remettre l'alerte à 0
+        AlerteProf = False
+
+        """
         print("Matière = ", MatiereActuelle,"," ,"Intervenant = ",Intervenant,"," ," Acronyme = ",Acronyme,"," ,
-              "Titulaire = ",Titulaire,",","NombreGroupes = ",NombreGroupes,",","NombreGroupes = ",NombreGroupes,",",
+              "Titulaire = ",Titulaire,",","NombreGroupes = ",NombreGroupes,",",
               "TDNonD = ",TDNonD,",","TPD = ",TPD,",","Test = ",Test,)
-
         """
-        print(Feuille.cell(IndexLigne, IndexColonne).internal_value)
-        print(Feuille.cell(IndexLigne, IndexColonne).fill.start_color.index)
-        """
-
-        IndexLigne += 1
 
 # On parcours toutes les feuilles
 def RecuperationParFeuille(ListeFeuilles):
+
+    # Tableau où seront rangées les données
+    TableauDonnées = []
+
     # On parcours toutes les feuilles fournis
     for Feuille in ListeFeuilles:
-        RecuperationProfMatiere(Feuille)
+
+        RecuperationProfMatiere(Feuille,TableauDonnées)
+
+        """
         print("")
         print("PAGE SUIVANTE")
         print("PAGE SUIVANTE")
         print("PAGE SUIVANTE")
         print("")
+        """
 
-    QuiFaitQuoi.close()
+    return TableauDonnées
 
-RecuperationParFeuille(ListeFeuillesQuiFaitQuoi)
+DonneesQuiFaitQuoi = RecuperationParFeuille(ListeFeuillesQuiFaitQuoi)
+print(DonneesQuiFaitQuoi)

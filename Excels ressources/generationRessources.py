@@ -3,10 +3,13 @@ from openpyxl import load_workbook
 from pathlib import Path
 import sqlite3
 
+# connection à la base de donnée
+db_connection = sqlite3.connect("../SAE.db")
+cursor = db_connection.cursor()
 
 #récupérer un fichier excel de ressource de base créé par un autre code
 base = Path('Ressources.xlsx')
-#si le fichier ecxel résultant de ce code existe déjà on l'utilise directement
+#si le fichier excel résultant de ce code existe déjà on l'utilise directement
 if base.is_file():
     # Charger le classeur Excel existant
     classeur_existant = load_workbook('Ressources.xlsx')
@@ -15,12 +18,10 @@ else:
     exec(open('baseRessources.py').read())
     classeur_existant = load_workbook('Ressources.xlsx')
 
-def Remplissage():
-    # Sélectionner la feuille existante (ou créer une nouvelle feuille si elle n'existe pas)
-    #nom_feuille = 'Sheet'  # Remplacez par le nom de votre feuille
-    #feuille = classeur_existant[
-    #    nom_feuille] if nom_feuille in classeur_existant.sheetnames else classeur_existant.create_sheet(nom_feuille)
-    nouvelle_feuille = classeur_existant.create_sheet("R...")
+
+def Remplissage(res):
+    # Créer une nouvelle feuille pour chaque matière
+    nouvelle_feuille = classeur_existant.create_sheet(res)
 
     # Copier le contenu de la feuille existante dans la nouvelle feuille
     nom_feuille_base = "Sheet"  # ou spécifiez le nom de la feuille existante
@@ -28,8 +29,8 @@ def Remplissage():
     for ligne in feuille_base.iter_rows(min_row=1, values_only=True):
         nouvelle_feuille.append(ligne)
 
-    cellule_selectionnee = feuille_base['C1']
-    cellule_selectionnee.value = 'Nomres'
+    cellule_selectionnee = nouvelle_feuille['C1']
+    cellule_selectionnee.value = res
 
     cellule_selectionnee = nouvelle_feuille['H1']
     cellule_selectionnee.value = 'Nomresp'
@@ -58,4 +59,8 @@ def Remplissage():
     # Enregistrer le classeur modifié dans un nouveau fichier
     classeur_existant.save('Ressources.xlsx')
 
-Remplissage()
+#récupération des noms de chaque ressource de la base de donnée
+cursor.execute("SELECT libelle_simple FROM BIBLE")
+liste_libelle = cursor.fetchall()
+for i in range(len(liste_libelle)):
+    Remplissage(liste_libelle[i][0])

@@ -37,6 +37,8 @@ def RecuperationProfMatiere(FeuilleActuelle,TableauDonnées):
     """
 
     for IndexLigne in range(2,CompteurLigne):
+
+        # Permet de savoir lors du changement de couleur qu'une nouvelle matière apporte un nouveau responsable de module
         if (Feuille.cell(IndexLigne, IndexColonne).fill.start_color.index) != '00000000':
             MatiereActuelle = Feuille.cell(IndexLigne, IndexColonne-1).internal_value
             """

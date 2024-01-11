@@ -21,6 +21,8 @@ On possède par les info suivantes :
 - Heures Info
 - Heures Non Info
 - Heures Totales
+
+ROUGE = SEMAINE MORTE DONC OSEF
 """
 
 # On charge le classeur Excel
@@ -30,9 +32,9 @@ PlanningInfo = op.load_workbook('../Documents/Planning_2023-2024.xlsx',data_only
 def PurgeFeuille(Planning):
     FeuilleASupprimer = []
 
-    for feuille_nom in Planning.sheetnames:
-        if feuille_nom[0] != "S" or not feuille_nom[1].isdigit():
-            FeuilleASupprimer.append(feuille_nom)
+    for Feuille in Planning.sheetnames:
+        if Feuille[0] != "S" or not Feuille[1].isdigit():
+            FeuilleASupprimer.append(Feuille)
 
     for Feuille in FeuilleASupprimer:
         Planning.remove(Planning[Feuille])
@@ -45,11 +47,11 @@ def LocateMatiere():
 
 # Automatise le changement de feuilles
 def RecuperationParFeuille(ListeFeuilles):
+    for Feuille in ListeFeuilles:
+        print(Feuille.title)
     return
-# print(ListeFeuillesPlanning) ['Bilan semestres impairs', 'Bilan semestres pairs', 'S1', 'S2', 'S3', 'S4.A', 'S4.B', 'S5.A', 'S5.B', 'S6.A', 'S6.B']
+
 # On établie la liste des feuilles qui nous intéressent
 PurgeFeuille(PlanningInfo)
-ListeFeuillesPlanning = sorted(PlanningInfo.sheetnames)
-print(ListeFeuillesPlanning)
 
 RecuperationParFeuille(PlanningInfo)

@@ -23,24 +23,33 @@ On possède par les info suivantes :
 - Heures Totales
 """
 
-def LocateRessources():
+# On charge le classeur Excel
+Planning = pd.ExcelFile('../Documents/Planning_2023-2024.xlsx')
+PlanningInfo = op.load_workbook('../Documents/Planning_2023-2024.xlsx',data_only=True)
 
+def PurgeFeuille(Planning):
+    FeuilleASupprimer = []
+
+    for feuille_nom in Planning.sheetnames:
+        if feuille_nom[0] != "S" or not feuille_nom[1].isdigit():
+            FeuilleASupprimer.append(feuille_nom)
+
+    for Feuille in FeuilleASupprimer:
+        Planning.remove(Planning[Feuille])
+
+def LocateRessources():
+    return
+
+def LocateMatiere():
+    return
 
 # Automatise le changement de feuilles
 def RecuperationParFeuille(ListeFeuilles):
-    for Feuille in ListeFeuilles:
-        print(i)
-    Planning.close()
-
-
-# On charge le classeur Excel
-Planning = pd.ExcelFile('../Documents/Planning_2023-2024.xlsx')
-
+    return
+# print(ListeFeuillesPlanning) ['Bilan semestres impairs', 'Bilan semestres pairs', 'S1', 'S2', 'S3', 'S4.A', 'S4.B', 'S5.A', 'S5.B', 'S6.A', 'S6.B']
 # On établie la liste des feuilles qui nous intéressent
-ListeFeuillesPlanning = sorted(Planning.sheet_names)
-ListeFeuillesPlanning.pop(0)
-ListeFeuillesPlanning.pop(0)
-
-RecuperationParFeuille(ListeFeuillesPlanning)
-
+PurgeFeuille(PlanningInfo)
+ListeFeuillesPlanning = sorted(PlanningInfo.sheetnames)
 print(ListeFeuillesPlanning)
+
+RecuperationParFeuille(PlanningInfo)

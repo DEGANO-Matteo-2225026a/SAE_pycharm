@@ -24,7 +24,7 @@ def RecuperationProfMatiere(FeuilleActuelle,TableauDonnées):
     Feuille = QuiFaitQuoiInfo[FeuilleActuelle]
 
     # Indice maximum Lignes et Colonnes
-    CompteurLigne = Feuille.max_row
+    CompteurLigne = Feuille.max_row + 1
     CompteurColonne = Feuille.max_column
 
     # Index pour le "curseur"

@@ -7,19 +7,6 @@ Created on Wed Oct 11 09:22:51 2023
 """
 import pandas as pd
 
-"""
-Commencer par récuperer toutes les informations importantes qu'il faut
-renseigner dans la base de données.
-
-On essaye de faire le BUT 1 avant de passer aux autres.
-
-En l'occurrence on récupère :
-    - Code Apogée
-    - Libellé complet Apogée
-    - Volume Horaire Total (CM, TD, TP)
-    - HETD et HETD PAcome
-"""
-
 # Indique le bon document et la bonne feuille du document
 BUT1Info = pd.read_excel('../Documents/BUT1_INFO_AIX.xlsx', sheet_name=None)
 FeuilleInfoBut1 = 'BUT 1'
@@ -42,13 +29,6 @@ S2LibelleCompletApogee = S1But1Info.iloc[34:60, 2]
 S1volumeHoraireTotal = S1But1Info.iloc[8:33, 17:19]
 S2volumeHoraireTotal = S1But1Info.iloc[34:60, 17:19]
 
-# Donnée HETD
-# 22
-
-# Donnée HETD pacome
-
-S1HETD = S1But1Info.iloc[8:33, 23]
-S2HETD = S1But1Info.iloc[34:60, 23]
 
 # Donnée nombre groupe td
 

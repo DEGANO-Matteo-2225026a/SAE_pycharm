@@ -45,9 +45,13 @@ def LocateRessources():
 def LocateMatiere():
     return
 
+def RecuperationDonneesFeuille(FeuilleActuelle):
+    return
+
 # Automatise le changement de feuilles
 def RecuperationParFeuille(ListeFeuilles):
     for Feuille in ListeFeuilles:
+        RecuperationDonneesFeuille(Feuille)
         print(Feuille.title)
     return
 

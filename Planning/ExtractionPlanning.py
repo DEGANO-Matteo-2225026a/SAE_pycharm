@@ -39,10 +39,22 @@ def PurgeFeuille(Planning):
     for Feuille in FeuilleASupprimer:
         Planning.remove(Planning[Feuille])
 
-def LocateRessources(couleur):
-    return
+def LocateRessources(Feuille,LimiteBoucle,LimiteDroite):
 
-def LocateMatiere():
+    IndiceLigne = LimiteBoucle + 2
+    IndiceColonne = LimiteDroite
+
+    print("ON COMMENCE LIGNE :", IndiceLigne)
+    i = 0
+
+    for i in range(1,LimiteBoucle):
+        for j in range(1,LimiteDroite):
+            if Feuille.cell(IndiceLigne + i,j).fill.start_color.index != '00000000' and Feuille.cell(IndiceLigne + i,j).value == 'X':
+                print(Feuille.cell(IndiceLigne + i,j).value)
+                i += 1
+
+    print("NOMBRE DE i :",i)
+
     return
 
 def LocateDate(Feuille):
@@ -67,16 +79,40 @@ def LocateDate(Feuille):
 
     return IndiceDate, LongueurDate
 
+def LocateLimite(Feuille,ColonneDate):
+
+    LimiteGauche = 1
+    LimiteDroite = ColonneDate
+
+    # On cherche l'indice du début de la première colonne "Cours"
+    while Feuille.cell(1,LimiteGauche).value != "Cours":
+        LimiteGauche += 1
+
+    # On cherche l'indice de fin de la deuxième colonne "Test"
+    while Feuille.cell(1,LimiteDroite-1).value != "Test" or Feuille.cell(1,LimiteDroite).fill.start_color.index != '00000000':
+        LimiteDroite += 1
+
+    return LimiteDroite,LimiteGauche
+
 def RecuperationDonneesFeuille(FeuilleActuelle):
 
     # Active la page pour openPYXL
     Feuille = PlanningInfo[FeuilleActuelle.title]
 
-    # On récupère les informations de la colonne Date
-    ColonneDate = LocateDate(Feuille)[0]
-    LongueurDate = LocateDate(Feuille)[1]
+    # On récupère les informations de la colonne Date et de la longueur du tableau
+    ColonneDate = LocateDate(Feuille)
+    LimiteBoucle = ColonneDate[1]
+    ColonneDate = ColonneDate[0]
 
-    print("VOICI LA LONGUEUR DE DATE :", LongueurDate, "ET SA COLONNE :", ColonneDate)
+    # On récupère les limites pour les informations du tableau
+    LimiteDroite = LocateLimite(Feuille,ColonneDate)
+    LimiteGauche = LimiteDroite[1]
+    LimiteDroite = LimiteDroite[0]
+
+    LocateRessources(Feuille, LimiteBoucle, LimiteDroite)
+
+    print("VOICI LA LONGUEUR DE DATE :", LimiteBoucle, "ET SA COLONNE :", ColonneDate)
+    print("VOICI LA GAUCHE DU TABLEAU :", LimiteGauche, "ET SA LIMITE DROITE :", LimiteDroite)
 
     return
 

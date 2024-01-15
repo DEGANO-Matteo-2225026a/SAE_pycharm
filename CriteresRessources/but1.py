@@ -42,13 +42,6 @@ S2LibelleCompletApogee = S1But1Info.iloc[34:60, 2]
 S1volumeHoraireTotal = S1But1Info.iloc[8:33, 17:19]
 S2volumeHoraireTotal = S1But1Info.iloc[34:60, 17:19]
 
-# Donnée HETD
-# 22
-
-# Donnée HETD pacome
-
-S1HETD = S1But1Info.iloc[8:33, 23]
-S2HETD = S1But1Info.iloc[34:60, 23]
 
 # Donnée nombre groupe td
 

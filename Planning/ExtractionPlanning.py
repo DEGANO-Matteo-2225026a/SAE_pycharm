@@ -1,4 +1,4 @@
-import pandas as pd
+
 import openpyxl as op
 
 """
@@ -26,7 +26,8 @@ ROUGE = SEMAINE MORTE DONC OSEF
 """
 
 # On charge le classeur Excel
-Planning = pd.ExcelFile('../Documents/Planning_2023-2024.xlsx')
+# import pandas as pd
+# Planning = pd.ExcelFile('../Documents/Planning_2023-2024.xlsx')
 PlanningInfo = op.load_workbook('../Documents/Planning_2023-2024.xlsx',data_only=True)
 
 def PurgeFeuille(Planning):
@@ -48,10 +49,32 @@ def LocateRessources(Feuille,LimiteBoucle,LimiteDroite):
         for j in range(1,LimiteDroite):
             if Feuille.cell(IndiceLigne + i,j).fill.start_color.index != '00000000' and Feuille.cell(IndiceLigne + i,j).value == 'X':
 
+                # Indice du nom de la matière d'après ce qui est écrit
                 TrouveNom = 1
                 while Feuille.cell(IndiceLigne + i, j + TrouveNom).value == None:
                     TrouveNom += 1
-                print(Feuille.cell(IndiceLigne + i,j).value, Feuille.cell(IndiceLigne + i, j + TrouveNom).value)
+
+                # Nombre de CM de la matière d'après ce qui est écrit
+                ValeurCM = 0
+                if Feuille.cell(IndiceLigne + i, j + TrouveNom + 3).value != None:
+                    ValeurCM = Feuille.cell(IndiceLigne + i, j + TrouveNom + 3).value
+
+                # Nombre de TD de la matière d'après ce qui est écrit
+                ValeurTD = 0
+                if Feuille.cell(IndiceLigne + i, j + TrouveNom + 5).value != None:
+                    ValeurTD = Feuille.cell(IndiceLigne + i, j + TrouveNom + 5).value
+
+                # Nombre de TP de la matière d'après ce qui est écrit
+                ValeurTP = 0
+                if Feuille.cell(IndiceLigne + i, j + TrouveNom + 7).value != None:
+                    ValeurTP = Feuille.cell(IndiceLigne + i, j + TrouveNom + 7).value
+
+                # Acronyme du Responsable de la matière d'après ce qui est écrit
+                Responsable = "Personne"
+                if Feuille.cell(IndiceLigne + i, j + TrouveNom + 10).value != None:
+                    Responsable = Feuille.cell(IndiceLigne + i, j + TrouveNom + 10).value
+
+                print(Feuille.cell(IndiceLigne + i, j + TrouveNom).value,ValeurCM,ValeurTD,ValeurTP,Responsable)
     return
 
 def LocateDate(Feuille):

@@ -44,17 +44,14 @@ def LocateRessources(Feuille,LimiteBoucle,LimiteDroite):
     IndiceLigne = LimiteBoucle + 2
     IndiceColonne = LimiteDroite
 
-    print("ON COMMENCE LIGNE :", IndiceLigne)
-    i = 0
-
     for i in range(1,LimiteBoucle):
         for j in range(1,LimiteDroite):
             if Feuille.cell(IndiceLigne + i,j).fill.start_color.index != '00000000' and Feuille.cell(IndiceLigne + i,j).value == 'X':
-                print(Feuille.cell(IndiceLigne + i,j).value)
-                i += 1
 
-    print("NOMBRE DE i :",i)
-
+                TrouveNom = 1
+                while Feuille.cell(IndiceLigne + i, j + TrouveNom).value == None:
+                    TrouveNom += 1
+                print(Feuille.cell(IndiceLigne + i,j).value, Feuille.cell(IndiceLigne + i, j + TrouveNom).value)
     return
 
 def LocateDate(Feuille):

@@ -19,7 +19,7 @@ else:
     classeur_existant = load_workbook('Ressources.xlsx')
 
 
-def Remplissage(res, cm, td, tp):
+def RemplissageBible(res, cm, td, tp):
     # Créer une nouvelle feuille pour chaque matière
     nouvelle_feuille = classeur_existant.create_sheet(res)
 
@@ -32,9 +32,6 @@ def Remplissage(res, cm, td, tp):
     cellule_selectionnee = nouvelle_feuille['C1']
     cellule_selectionnee.value = res
 
-    cellule_selectionnee = nouvelle_feuille['H1']
-    cellule_selectionnee.value = 'Nomresp'
-
     cellule_selectionnee = nouvelle_feuille['B4']
     cellule_selectionnee.value = cm
 
@@ -44,20 +41,17 @@ def Remplissage(res, cm, td, tp):
     cellule_selectionnee = nouvelle_feuille['D4']
     cellule_selectionnee.value = tp
 
+
+
     ligne_insertion = 7
     nouvelle_feuille.insert_rows(ligne_insertion)
     nouvelle_feuille.cell(row=ligne_insertion, column=1, value='prof1')
 
-    ligne_insertion = 8
-    nouvelle_feuille.insert_rows(ligne_insertion)
-    nouvelle_feuille.cell(row=ligne_insertion, column=1, value='prof2')
+def RemplissageProfs(feuille, resp):
+    feuilleRes = classeur_existant[feuille]
 
-    ligne_insertion = 9
-    nouvelle_feuille.insert_rows(ligne_insertion)
-    nouvelle_feuille.cell(row=ligne_insertion, column=1, value='prof3')
-
-    # Enregistrer le classeur modifié dans un nouveau fichier
-    classeur_existant.save('Ressources.xlsx')
+    cellule_selectionnee = feuilleRes['H1']
+    cellule_selectionnee.value = resp
 
 #récupération des noms de chaque ressource de la base de donnée
 cursor.execute("SELECT libelle_simple FROM BIBLE")
@@ -71,5 +65,22 @@ liste_td = cursor.fetchall()
 cursor.execute("SELECT total_tp FROM BIBLE")
 liste_tp = cursor.fetchall()
 
+# récupération des noms de profs
+cursor.execute("SELECT AlerteProf, Intervenant FROM DONNEEPROF")
+liste_profs = cursor.fetchall()
+
 for i in range(len(liste_libelle)):
-    Remplissage(liste_libelle[i][0], liste_cm[i][0], liste_td[i][0], liste_tp[i][0])
+    RemplissageBible(liste_libelle[i][0], liste_cm[i][0], liste_td[i][0], liste_tp[i][0])
+    for j in range(len(liste_profs)):
+        RemplissageProfs(liste_libelle[i][0], liste_profs[j][1])
+
+
+
+
+
+
+
+
+
+# Enregistrer le classeur modifié dans un nouveau fichier
+classeur_existant.save('Ressources.xlsx')

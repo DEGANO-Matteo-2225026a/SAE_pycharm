@@ -40,7 +40,7 @@ def PurgeFeuille(Planning):
     for Feuille in FeuilleASupprimer:
         Planning.remove(Planning[Feuille])
 
-def LocateRessources(Feuille,LimiteBoucle,LimiteDroite):
+def GetRessources(Feuille,LimiteBoucle,LimiteDroite):
 
     IndiceLigne = LimiteBoucle + 2
     IndiceColonne = LimiteDroite
@@ -129,7 +129,8 @@ def RecuperationDonneesFeuille(FeuilleActuelle):
     LimiteGauche = LimiteDroite[1]
     LimiteDroite = LimiteDroite[0]
 
-    LocateRessources(Feuille, LimiteBoucle, LimiteDroite)
+    GetRessources(Feuille, LimiteBoucle, LimiteDroite)
+
 
     print("VOICI LA LONGUEUR DE DATE :", LimiteBoucle, "ET SA COLONNE :", ColonneDate)
     print("VOICI LA GAUCHE DU TABLEAU :", LimiteGauche, "ET SA LIMITE DROITE :", LimiteDroite)

@@ -20,7 +20,7 @@ def label(code_apogee):
 
 def detectionProblemeTotalCours():
 
-    cursor.execute("SELECT code_apogee, total_cm, total_td, total_tp  FROM RESSOURCE;")
+    cursor.execute("SELECT libelle_simple, total_cm, total_td, total_tp  FROM BIBLE;")
 
     # On récupère le nom de chaque ressources depuis la bible que l'on associe à une clef dans une biblothèque
     # puis les données du total de CM, TD et TP associés a cette resource
@@ -33,9 +33,7 @@ def detectionProblemeTotalCours():
     - Récupérer les heures effectuées dans le planning a droite des noms de ressource dans la table Planning
     - Utiliser des fonctions provenant de ExtractionPlanning pour récupérer les données
     - Stocker les informations récupérées dans une bibliothèque pour comparaison
-    - Pour la comparaison, utiliser une boucle de comparaison et généraliser les noms de ressource (Possible problème
-      de difficultés dans la comparaison des donnés à cause de l'utilisation du code apogée dans la première
-      récupération)
+    - Pour la comparaison, utiliser une boucle de comparaison et généraliser les noms de ressource
     """
 
 

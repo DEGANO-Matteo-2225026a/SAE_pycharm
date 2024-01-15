@@ -18,14 +18,14 @@ feuille['C3'] = 'TD'
 feuille['D3'] = 'TP'
 feuille['A6'] = 'Intervenants'
 feuille['A6'].font = Font(bold=True)
-feuille['A8'] = 'Répartition'
+feuille['A8'] = 'Repartition'
 feuille['A8'].font = Font(bold=True)
 feuille['B8'] = 'Nombre de Groupes'
 feuille['A9'] = 'CM'
 feuille['A11'] = 'TD'
-feuille['A13'] = 'TP dédoublés'
-feuille['A15'] = 'TP non dédoublés'
-feuille['A17'] = 'Organisation détaillée'
+feuille['A13'] = 'TP dedoubles'
+feuille['A15'] = 'TP non dedoubles'
+feuille['A17'] = 'Organisation detaillee'
 feuille['A17'].font = Font(bold=True)
 feuille['B19'] = 'CM'
 feuille['C19'] = 'TD'

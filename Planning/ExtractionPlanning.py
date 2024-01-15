@@ -39,13 +39,45 @@ def PurgeFeuille(Planning):
     for Feuille in FeuilleASupprimer:
         Planning.remove(Planning[Feuille])
 
-def LocateRessources():
+def LocateRessources(couleur):
     return
 
 def LocateMatiere():
     return
 
+def LocateDate(Feuille):
+
+    # On recherche l'Indice de la colonne des Dates
+    IndiceDate = 1
+    while Feuille.cell(1,IndiceDate).value != "Date":
+        IndiceDate += 1
+
+    # On cherche le nombre de semaine pour nos boucles.
+    LongueurDate = 1
+    BlancsDate = 0
+    while BlancsDate != 3:
+        if Feuille.cell(LongueurDate, IndiceDate).value != None:
+            BlancsDate = 0
+        else:
+            BlancsDate += 1
+        LongueurDate += 1
+
+    # On oublie pas de retirer les lignes vides servant à confirmer la fin des infos de la colonne
+    LongueurDate = LongueurDate - 4
+
+    return IndiceDate, LongueurDate
+
 def RecuperationDonneesFeuille(FeuilleActuelle):
+
+    # Active la page pour openPYXL
+    Feuille = PlanningInfo[FeuilleActuelle.title]
+
+    # On récupère les informations de la colonne Date
+    ColonneDate = LocateDate(Feuille)[0]
+    LongueurDate = LocateDate(Feuille)[1]
+
+    print("VOICI LA LONGUEUR DE DATE :", LongueurDate, "ET SA COLONNE :", ColonneDate)
+
     return
 
 # Automatise le changement de feuilles

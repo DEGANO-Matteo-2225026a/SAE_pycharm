@@ -19,7 +19,7 @@ else:
     classeur_existant = load_workbook('Ressources.xlsx')
 
 
-def Remplissage(res):
+def Remplissage(res, cm, td, tp):
     # Créer une nouvelle feuille pour chaque matière
     nouvelle_feuille = classeur_existant.create_sheet(res)
 
@@ -36,13 +36,13 @@ def Remplissage(res):
     cellule_selectionnee.value = 'Nomresp'
 
     cellule_selectionnee = nouvelle_feuille['B4']
-    cellule_selectionnee.value = '...h'
+    cellule_selectionnee.value = cm
 
     cellule_selectionnee = nouvelle_feuille['C4']
-    cellule_selectionnee.value = '...h'
+    cellule_selectionnee.value = td
 
     cellule_selectionnee = nouvelle_feuille['D4']
-    cellule_selectionnee.value = '...h'
+    cellule_selectionnee.value = tp
 
     ligne_insertion = 7
     nouvelle_feuille.insert_rows(ligne_insertion)
@@ -62,5 +62,14 @@ def Remplissage(res):
 #récupération des noms de chaque ressource de la base de donnée
 cursor.execute("SELECT libelle_simple FROM BIBLE")
 liste_libelle = cursor.fetchall()
+
+#récupération des horaires
+cursor.execute("SELECT total_cm FROM BIBLE")
+liste_cm = cursor.fetchall()
+cursor.execute("SELECT total_td FROM BIBLE")
+liste_td = cursor.fetchall()
+cursor.execute("SELECT total_tp FROM BIBLE")
+liste_tp = cursor.fetchall()
+
 for i in range(len(liste_libelle)):
-    Remplissage(liste_libelle[i][0])
+    Remplissage(liste_libelle[i][0], liste_cm[i][0], liste_td[i][0], liste_tp[i][0])

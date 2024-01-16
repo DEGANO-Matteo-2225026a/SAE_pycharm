@@ -162,7 +162,7 @@ def GetInfoPlanning(Feuille,ColonneDate,LimiteGauche,LimiteDroite,LimiteBoucle):
     TableauInfoPlanning = []
 
     # On parcours toutes les lignes de la colonne Date
-    for i in range(1,LimiteBoucle+1):
+    for i in range(2,LimiteBoucle+1):
         if Feuille.cell(i,ColonneDate).fill.start_color.index == 'FFFF0000':
             continue
         print(Feuille.cell(i,ColonneDate).value)

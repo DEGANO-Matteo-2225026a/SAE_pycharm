@@ -52,15 +52,6 @@ def detectionProblemeTotalCours():
     print(ressourcesAComparer)
     fusionRessourcesDivisees(ressourcesAComparer)
 
-    """
-    TODO :
-    - Récupérer les heures effectuées dans le planning a droite des noms de ressource dans la table Planning
-    - Utiliser des fonctions provenant de ExtractionPlanning pour récupérer les données
-    - Stocker les informations récupérées dans une bibliothèque pour comparaison
-    - Pour la comparaison, utiliser une boucle de comparaison et généraliser les noms de ressource
-    """
-
-
 detectionProblemeTotalCours()
 
 fichierSortie.write("\n\nFin rapport d'erreurs.")

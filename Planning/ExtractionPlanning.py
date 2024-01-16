@@ -3,7 +3,7 @@ from datetime import datetime
 
 """
 
-TableauDonnees = [[['FFCC99FF', 'R1.01', 18, 30, 38, 'Acronyme'],
+TableauDonnees[0] = [[['FFCC99FF', 'R1.01', 18, 30, 38, 'Acronyme'],
                    ['FFAECF00', 'R1.06-1', 8, 11, 3, 'Acronyme'],
                    ['FF66CCFF', 'R1.02', 6, 2, 16, 'Acronyme'],
                    ['FFAECF00', 'R1.06-2', 4, 6, 4, 'Acronyme'],
@@ -11,7 +11,11 @@ TableauDonnees = [[['FFCC99FF', 'R1.01', 18, 30, 38, 'Acronyme'],
                   [['FFCC99FF', 'R3.01', 8, 0, 18, 'Acronyme'],
                    ['FFAECF00', 'R3.08', 10, 14, 6, 'Acronyme']]]
                    
-TableauSemaine = [[Semaine, Ressource, TypeCours, TypeSalle], [Semaine, Ressource, TypeCours, TypeSalle]]
+TableauDonnees[1] = [[Semaine, Ressource, TypeCours, TypeSalle],
+                  [Semaine, Ressource, TypeCours, TypeSalle],
+                  [[Semaine, Ressource, TypeCours, TypeSalle],
+                  [Semaine, Ressource, TypeCours, TypeSalle],
+                  [[Semaine, Ressource, TypeCours, TypeSalle]]
 
 Les données du document planning nous apparaissent avec cette logique :
 - Les données concernant les matières de chaque pages de semestre sont divisées en deux parties, la deuxième commençant 
@@ -160,9 +164,7 @@ def GetRessources(Feuille,LimiteBoucle,LimiteDroite):
 
 
 
-def GetInfoPlanning(Feuille,ColonneDate,LimiteGauche,LimiteDroite,LimiteBoucle,TableauRessource,IndicePage):
-
-    TableauInfoPlanning = []
+def GetInfoPlanning(Feuille,ColonneDate,LimiteGauche,LimiteDroite,LimiteBoucle,TableauRessource,IndicePage,TableauInfoPlanning):
 
     # On parcours toutes les lignes de la colonne Date
     for i in range(2,LimiteBoucle+1):
@@ -196,10 +198,11 @@ def GetInfoPlanning(Feuille,ColonneDate,LimiteGauche,LimiteDroite,LimiteBoucle,T
                 if Feuille.cell(i, j).fill.start_color.index == TableauRessource[k][0]:
                     Couleur = TableauRessource[k][1]
 
-            print(SemaineActuelle,Couleur,TypeCours,Feuille.cell(i,j).value)
-    return
+            TableauInfoPlanning.append([SemaineActuelle,Couleur,TypeCours,Feuille.cell(i,j).value])
+            # print(SemaineActuelle,Couleur,TypeCours,Feuille.cell(i,j).value)
+    return TableauInfoPlanning
 
-def RecuperationDonneesFeuille(TableauDonnees,FeuilleActuelle, IndicePage):
+def RecuperationDonneesFeuille(TableauDonnees,TableauInfoPlanning,FeuilleActuelle, IndicePage):
 
     # Active la page pour openPYXL
     Feuille = PlanningInfo[FeuilleActuelle.title]
@@ -219,7 +222,7 @@ def RecuperationDonneesFeuille(TableauDonnees,FeuilleActuelle, IndicePage):
     TableauRessource = GetRessources(Feuille, LimiteBoucle, LimiteDroite)
     TableauDonnees.append(TableauRessource)
 
-    GetInfoPlanning(Feuille, ColonneDate, LimiteGauche, LimiteDroite, LimiteBoucle, TableauRessource, IndicePage)
+    GetInfoPlanning(Feuille, ColonneDate, LimiteGauche, LimiteDroite, LimiteBoucle, TableauRessource, IndicePage,TableauInfoPlanning)
 
     IndicePage += 1
 
@@ -230,10 +233,11 @@ def RecuperationDonneesFeuille(TableauDonnees,FeuilleActuelle, IndicePage):
 # Automatise le changement de feuilles
 def RecuperationParFeuille(ListeFeuilles):
     TableauDonnees = []
+    TableauInfoPlanning = []
     IndicePage = 0
     for Feuille in ListeFeuilles:
-        RecuperationDonneesFeuille(TableauDonnees,Feuille,IndicePage)
-    return TableauDonnees
+        RecuperationDonneesFeuille(TableauDonnees,TableauInfoPlanning,Feuille,IndicePage)
+    return TableauDonnees, TableauInfoPlanning
 
 
 
@@ -242,4 +246,6 @@ PurgeFeuille(PlanningInfo)
 
 # On Lance le code
 TableauDonnees = RecuperationParFeuille(PlanningInfo)
-print(TableauDonnees)
+print(TableauDonnees[0])
+print(TableauDonnees[1])
+

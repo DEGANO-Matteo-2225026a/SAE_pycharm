@@ -1,6 +1,15 @@
 import openpyxl as op
 
 """
+
+TableauDonnees = [[['FFCC99FF', 'R1.01', 18, 30, 38, 'AC'],
+                   ['FFAECF00', 'R1.06-1', 8, 11, 3, 'SA'],
+                   ['FF66CCFF', 'R1.02', 6, 2, 16, 'MMN'],
+                   ['FFAECF00', 'R1.06-2', 4, 6, 4, 'SA'],
+                   ['FFFFF200', 'R1.03', 4, 8, 8, 'MMN']],
+                  [['FFCC99FF', 'R3.01', 8, 0, 18, 'MMN'],
+                   ['FFAECF00', 'R3.08', 10, 14, 6, 'MoM']]]
+
 Les données du document planning nous apparaissent avec cette logique :
 - Les données concernant les matières de chaque pages de semestre sont divisées en deux parties, la deuxième commençant 
 après la colonne contenant "A placer dans EDT"
@@ -83,21 +92,6 @@ def LocateLimite(Feuille,ColonneDate):
     return LimiteDroite,LimiteGauche
 
 
-def GetInfoPlanning(Feuille,ColonneDate,LimiteGauche,LimiteDroite,LimiteBoucle):
-
-    # On parcours toutes les lignes de la colonne Date
-    for i in range(1,LimiteBoucle+1):
-        if Feuille.cell(i,ColonneDate).fill.start_color.index == 'FFFF0000':
-            continue
-        print(Feuille.cell(i,ColonneDate).value)
-
-        # On parcours toutes les cellules de la ligne
-        for j in range(LimiteGauche,LimiteDroite + 1):
-            if Feuille.cell(i,j).fill.start_color.index == '00000000' or Feuille.cell(i,j).value == None :
-                continue
-            print(Feuille.cell(i,j).value)
-    return
-
 
 def GetRessources(Feuille,LimiteBoucle,LimiteDroite):
 
@@ -163,7 +157,26 @@ def GetRessources(Feuille,LimiteBoucle,LimiteDroite):
 
 
 
-def RecuperationDonneesFeuille(FeuilleActuelle):
+def GetInfoPlanning(Feuille,ColonneDate,LimiteGauche,LimiteDroite,LimiteBoucle):
+
+    TableauInfoPlanning = []
+
+    # On parcours toutes les lignes de la colonne Date
+    for i in range(1,LimiteBoucle+1):
+        if Feuille.cell(i,ColonneDate).fill.start_color.index == 'FFFF0000':
+            continue
+        print(Feuille.cell(i,ColonneDate).value)
+
+        # On parcours toutes les cellules de la ligne
+        for j in range(LimiteGauche,LimiteDroite + 1):
+            if Feuille.cell(i,j).fill.start_color.index == '00000000' or Feuille.cell(i,j).value == None :
+                continue
+            print(Feuille.cell(i,j).value)
+    return
+
+
+
+def RecuperationDonneesFeuille(TableauDonnees,FeuilleActuelle):
 
     # Active la page pour openPYXL
     Feuille = PlanningInfo[FeuilleActuelle.title]
@@ -179,13 +192,13 @@ def RecuperationDonneesFeuille(FeuilleActuelle):
     LimiteDroite = LimiteDroite[0]
 
     TableauRessource = GetRessources(Feuille, LimiteBoucle, LimiteDroite)
-    print(TableauRessource)
+    TableauDonnees.append(TableauRessource)
 
-    # GetInfoPlanning(Feuille, ColonneDate, LimiteGauche, LimiteDroite, LimiteBoucle)
+    GetInfoPlanning(Feuille, ColonneDate, LimiteGauche, LimiteDroite, LimiteBoucle)
 
-
-    print("VOICI LA LONGUEUR DE DATE :", LimiteBoucle, "ET SA COLONNE :", ColonneDate)
-    print("VOICI LA GAUCHE DU TABLEAU :", LimiteGauche, "ET SA LIMITE DROITE :", LimiteDroite)
+    # print(TableauRessource)
+    # print("VOICI LA LONGUEUR DE DATE :", LimiteBoucle, "ET SA COLONNE :", ColonneDate)
+    # print("VOICI LA GAUCHE DU TABLEAU :", LimiteGauche, "ET SA LIMITE DROITE :", LimiteDroite)
 
     return
 
@@ -193,10 +206,10 @@ def RecuperationDonneesFeuille(FeuilleActuelle):
 
 # Automatise le changement de feuilles
 def RecuperationParFeuille(ListeFeuilles):
+    TableauDonnees = []
     for Feuille in ListeFeuilles:
-        RecuperationDonneesFeuille(Feuille)
-        print(Feuille.title)
-    return
+        RecuperationDonneesFeuille(TableauDonnees,Feuille)
+    return TableauDonnees
 
 
 
@@ -204,4 +217,5 @@ def RecuperationParFeuille(ListeFeuilles):
 PurgeFeuille(PlanningInfo)
 
 # On Lance le code
-RecuperationParFeuille(PlanningInfo)
+TableauDonnees = RecuperationParFeuille(PlanningInfo)
+print(TableauDonnees)

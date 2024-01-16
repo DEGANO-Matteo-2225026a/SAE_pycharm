@@ -173,7 +173,7 @@ def GetInfoPlanning(Feuille,ColonneDate,LimiteGauche,LimiteDroite,LimiteBoucle,T
             if Feuille.cell(i,ColonneDate).fill.start_color.index not in TableauRessource[k][0]:
                 continue
 
-        print(Feuille.cell(i,ColonneDate).value)
+        SemaineActuelle = Feuille.cell(i,ColonneDate).value
 
         # On parcours toutes les cellules de la ligne
         for j in range(LimiteGauche,LimiteDroite + 1):
@@ -181,7 +181,7 @@ def GetInfoPlanning(Feuille,ColonneDate,LimiteGauche,LimiteDroite,LimiteBoucle,T
             if Feuille.cell(i,j).value not in {"X","Y"} or Feuille.cell(i,j).fill.start_color.index == 'FFCCCCCC':
                 continue
 
-            print(Feuille.cell(i,j).value)
+            print(SemaineActuelle,Feuille.cell(i,j).value)
     return
 
 

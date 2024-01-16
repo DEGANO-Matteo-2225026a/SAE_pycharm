@@ -32,7 +32,7 @@ def ajouterDonneesToRESSOURCE(ligne_donnees,table_name):
     cursor.execute(f"INSERT INTO {table_name} ({colonnes}) VALUES ({valeurs})", tuple(ligne_donnees))
 
 # Liste des Semestre (relié au fichier de recuperation  de donnée)
-liste_S1R1 = ['S1R101', 'S1R102', 'S1R103', 'S1R104', 'S1R105', 'S1R106', 'S1R107', 'S1R108', 'S1R109', 'S1R110', 'S1R111', 'S1R112']
+liste_S1R1 = ['S1R101', 'S1R102', 'S1R103', 'S1R104', 'S1R105', 'S1R106', 'S1R107', 'S1R108', 'S1R109', 'S1R110', 'S1R111', 'S1R112','S1RL1']
 liste_S2R2 = ['S2R201', 'S2R202', 'S2R203', 'S2R204', 'S2R205', 'S2R206', 'S2R207', 'S2R208', 'S2R209', 'S2R210', 'S2R211', 'S2R212', 'S2R213', 'S2R214']
 liste_S3R3A = ['S3R301', 'S3R302', 'S3R303', 'S3R304', 'S3R305', 'S3R306', 'S3R307', 'S3R308', 'S3R309', 'S3R310', 'S3R311', 'S3R312', 'S3R313', 'S3R314', 'S3AL1']
 liste_S4R4A = ['S4R401', 'S4R402', 'S4R403', 'S4R404', 'S4R405', 'S4R406', 'S4R407', 'S4R4A08', 'S4R4A09', 'S4R4A10', 'S4R4A11', 'S4R4A12', 'S4AL1']

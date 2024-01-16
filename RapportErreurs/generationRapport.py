@@ -1,10 +1,8 @@
 import sqlite3 as sql
 
-"""
 import sys
 sys.path.insert(0, '../Planning')
-from ExtractionPlanning import LocateRessource
-"""
+from ExtractionPlanning import *
 
 
 sqlConnection = sql.connect("../SAE.db")
@@ -14,20 +12,35 @@ fichierSortie = open("../Sortie/rapportErreurs.txt", 'w')
 fichierSortie.write("Début rapport d'erreurs.\n")
 
 
-def label(code_apogee):
-    return code_apogee[3:len(code_apogee)-1]
-
-
 def detectionProblemeTotalCours():
 
+    # Execution de la query en sql visant à récupérer les données de références depuis la bible
     cursor.execute("SELECT libelle_simple, total_cm, total_td, total_tp  FROM BIBLE;")
 
     # On récupère le nom de chaque ressources depuis la bible que l'on associe à une clef dans une biblothèque
     # puis les données du total de CM, TD et TP associés a cette resource
-    ressources = {}
+    ressourcesComparateur = {}
     for row in cursor.fetchall():
-        ressources[label(row[0])] = (row[1], row[2], row[3])
+        ressourcesComparateur[row[0]] = (row[1], row[2], row[3])
 
+    PlanningInfo = op.load_workbook('../Documents/Planning_2023-2024.xlsx', data_only=True)
+    PurgeFeuille(PlanningInfo)
+    TableauDonnees = RecuperationParFeuille(PlanningInfo)
+
+    ressourcesAComparer = {}
+    for semestre in TableauDonnees:
+        for ressource in semestre :
+            if (isinstance(ressource[3], str)):
+                continue
+            else:
+                ressourcesAComparer[ressource[1]] = (ressource[2], ressource[3], ressource[4])
+
+    print(ressourcesComparateur)
+    print(ressourcesAComparer)
+
+    for clef in ressourcesAComparer.keys() :
+        if(len(clef)>5):
+            print(clef)
     """
     TODO :
     - Récupérer les heures effectuées dans le planning a droite des noms de ressource dans la table Planning

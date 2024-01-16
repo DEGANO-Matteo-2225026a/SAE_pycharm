@@ -44,10 +44,12 @@ def Remplissage(res,resp):
         ligne_insertion = 7 + i
         nouvelle_feuille.insert_rows(ligne_insertion)
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][0])
+        nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][1])
 
         ligne_insertion = 11 + i
         nouvelle_feuille.insert_rows(ligne_insertion)
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
+        nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][2])
 
     cellule_selectionnee = nouvelle_feuille['B4']
     cellule_selectionnee.value = "heures"

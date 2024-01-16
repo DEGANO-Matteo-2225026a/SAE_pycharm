@@ -181,10 +181,23 @@ def GetInfoPlanning(Feuille,ColonneDate,LimiteGauche,LimiteDroite,LimiteBoucle,T
             if Feuille.cell(i,j).value not in {"X","Y"} or Feuille.cell(i,j).fill.start_color.index == 'FFCCCCCC':
                 continue
 
-            print(SemaineActuelle,Feuille.cell(i,j).value)
+            TypeCours = Feuille.cell(1,j).value
+            IndiceCelluleCours = 0
+
+            while TypeCours == None:
+                if Feuille.cell(1,j-IndiceCelluleCours).value == None:
+                    IndiceCelluleCours += 1
+                TypeCours = Feuille.cell(1,j-IndiceCelluleCours).value
+
+            Couleur = Feuille.cell(i, j).fill.start_color.index
+
+            for k in range(len(TableauRessource[IndicePage])):
+                if Feuille.cell(i, j).fill.start_color.index == TableauRessource[k][0]:
+                    Couleur = TableauRessource[k][1]
+                    break
+
+            print(SemaineActuelle,Couleur,TypeCours,Feuille.cell(i,j).value)
     return
-
-
 
 def RecuperationDonneesFeuille(TableauDonnees,FeuilleActuelle, IndicePage):
 

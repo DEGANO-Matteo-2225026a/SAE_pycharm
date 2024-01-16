@@ -19,7 +19,7 @@ else:
     classeur_existant = load_workbook('Ressources.xlsx')
 
 
-def RemplissageBible(res, cm, td, tp):
+def Remplissage(res,resp):
     # Créer une nouvelle feuille pour chaque matière
     nouvelle_feuille = classeur_existant.create_sheet(res)
 
@@ -29,54 +29,41 @@ def RemplissageBible(res, cm, td, tp):
     for ligne in feuille_base.iter_rows(min_row=1, values_only=True):
         nouvelle_feuille.append(ligne)
 
+    cellule_selectionnee = nouvelle_feuille['H1']
+    cellule_selectionnee.value = resp
+
     cellule_selectionnee = nouvelle_feuille['C1']
     cellule_selectionnee.value = res
 
+    requete = "SELECT Intervenant, Acronyme, CM, TDNonD, TPD FROM DONNEEPROF WHERE MatiereActuelle = ?"
+    cursor.execute(requete, (res,))
+    liste_inter = cursor.fetchall()
+
+    # insertion des noms des profs dans la feuille
+    for i in range(len(liste_inter)):
+        ligne_insertion = 7 + i
+        nouvelle_feuille.insert_rows(ligne_insertion)
+        nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][0])
+
+        ligne_insertion = 11 + i
+        nouvelle_feuille.insert_rows(ligne_insertion)
+        nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
+
     cellule_selectionnee = nouvelle_feuille['B4']
-    cellule_selectionnee.value = cm
+    cellule_selectionnee.value = "heures"
 
     cellule_selectionnee = nouvelle_feuille['C4']
-    cellule_selectionnee.value = td
+    cellule_selectionnee.value = "heures"
 
     cellule_selectionnee = nouvelle_feuille['D4']
-    cellule_selectionnee.value = tp
+    cellule_selectionnee.value = "heures"
 
 
+cursor.execute("SELECT MatiereActuelle, Intervenant FROM DONNEEPROF GROUP BY MatiereActuelle")
+liste_resp = cursor.fetchall()
 
-    ligne_insertion = 7
-    nouvelle_feuille.insert_rows(ligne_insertion)
-    nouvelle_feuille.cell(row=ligne_insertion, column=1, value='prof1')
-
-def RemplissageProfs(feuille, resp):
-    feuilleRes = classeur_existant[feuille]
-
-    cellule_selectionnee = feuilleRes['H1']
-    cellule_selectionnee.value = resp
-
-#récupération des noms de chaque ressource de la base de donnée
-cursor.execute("SELECT libelle_simple FROM BIBLE")
-liste_libelle = cursor.fetchall()
-
-#récupération des horaires
-cursor.execute("SELECT total_cm FROM BIBLE")
-liste_cm = cursor.fetchall()
-cursor.execute("SELECT total_td FROM BIBLE")
-liste_td = cursor.fetchall()
-cursor.execute("SELECT total_tp FROM BIBLE")
-liste_tp = cursor.fetchall()
-
-# récupération des noms de profs
-cursor.execute("SELECT AlerteProf, Intervenant FROM DONNEEPROF")
-liste_profs = cursor.fetchall()
-
-for i in range(len(liste_libelle)):
-    RemplissageBible(liste_libelle[i][0], liste_cm[i][0], liste_td[i][0], liste_tp[i][0])
-    for j in range(len(liste_profs)):
-        RemplissageProfs(liste_libelle[i][0], liste_profs[j][1])
-
-
-
-
+for i in range(len(liste_resp)):
+     Remplissage(liste_resp[i][0], liste_resp[i][1])
 
 
 

@@ -14,9 +14,14 @@ import sys
 sys.path.insert(0, '../QuiFaitQuoi')  # Ajoute le chemin relatif vers le dossier
 from ExtractionQuiFaitQuoi import *
 
+import sys
+sys.path.insert(0, '../Planning')  # Ajoute le chemin relatif vers le dossier
+from ExtractionPlanning import *
+
 
 with sqlite3.connect("../SAE.db") as connection:
     cursor = connection.cursor()
+    
 
 #creation des tables etc ....
 exec(open('BDD_file.py').read())
@@ -97,6 +102,26 @@ def ajouterDonneesToDONNEEPROF(ligne_donnees,table_name):
         cursor.execute(f"INSERT INTO {table_name} ({colonnes}) VALUES ({valeurs})", tuple(ligne_donnees[i]))
 
 ajouterDonneesToDONNEEPROF(DonneesQuiFaitQuoi,'DONNEEPROF')
+
+# PARTIE Planning
+
+column_list_PLANRESSOURCE = ['Couleur','Ressource','CM','TD','TP','Acronyme']
+def ajouterDonneesToPLANRESOURCE(ligne_donnees,table_name):
+    colonnes = ', '.join(column_list_PLANRESSOURCE)
+    valeurs = ', '.join(['?'] * len(column_list_PLANRESSOURCE))
+    for i in range(len(ligne_donnees[0])):
+        cursor.execute(f"INSERT INTO {table_name} ({colonnes}) VALUES ({valeurs})", tuple(ligne_donnees[0][i]))
+
+ajouterDonneesToPLANRESOURCE(TableauDonnees[0],'PLANRESSOURCE')
+
+column_list_PLANINFO = ['Semaine','Ressource','TypeCours','TypeSalle']
+def ajouterDonneesToPLANINFO(ligne_donnees,table_name):
+    colonnes = ', '.join(column_list_PLANINFO)
+    valeurs = ', '.join(['?'] * len(column_list_PLANINFO))
+    for i in range(len(ligne_donnees)):
+        cursor.execute(f"INSERT INTO {table_name} ({colonnes}) VALUES ({valeurs})", tuple(ligne_donnees[i]))
+
+ajouterDonneesToPLANINFO(TableauDonnees[1],'PLANINFO')
 
 connection.commit()
 connection.close()

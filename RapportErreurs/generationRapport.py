@@ -12,6 +12,12 @@ cursor = sqlConnection.cursor()
 fichierSortie = open("../Sortie/rapportErreurs.txt", 'w')
 fichierSortie.write("Début rapport d'erreurs.\n\n\n")
 
+# Chargement des données depuis le fichier Excel
+PlanningInfo = op.load_workbook('../Documents/Planning_2023-2024-2.xlsx', data_only=True)
+PurgeFeuille(PlanningInfo)
+TableauDonnees = RecuperationParFeuille(PlanningInfo)
+
+
 # Fonction de fusion des ressources divisées
 def fusionRessourcesDivisees(dict_ress):
     ressAFusionner = []
@@ -45,6 +51,12 @@ def fusionRessourcesDivisees(dict_ress):
     for detritus in aDetruire:
         del dict_ress[detritus]
 
+
+def detruireElements(aDetruire, dict):
+    for detritus in aDetruire:
+        del dict[detritus]
+
+
 # Exécution de la requête SQL pour récupérer les données de référence depuis la table 'BIBLE'
 cursor.execute("SELECT libelle_simple, total_cm, total_td, total_tp  FROM BIBLE;")
 
@@ -52,11 +64,6 @@ cursor.execute("SELECT libelle_simple, total_cm, total_td, total_tp  FROM BIBLE;
 ressourcesComparateur = {}
 for row in cursor.fetchall():
     ressourcesComparateur[row[0]] = (row[1], row[2], row[3])
-
-# Chargement des données depuis le fichier Excel
-PlanningInfo = op.load_workbook('../Documents/Planning_2023-2024.xlsx', data_only=True)
-PurgeFeuille(PlanningInfo)
-TableauDonnees = RecuperationParFeuille(PlanningInfo)
 
 # Création d'un dictionnaire avec les données à comparer
 ressourcesAComparer = {}
@@ -76,17 +83,17 @@ erreurs = {}
 totalErreurs = 0
 
 for ressource in ressourcesAComparer.keys():
-    if ressourcesAComparer[ressource][0] != ressourcesComparateur[ressource][0]:
+    if ressourcesAComparer[ressource][0] > ressourcesComparateur[ressource][0]:
         erreurs[ressource + " total cm : "] = (ressourcesAComparer[ressource][0], ressourcesComparateur[ressource][0])
         totalErreurs += 1
-    if ressourcesAComparer[ressource][1] != ressourcesComparateur[ressource][1]:
+    if ressourcesAComparer[ressource][1] > ressourcesComparateur[ressource][1]:
         erreurs[ressource + " total td : "] = (ressourcesAComparer[ressource][1], ressourcesComparateur[ressource][1])
         totalErreurs += 1
-    if ressourcesAComparer[ressource][2] != ressourcesComparateur[ressource][2]:
+    if ressourcesAComparer[ressource][2] > ressourcesComparateur[ressource][2]:
         erreurs[ressource + " total tp : "] = (ressourcesAComparer[ressource][2], ressourcesComparateur[ressource][2])
 
 # Écriture du rapport d'erreurs dans le fichier de sortie
-sb = "Erreur(s) Incohérence Planning / Total cours par matière : " + str(totalErreurs) + "\n\n"
+sb = "Erreur(s) Dépassements d'heures entre prévisions et actuelles : " + str(totalErreurs) + "\n\n"
 fichierSortie.write(sb)
 
 if totalErreurs == 0:
@@ -95,6 +102,38 @@ else:
     for erreur in erreurs.keys():
         sb = erreur + "Attendu : " + str(erreurs[erreur][1]) + ", Trouvé :" + str(erreurs[erreur][0]) + "\n"
         fichierSortie.write(sb)
+
+
+
+planningTotal = {}
+for activite in TableauDonnees[1]:
+    if activite[1] not in planningTotal:
+        print(activite[1])
+        planningTotal[activite[1]] = [0, 0, 0]
+
+    if activite[2] == 'Cours':
+        planningTotal[activite[1]][0] += 1.5
+    if activite[2] == 'TD':
+        planningTotal[activite[1]][1] += 2
+    if activite[2] == 'TP':
+        planningTotal[activite[1]][2] += 2
+
+aDetruire = []
+for key in planningTotal.keys():
+    if key[0] != 'R':
+        aDetruire.append(key)
+
+detruireElements(aDetruire, planningTotal)
+fusionRessourcesDivisees(planningTotal)
+planningTotal = dict(sorted(planningTotal.items()))
+print(planningTotal)
+
+"""
+TODO :
+- Modifier la couleur de R2.13 a la couleur 51 51 255
+- Ajouter une fonction Mettre en forme
+"""
+
 
 # Fermeture du fichier de sortie, de la connexion à la base de données et du fichier Excel
 fichierSortie.write("\n\nFin rapport d'erreurs.\n")

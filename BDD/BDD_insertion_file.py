@@ -106,11 +106,12 @@ ajouterDonneesToDONNEEPROF(DonneesQuiFaitQuoi,'DONNEEPROF')
 # PARTIE Planning
 
 column_list_PLANRESSOURCE = ['Couleur','Ressource','CM','TD','TP','Acronyme']
-def ajouterDonneesToPLANRESOURCE(ligne_donnees,table_name):
+def ajouterDonneesToPLANRESOURCE(tableau_donnees,table_name):
     colonnes = ', '.join(column_list_PLANRESSOURCE)
     valeurs = ', '.join(['?'] * len(column_list_PLANRESSOURCE))
-    for i in range(len(ligne_donnees[0])):
-        cursor.execute(f"INSERT INTO {table_name} ({colonnes}) VALUES ({valeurs})", tuple(ligne_donnees[0][i]))
+    for ligne_donnees in tableau_donnees:
+        for i in range(len(ligne_donnees)):
+            cursor.execute(f"INSERT INTO {table_name} ({colonnes}) VALUES ({valeurs})", tuple(ligne_donnees[i]))
 
 ajouterDonneesToPLANRESOURCE(TableauDonnees[0],'PLANRESSOURCE')
 

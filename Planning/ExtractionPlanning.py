@@ -2,13 +2,15 @@ import openpyxl as op
 
 """
 
-TableauDonnees = [[['FFCC99FF', 'R1.01', 18, 30, 38, 'AC'],
-                   ['FFAECF00', 'R1.06-1', 8, 11, 3, 'SA'],
-                   ['FF66CCFF', 'R1.02', 6, 2, 16, 'MMN'],
-                   ['FFAECF00', 'R1.06-2', 4, 6, 4, 'SA'],
-                   ['FFFFF200', 'R1.03', 4, 8, 8, 'MMN']],
-                  [['FFCC99FF', 'R3.01', 8, 0, 18, 'MMN'],
-                   ['FFAECF00', 'R3.08', 10, 14, 6, 'MoM']]]
+TableauDonnees = [[['FFCC99FF', 'R1.01', 18, 30, 38, 'Acronyme'],
+                   ['FFAECF00', 'R1.06-1', 8, 11, 3, 'Acronyme'],
+                   ['FF66CCFF', 'R1.02', 6, 2, 16, 'Acronyme'],
+                   ['FFAECF00', 'R1.06-2', 4, 6, 4, 'Acronyme'],
+                   ['FFFFF200', 'R1.03', 4, 8, 8, 'Acronyme']],
+                  [['FFCC99FF', 'R3.01', 8, 0, 18, 'Acronyme'],
+                   ['FFAECF00', 'R3.08', 10, 14, 6, 'Acronyme']]]
+                   
+TableauSemaine = [[Semaine, Ressource, TypeCours, TypeSalle], [Semaine, Ressource, TypeCours, TypeSalle]]
 
 Les données du document planning nous apparaissent avec cette logique :
 - Les données concernant les matières de chaque pages de semestre sont divisées en deux parties, la deuxième commençant 
@@ -36,7 +38,7 @@ ROUGE = SEMAINE MORTE DONC OSEF
 # On charge le classeur Excel
 # import pandas as pd
 # Planning = pd.ExcelFile('../Documents/Planning_2023-2024.xlsx')
-PlanningInfo = op.load_workbook('../Documents/Planning_2023-2024.xlsx',data_only=True)
+PlanningInfo = op.load_workbook('../Documents/Planning_2023-2024-2.xlsx',data_only=True)
 
 
 
@@ -157,29 +159,39 @@ def GetRessources(Feuille,LimiteBoucle,LimiteDroite):
 
 
 
-def GetInfoPlanning(Feuille,ColonneDate,LimiteGauche,LimiteDroite,LimiteBoucle):
+def GetInfoPlanning(Feuille,ColonneDate,LimiteGauche,LimiteDroite,LimiteBoucle,TableauRessource,IndicePage):
 
     TableauInfoPlanning = []
 
     # On parcours toutes les lignes de la colonne Date
     for i in range(2,LimiteBoucle+1):
-        if Feuille.cell(i,ColonneDate).fill.start_color.index == 'FFFF0000':
+        if Feuille.cell(i,ColonneDate).fill.start_color.index == 'FFFF0000' or Feuille.cell(i,ColonneDate).value == None:
             continue
+
+        # On ignore les couleurs qui ne sont pas dans notre liste de matière
+        for k in range (len(TableauRessource[IndicePage])):
+            if Feuille.cell(i,ColonneDate).fill.start_color.index not in TableauRessource[k][0]:
+                continue
+
         print(Feuille.cell(i,ColonneDate).value)
 
         # On parcours toutes les cellules de la ligne
         for j in range(LimiteGauche,LimiteDroite + 1):
-            if Feuille.cell(i,j).fill.start_color.index == '00000000' or Feuille.cell(i,j).value == None :
+
+            if Feuille.cell(i,j).value not in {"X","Y"} or Feuille.cell(i,j).fill.start_color.index == 'FFCCCCCC':
                 continue
+
             print(Feuille.cell(i,j).value)
     return
 
 
 
-def RecuperationDonneesFeuille(TableauDonnees,FeuilleActuelle):
+def RecuperationDonneesFeuille(TableauDonnees,FeuilleActuelle, IndicePage):
 
     # Active la page pour openPYXL
     Feuille = PlanningInfo[FeuilleActuelle.title]
+
+    # print("VALEUR GRIS",Feuille.cell(2,2).fill.start_color.index)
 
     # On récupère les informations de la colonne Date et de la longueur du tableau
     ColonneDate = LocateDate(Feuille)
@@ -194,8 +206,9 @@ def RecuperationDonneesFeuille(TableauDonnees,FeuilleActuelle):
     TableauRessource = GetRessources(Feuille, LimiteBoucle, LimiteDroite)
     TableauDonnees.append(TableauRessource)
 
-    GetInfoPlanning(Feuille, ColonneDate, LimiteGauche, LimiteDroite, LimiteBoucle)
+    GetInfoPlanning(Feuille, ColonneDate, LimiteGauche, LimiteDroite, LimiteBoucle, TableauRessource, IndicePage)
 
+    IndicePage += 1
     # print(TableauRessource)
     # print("VOICI LA LONGUEUR DE DATE :", LimiteBoucle, "ET SA COLONNE :", ColonneDate)
     # print("VOICI LA GAUCHE DU TABLEAU :", LimiteGauche, "ET SA LIMITE DROITE :", LimiteDroite)
@@ -207,8 +220,9 @@ def RecuperationDonneesFeuille(TableauDonnees,FeuilleActuelle):
 # Automatise le changement de feuilles
 def RecuperationParFeuille(ListeFeuilles):
     TableauDonnees = []
+    IndicePage = 0
     for Feuille in ListeFeuilles:
-        RecuperationDonneesFeuille(TableauDonnees,Feuille)
+        RecuperationDonneesFeuille(TableauDonnees,Feuille,IndicePage)
     return TableauDonnees
 
 

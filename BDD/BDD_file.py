@@ -9,6 +9,10 @@ cursor.execute(
 cursor.execute(
    "DROP TABLE IF EXISTS DONNEEPROF")
 cursor.execute(
+   "DROP TABLE IF EXISTS PLANRESSOURCE")
+cursor.execute(
+   "DROP TABLE IF EXISTS PLANINFO")
+cursor.execute(
    "DROP TABLE IF EXISTS RESSOURCE")
 cursor.execute(
    "DROP TABLE IF EXISTS PROF")

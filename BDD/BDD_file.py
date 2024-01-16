@@ -3,7 +3,7 @@ import sqlite3
 #connection a la base de donnée SQLITE
 with sqlite3.connect("../SAE.db") as connection:
     cursor = connection.cursor()
-# Suppretion des tables pour mettre a jour les données dedans si il y a des modifs
+# Suppression des tables pour mettre a jour les données dedans si il y a des modifs
 cursor.execute(
    "DROP TABLE IF EXISTS ENSEIGNE")
 cursor.execute(
@@ -15,13 +15,16 @@ cursor.execute(
 cursor.execute(
    "DROP TABLE IF EXISTS BIBLE")
 
-# Création des tables
+# Création des tables :
+
+#table Prof
 cursor.execute(
    "CREATE TABLE IF NOT EXISTS PROF ("
        "cle_prof INTEGER PRIMARY KEY,"
        "acronyme TEXT,"
        "TITULAIRE BOOLEAN)")
 
+#table DonneeProf
 cursor.execute(
    "CREATE TABLE IF NOT EXISTS DONNEEPROF ("
        "Id INTEGER PRIMARY KEY,"
@@ -37,6 +40,7 @@ cursor.execute(
        "TPD INTEGER,"
        "Test INTEGER)")
 
+# table Ressource
 cursor.execute(
    "CREATE TABLE IF NOT EXISTS RESSOURCE ("
        "code_apogee TEXT PRIMARY KEY,"
@@ -49,6 +53,7 @@ cursor.execute(
        "HETD_PACOME INTEGER,"
        "FOREIGN KEY (cle_prof) REFERENCES PROF (cle_prof))")
 
+# table Enseigne
 cursor.execute(
    "CREATE TABLE IF NOT EXISTS ENSEIGNE ("
        "cle_prof INTEGER,"
@@ -60,6 +65,7 @@ cursor.execute(
        "FOREIGN KEY (code_apogee) REFERENCES RESSOURCE(code_apogee),"
        "PRIMARY KEY (cle_prof,code_apogee))")
 
+# table Bible
 cursor.execute(
    "CREATE TABLE IF NOT EXISTS BIBLE ("
        "code_apogee TEXT,"

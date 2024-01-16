@@ -12,6 +12,17 @@ fichierSortie = open("../Sortie/rapportErreurs.txt", 'w')
 fichierSortie.write("Début rapport d'erreurs.\n")
 
 
+def fusionRessourcesDivisees(dict_ress):
+    for key in dict_ress.keys():
+        if (key[len(key)-2:] == "-1"):
+            ressAFusionner.append(key[:len(key)-2])
+
+    for ress in ressAFusionner:
+
+
+
+
+
 def detectionProblemeTotalCours():
 
     # Execution de la query en sql visant à récupérer les données de références depuis la bible
@@ -29,18 +40,18 @@ def detectionProblemeTotalCours():
 
     ressourcesAComparer = {}
     for semestre in TableauDonnees:
-        for ressource in semestre :
-            if (isinstance(ressource[3], str)):
+        for ressource in semestre:
+            if (isinstance(ressource[3], str) or ressource[1] == 'SAE'):
                 continue
             else:
-                ressourcesAComparer[ressource[1]] = (ressource[2], ressource[3], ressource[4])
+                ressourcesAComparer[ressource[1]] = [ressource[2], ressource[3], ressource[4]]
 
-    print(ressourcesComparateur)
+    ressourcesAComparer = dict(sorted(ressourcesAComparer.items()))
+
+    # print(ressourcesComparateur)
     print(ressourcesAComparer)
+    fusionRessourcesDivisees(ressourcesAComparer)
 
-    for clef in ressourcesAComparer.keys() :
-        if(len(clef)>5):
-            print(clef)
     """
     TODO :
     - Récupérer les heures effectuées dans le planning a droite des noms de ressource dans la table Planning

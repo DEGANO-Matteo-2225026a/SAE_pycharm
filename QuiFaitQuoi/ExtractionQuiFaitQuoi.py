@@ -54,15 +54,27 @@ def RecuperationProfMatiere(FeuilleActuelle,TableauDonnées):
         # Récupère les données
         Intervenant = Feuille.cell(IndexLigne, IndexColonne).internal_value
         Acronyme = Feuille.cell(IndexLigne, IndexColonne+1).internal_value
+        if Feuille.cell(IndexLigne, IndexColonne+1).internal_value == None:
+            Acronyme = Intervenant
         if Feuille.cell(IndexLigne, IndexColonne+2).internal_value == "Oui":
             Titulaire = True
         else:
             Titulaire = False
         NombreGroupes = Feuille.cell(IndexLigne, IndexColonne+3).internal_value
+        if Feuille.cell(IndexLigne, IndexColonne+3).internal_value == None:
+            NombreGroupes = 0
         CM = Feuille.cell(IndexLigne, IndexColonne+4).internal_value
+        if Feuille.cell(IndexLigne, IndexColonne+4).internal_value == None:
+            CM = 0
         TDNonD = Feuille.cell(IndexLigne, IndexColonne+5).internal_value
+        if Feuille.cell(IndexLigne, IndexColonne+5).internal_value == None:
+            TDNonD = 0
         TPD = Feuille.cell(IndexLigne, IndexColonne+6).internal_value
+        if Feuille.cell(IndexLigne, IndexColonne+6).internal_value == None:
+            TPD = 0
         Test = Feuille.cell(IndexLigne, IndexColonne+7).internal_value
+        if Feuille.cell(IndexLigne, IndexColonne+7).internal_value == None:
+            Test = 0
 
         """
         if AlerteProf is not False:

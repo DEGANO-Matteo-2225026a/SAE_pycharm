@@ -40,6 +40,26 @@ cursor.execute(
        "TPD INTEGER,"
        "Test INTEGER)")
 
+#table PlanningRessource
+cursor.execute(
+   "CREATE TABLE IF NOT EXISTS PLANRESSOURCE ("
+       "Id INTEGER PRIMARY KEY,"
+       "Couleur TEXT,"
+       "Ressource TEXT,"
+       "CM INTEGER,"
+       "TD INTEGER,"
+       "TP INTEGER,"
+       "Acronyme TEXT)")
+
+#table PlanningInformation
+cursor.execute(
+   "CREATE TABLE IF NOT EXISTS PLANINFO ("
+       "Id INTEGER PRIMARY KEY,"
+       "Semaine TEXT,"
+       "Ressource TEXT,"
+       "TypeCours TEXT,"
+       "TypeSalle TEXT)")
+
 # table Ressource
 cursor.execute(
    "CREATE TABLE IF NOT EXISTS RESSOURCE ("

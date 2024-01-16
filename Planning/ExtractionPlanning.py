@@ -1,4 +1,5 @@
 import openpyxl as op
+from datetime import datetime
 
 """
 
@@ -173,7 +174,7 @@ def GetInfoPlanning(Feuille,ColonneDate,LimiteGauche,LimiteDroite,LimiteBoucle,T
             if Feuille.cell(i,ColonneDate).fill.start_color.index not in TableauRessource[k][0]:
                 continue
 
-        SemaineActuelle = Feuille.cell(i,ColonneDate).value
+        SemaineActuelle = Feuille.cell(i, ColonneDate).value.strftime('%d-%m-%Y')
 
         # On parcours toutes les cellules de la ligne
         for j in range(LimiteGauche,LimiteDroite + 1):
@@ -191,10 +192,9 @@ def GetInfoPlanning(Feuille,ColonneDate,LimiteGauche,LimiteDroite,LimiteBoucle,T
 
             Couleur = Feuille.cell(i, j).fill.start_color.index
 
-            for k in range(len(TableauRessource[IndicePage])):
+            for k in range(len(TableauRessource)):
                 if Feuille.cell(i, j).fill.start_color.index == TableauRessource[k][0]:
                     Couleur = TableauRessource[k][1]
-                    break
 
             print(SemaineActuelle,Couleur,TypeCours,Feuille.cell(i,j).value)
     return
@@ -222,9 +222,6 @@ def RecuperationDonneesFeuille(TableauDonnees,FeuilleActuelle, IndicePage):
     GetInfoPlanning(Feuille, ColonneDate, LimiteGauche, LimiteDroite, LimiteBoucle, TableauRessource, IndicePage)
 
     IndicePage += 1
-    # print(TableauRessource)
-    # print("VOICI LA LONGUEUR DE DATE :", LimiteBoucle, "ET SA COLONNE :", ColonneDate)
-    # print("VOICI LA GAUCHE DU TABLEAU :", LimiteGauche, "ET SA LIMITE DROITE :", LimiteDroite)
 
     return
 

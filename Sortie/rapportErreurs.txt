@@ -1,4 +1,15 @@
-DÃ©but rapport d'erreurs.
+Début rapport d'erreurs.
+
+
+Erreur(s) Incohérence Planning / Total cours par matière : 7
+
+R1.11 total TP : Attendu : 1, Trouvé :0
+R3.04 total TD : Attendu : 14, Trouvé :13
+R3.09 total TP : Attendu : 7, Trouvé :8
+R5.A.06 total CM : Attendu : 0, Trouvé :2
+R5.A.06 total TD : Attendu : 12, Trouvé :10
+R5.A.L1 total CM : Attendu : 8, Trouvé :4
+R5.A.L1 total TD : Attendu : 24, Trouvé :20
 
 
 Fin rapport d'erreurs.

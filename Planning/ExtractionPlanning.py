@@ -1,4 +1,3 @@
-
 import openpyxl as op
 
 """
@@ -30,6 +29,8 @@ ROUGE = SEMAINE MORTE DONC OSEF
 # Planning = pd.ExcelFile('../Documents/Planning_2023-2024.xlsx')
 PlanningInfo = op.load_workbook('../Documents/Planning_2023-2024.xlsx',data_only=True)
 
+
+
 def PurgeFeuille(Planning):
     FeuilleASupprimer = []
 
@@ -40,42 +41,7 @@ def PurgeFeuille(Planning):
     for Feuille in FeuilleASupprimer:
         Planning.remove(Planning[Feuille])
 
-def GetRessources(Feuille,LimiteBoucle,LimiteDroite):
 
-    IndiceLigne = LimiteBoucle + 2
-    IndiceColonne = LimiteDroite
-
-    for i in range(1,LimiteBoucle):
-        for j in range(1,LimiteDroite):
-            if Feuille.cell(IndiceLigne + i,j).fill.start_color.index != '00000000' and Feuille.cell(IndiceLigne + i,j).value == 'X':
-
-                # Indice du nom de la matière d'après ce qui est écrit
-                TrouveNom = 1
-                while Feuille.cell(IndiceLigne + i, j + TrouveNom).value == None:
-                    TrouveNom += 1
-
-                # Nombre de CM de la matière d'après ce qui est écrit
-                ValeurCM = 0
-                if Feuille.cell(IndiceLigne + i, j + TrouveNom + 3).value != None:
-                    ValeurCM = Feuille.cell(IndiceLigne + i, j + TrouveNom + 3).value
-
-                # Nombre de TD de la matière d'après ce qui est écrit
-                ValeurTD = 0
-                if Feuille.cell(IndiceLigne + i, j + TrouveNom + 5).value != None:
-                    ValeurTD = Feuille.cell(IndiceLigne + i, j + TrouveNom + 5).value
-
-                # Nombre de TP de la matière d'après ce qui est écrit
-                ValeurTP = 0
-                if Feuille.cell(IndiceLigne + i, j + TrouveNom + 7).value != None:
-                    ValeurTP = Feuille.cell(IndiceLigne + i, j + TrouveNom + 7).value
-
-                # Acronyme du Responsable de la matière d'après ce qui est écrit
-                Responsable = "Personne"
-                if Feuille.cell(IndiceLigne + i, j + TrouveNom + 10).value != None:
-                    Responsable = Feuille.cell(IndiceLigne + i, j + TrouveNom + 10).value
-
-                print(Feuille.cell(IndiceLigne + i, j + TrouveNom).value,ValeurCM,ValeurTD,ValeurTP,Responsable)
-    return
 
 def LocateDate(Feuille):
 
@@ -99,6 +65,8 @@ def LocateDate(Feuille):
 
     return IndiceDate, LongueurDate
 
+
+
 def LocateLimite(Feuille,ColonneDate):
 
     LimiteGauche = 1
@@ -113,6 +81,87 @@ def LocateLimite(Feuille,ColonneDate):
         LimiteDroite += 1
 
     return LimiteDroite,LimiteGauche
+
+
+def GetInfoPlanning(Feuille,ColonneDate,LimiteGauche,LimiteDroite,LimiteBoucle):
+
+    # On parcours toutes les lignes de la colonne Date
+    for i in range(1,LimiteBoucle+1):
+        if Feuille.cell(i,ColonneDate).fill.start_color.index == 'FFFF0000':
+            continue
+        print(Feuille.cell(i,ColonneDate).value)
+
+        # On parcours toutes les cellules de la ligne
+        for j in range(LimiteGauche,LimiteDroite + 1):
+            if Feuille.cell(i,j).fill.start_color.index == '00000000' or Feuille.cell(i,j).value == None :
+                continue
+            print(Feuille.cell(i,j).value)
+    return
+
+
+def GetRessources(Feuille,LimiteBoucle,LimiteDroite):
+
+    IndiceLigne = LimiteBoucle + 2
+    IndiceColonne = LimiteDroite
+    IndiceTableau = 0
+
+    TableauRessource = []
+
+    for i in range(1,LimiteBoucle):
+        for j in range(1,LimiteDroite):
+            if Feuille.cell(IndiceLigne + i,j).fill.start_color.index != '00000000' and Feuille.cell(IndiceLigne + i,j).value == 'X':
+
+                TableauRessource.append([])
+
+                # On ajoute la couleur de la Ressource au tableau nécessaire pour GetInfoPlanning()
+                TableauRessource[IndiceTableau].append(Feuille.cell(IndiceLigne + i,j).fill.start_color.index)
+
+                # Indice du nom de la matière d'après ce qui est écrit
+                TrouveNom = 1
+                while Feuille.cell(IndiceLigne + i, j + TrouveNom).value == None:
+                    TrouveNom += 1
+
+                # On ajoute le nom de la Ressource au tableau
+                TableauRessource[IndiceTableau].append(Feuille.cell(IndiceLigne + i, j + TrouveNom).value)
+
+                # Nombre de CM de la matière d'après ce qui est écrit
+                ValeurCM = 0
+                if Feuille.cell(IndiceLigne + i, j + TrouveNom + 3).value != None:
+                    ValeurCM = Feuille.cell(IndiceLigne + i, j + TrouveNom + 3).value
+
+                # On ajoute ValeurCM au tableau
+                TableauRessource[IndiceTableau].append(ValeurCM)
+
+                # Nombre de TD de la matière d'après ce qui est écrit
+                ValeurTD = 0
+                if Feuille.cell(IndiceLigne + i, j + TrouveNom + 5).value != None:
+                    ValeurTD = Feuille.cell(IndiceLigne + i, j + TrouveNom + 5).value
+
+                # On ajoute ValeurTD au tableau
+                TableauRessource[IndiceTableau].append(ValeurTD)
+
+                # Nombre de TP de la matière d'après ce qui est écrit
+                ValeurTP = 0
+                if Feuille.cell(IndiceLigne + i, j + TrouveNom + 7).value != None:
+                    ValeurTP = Feuille.cell(IndiceLigne + i, j + TrouveNom + 7).value
+
+                # On ajoute ValeurTP au tableau
+                TableauRessource[IndiceTableau].append(ValeurTP)
+
+                # Acronyme du Responsable de la matière d'après ce qui est écrit
+                Responsable = "Personne"
+                if Feuille.cell(IndiceLigne + i, j + TrouveNom + 10).value != None:
+                    Responsable = Feuille.cell(IndiceLigne + i, j + TrouveNom + 10).value
+
+                # On ajoute l'Acronyme du Responsable au tableau
+                TableauRessource[IndiceTableau].append(Responsable)
+
+                # On oublie pas de changer l'indice du tableau pour passer à la ressource suivante
+                IndiceTableau += 1
+
+    return TableauRessource
+
+
 
 def RecuperationDonneesFeuille(FeuilleActuelle):
 
@@ -129,13 +178,18 @@ def RecuperationDonneesFeuille(FeuilleActuelle):
     LimiteGauche = LimiteDroite[1]
     LimiteDroite = LimiteDroite[0]
 
-    GetRessources(Feuille, LimiteBoucle, LimiteDroite)
+    TableauRessource = GetRessources(Feuille, LimiteBoucle, LimiteDroite)
+    print(TableauRessource)
+
+    # GetInfoPlanning(Feuille, ColonneDate, LimiteGauche, LimiteDroite, LimiteBoucle)
 
 
     print("VOICI LA LONGUEUR DE DATE :", LimiteBoucle, "ET SA COLONNE :", ColonneDate)
     print("VOICI LA GAUCHE DU TABLEAU :", LimiteGauche, "ET SA LIMITE DROITE :", LimiteDroite)
 
     return
+
+
 
 # Automatise le changement de feuilles
 def RecuperationParFeuille(ListeFeuilles):
@@ -144,7 +198,10 @@ def RecuperationParFeuille(ListeFeuilles):
         print(Feuille.title)
     return
 
+
+
 # On établie la liste des feuilles qui nous intéressent
 PurgeFeuille(PlanningInfo)
 
+# On Lance le code
 RecuperationParFeuille(PlanningInfo)

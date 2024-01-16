@@ -132,6 +132,7 @@ print(planningTotal)
 TODO :
 - Modifier la couleur de R2.13 a la couleur 51 51 255
 - Ajouter une fonction Mettre en forme
+- Compare la table QuiFaitQuoi et les infos de Planning si incohérences entre nombre d'heures que font profs de la matière et heures de matière
 """
 
 

@@ -13,9 +13,9 @@ feuille['A1'].font = Font(bold=True)
 feuille['F1'] = 'Responsable'
 feuille['F1'].font = Font(bold=True)
 feuille['A3'] = 'Maquette'
-feuille['B3'] = 'CM'
-feuille['C3'] = 'TD'
-feuille['D3'] = 'TP'
+feuille['B3'] = 'CM (h)'
+feuille['C3'] = 'TD (h)'
+feuille['D3'] = 'TP (h)'
 feuille['A6'] = 'Intervenants'
 feuille['A6'].font = Font(bold=True)
 feuille['A8'] = 'Repartition'

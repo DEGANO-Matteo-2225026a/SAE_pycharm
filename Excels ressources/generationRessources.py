@@ -21,7 +21,7 @@ else:
 
 def Remplissage(res,resp):
     # Créer une nouvelle feuille pour chaque matière
-    nouvelle_feuille = classeur_existant.create_sheet(res)
+    nouvelle_feuille = classeur_existant.create_sheet(res.split(' ')[0])
 
     # Copier le contenu de la feuille existante dans la nouvelle feuille
     nom_feuille_base = "Sheet"  # ou spécifiez le nom de la feuille existante
@@ -46,10 +46,26 @@ def Remplissage(res,resp):
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][0])
         nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][1])
 
-        ligne_insertion = 11 + i
+        cms = trouver_ligne(nouvelle_feuille, "CM")
+
+        ligne_insertion = cms + 1 + i
         nouvelle_feuille.insert_rows(ligne_insertion)
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
         nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][2])
+
+        tds = trouver_ligne(nouvelle_feuille, "TD")
+
+        ligne_insertion = tds + 1 + i
+        nouvelle_feuille.insert_rows(ligne_insertion)
+        nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
+        nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][3])
+
+        tps = trouver_ligne(nouvelle_feuille, "TP non dedoubles")
+
+        ligne_insertion = tps + 1 + i
+        nouvelle_feuille.insert_rows(ligne_insertion)
+        nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
+        nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][4])
 
     cellule_selectionnee = nouvelle_feuille['B4']
     cellule_selectionnee.value = "heures"
@@ -60,14 +76,21 @@ def Remplissage(res,resp):
     cellule_selectionnee = nouvelle_feuille['D4']
     cellule_selectionnee.value = "heures"
 
+def trouver_ligne(feuille, contenu_cible):
+    for row_number, row in enumerate(feuille.iter_rows(values_only=True), start=1):
+        if contenu_cible in row:
+            return row_number
+
+    return None
+
 
 cursor.execute("SELECT MatiereActuelle, Intervenant FROM DONNEEPROF GROUP BY MatiereActuelle")
 liste_resp = cursor.fetchall()
 
+
+
 for i in range(len(liste_resp)):
      Remplissage(liste_resp[i][0], liste_resp[i][1])
-
-
 
 
 

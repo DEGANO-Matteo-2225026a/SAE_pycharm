@@ -82,15 +82,34 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
         nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][4])
 
-    cours = "SELECT Semaine, TypeCours FROM PLANINFO WHERE Ressource = ?"
+    cours = "SELECT Semaine, TypeCours, COUNT(*) AS NombreCours FROM PLANINFO WHERE Ressource = ? GROUP BY Semaine, TypeCours "
     cursor.execute(cours, (res,))
     liste_cours = cursor.fetchall()
 
 
-    #for i in liste_cours:
+    for i in range(len(liste_cours)):
+
+        hcm = trouver_ligne(nouvelle_feuille, "CM heures")
+
+        ligne_insertion = hcm + 1 + i
+        nouvelle_feuille.insert_rows(ligne_insertion)
+        nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_cours[i][0])
+
+        ligne_date = trouver_ligne(nouvelle_feuille, liste_cours[i][0])
+        if liste_cours[i][1] == "Cours" :
+            nouvelle_feuille.cell(row=ligne_date, column=2, value=(liste_cours[i][2]) * 1.5)
+        elif liste_cours[i][1] == "TD":
+            nouvelle_feuille.cell(row=ligne_date, column=3, value=(liste_cours[i][2] * 2))
+        elif liste_cours[i][1] == "TP":
+            nouvelle_feuille.cell(row=ligne_date, column=4, value=(liste_cours[i][2] * 2))
+        else:
+            nouvelle_feuille.cell(row=ligne_date, column=5, value=(liste_cours[i][2] * 2))
 
 
-    #hcm = trouver_ligne(nouvelle_feuille, "CM cours")
+
+
+
+
 
 
 

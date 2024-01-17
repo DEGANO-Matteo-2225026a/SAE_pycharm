@@ -10,11 +10,9 @@ from but1 import *
 from but2 import *
 from but3 import *
 
-import sys
 sys.path.insert(0, '../QuiFaitQuoi')  # Ajoute le chemin relatif vers le dossier
 from ExtractionQuiFaitQuoi import *
 
-import sys
 sys.path.insert(0, '../Planning')  # Ajoute le chemin relatif vers le dossier
 from ExtractionPlanning import *
 

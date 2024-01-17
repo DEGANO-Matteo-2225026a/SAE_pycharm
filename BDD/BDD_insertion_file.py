@@ -76,7 +76,7 @@ remplissageInBIBLE(liste_S6R6B, S6nbGroupeTDB, 'BUT3')
 
 # PARTIE QuiFaitQuoi
 
-column_list_DONNEEPROF = ['Feuille_title','MatiereActuelle','AlerteProf','Intervenant','Acronyme','Titulaire','NombreGroupes','CM','TDNonD','TPD','Test']
+column_list_DONNEEPROF = ['Feuille_title','MatiereActuelle','AlerteProf','Intervenant','Acronyme','Titulaire','NombreGroupes','CM','TD','TDNonD','TPD','Test']
 def ajouterDonneesToDONNEEPROF(ligne_donnees,table_name):
     colonnes = ', '.join(column_list_DONNEEPROF)
     valeurs = ', '.join(['?'] * len(column_list_DONNEEPROF))

@@ -32,7 +32,8 @@ cursor.execute(
        "Acronyme TEXT,"
        "Titulaire TEXT,"
        "NombreGroupes INTEGER,"
-       "CM FLOAT,"
+       "CM INTEGER,"
+       "TD FLOAT,"
        "TDNonD INTEGER,"
        "TPD INTEGER,"
        "Test INTEGER)")

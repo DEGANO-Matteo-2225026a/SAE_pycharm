@@ -18,7 +18,7 @@ else:
     exec(open('baseRessources.py').read())
     classeur_existant = load_workbook('Ressources.xlsx')
 
-
+# fonction qui crée une nouvelle feuille pour chaque ressource
 def Remplissage(res, cmtot, tdtot, tptot, resp):
     # Créer une nouvelle feuille pour chaque matière
     nouvelle_feuille = classeur_existant.create_sheet(res)
@@ -29,12 +29,15 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
     for ligne in feuille_base.iter_rows(min_row=1, values_only=True):
         nouvelle_feuille.append(ligne)
 
+    #nom responsable de ressource
     cellule_selectionnee = nouvelle_feuille['H1']
     cellule_selectionnee.value = resp
 
+    #nom ressource
     cellule_selectionnee = nouvelle_feuille['C1']
     cellule_selectionnee.value = res
 
+    #volume horaire total
     cellule_selectionnee = nouvelle_feuille['B4']
     cellule_selectionnee.value = cmtot
 
@@ -44,23 +47,24 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
     cellule_selectionnee = nouvelle_feuille['D4']
     cellule_selectionnee.value = tptot
 
-
-
+    #Récupération des donnees des intervenants
     requete = "SELECT Intervenant, Acronyme, CM, TDNonD, TPD FROM DONNEEPROF WHERE SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) = ?"
     cursor.execute(requete, (res,))
     liste_inter = cursor.fetchall()
 
 
-    # insertion des noms des profs dans la feuille
+    # insertion données dans la feuille
     for i in range(len(liste_inter)):
 
+        #nom et acronyme
         inter = trouver_ligne(nouvelle_feuille, "Intervenants")
-
+        
         ligne_insertion = 7 + i
         nouvelle_feuille.insert_rows(ligne_insertion)
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][0])
         nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][1])
 
+        # pourcentage du total de cm effectuépar le professeur
         cms = trouver_ligne(nouvelle_feuille, "CM")
 
         ligne_insertion = cms + 1 + i
@@ -68,8 +72,10 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
         nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][2])
 
+        
         tds = trouver_ligne(nouvelle_feuille, "TD")
 
+        #nombre de groupes en TD
         ligne_insertion = tds + 1 + i
         nouvelle_feuille.insert_rows(ligne_insertion)
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
@@ -77,15 +83,24 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
 
         tps = trouver_ligne(nouvelle_feuille, "TP non dedoubles")
 
+        #nombre de groupes en TP non dédoublés
         ligne_insertion = tps + 1 + i
         nouvelle_feuille.insert_rows(ligne_insertion)
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
         nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][4])
 
+        tpsD = trouver_ligne(nouvelle_feuille, "TP dedoubles")
+
+        #nombre de groupes en TP dédoublés
+        ligne_insertion = tps + 1 + i
+        nouvelle_feuille.insert_rows(ligne_insertion)
+        nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
+        nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][5])
+
+    #Récupération des données de cours par semaine 
     cours = "SELECT Semaine, TypeCours, COUNT(*) AS NombreCours FROM PLANINFO WHERE Ressource = ? GROUP BY Semaine, TypeCours "
     cursor.execute(cours, (res,))
     liste_cours = cursor.fetchall()
-
 
     for i in range(len(liste_cours)):
 
@@ -105,24 +120,14 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
         else:
             nouvelle_feuille.cell(row=ligne_date, column=5, value=(liste_cours[i][2] * 2))
 
-
-
-
-
-
-
-
-
-
-
-
+#fonction qui trouve la première ligne dans laquelle se trouve une cellule possédant la donnée recherchée
 def trouver_ligne(feuille, contenu_cible):
     for row_number, row in enumerate(feuille.iter_rows(values_only=True), start=1):
         if contenu_cible in row:
             return row_number
-
     return None
 
+#recuperation des données pour chaque ressource existante
 requeteRemplissage = "SELECT Ressource, CM, TD, TP, Acronyme FROM PLANRESSOURCE WHERE Ressource NOT LIKE '%SAE%' GROUP BY Ressource ORDER BY Ressource "
 cursor.execute(requeteRemplissage)
 liste_res = cursor.fetchall()

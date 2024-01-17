@@ -124,7 +124,7 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
 
 
     #Récupération des données pour remplir tableau titulaire
-    titu = "SELECT Intervenant, Feuille_title FROM DONNEEPROF WHERE AlerteProf == 1 AND SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) = ?"
+    titu = "SELECT Intervenant, Feuille_title, SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) AS matiere FROM DONNEEPROF WHERE AlerteProf == 1 AND matiere = ?"
     cursor.execute(titu, (res,))
     liste_titu = cursor.fetchall()
 
@@ -147,7 +147,7 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
             nouvelle_feuille.cell(row=ligne_insertion, column=4, value="B")
 
     # Récupération des données pour remplir tableau vacataire
-    vac = "SELECT Intervenant, Feuille_title FROM DONNEEPROF WHERE AlerteProf == 0 AND SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) = ?"
+    vac = "SELECT Intervenant, Feuille_title, SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) AS matiere,d.CM, p.CM FROM DONNEEPROF d JOIN PLANRESSOURCE p ON matiere = Ressource WHERE AlerteProf == 0 AND matiere = ?"
     cursor.execute(vac, (res,))
     liste_vac = cursor.fetchall()
 
@@ -167,6 +167,7 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
             nouvelle_feuille.cell(row=ligne_insertion, column=4, value="A")
         elif "B" in liste_vac[i][1]:
             nouvelle_feuille.cell(row=ligne_insertion, column=4, value="B")
+        nouvelle_feuille.cell(row=ligne_insertion, column=6, value=((liste_vac[i][3]) * (liste_vac[i][4])))
 
 
 

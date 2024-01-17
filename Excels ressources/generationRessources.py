@@ -26,6 +26,8 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
     # Copier le contenu de la feuille existante dans la nouvelle feuille
     nom_feuille_base = "Sheet"  # ou spécifiez le nom de la feuille existante
     feuille_base = classeur_existant[nom_feuille_base]
+
+
     for ligne in feuille_base.iter_rows(min_row=1, values_only=True):
         nouvelle_feuille.append(ligne)
 
@@ -64,7 +66,7 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][0])
         nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][1])
 
-        # pourcentage du total de cm effectuépar le professeur
+        # pourcentage du total de cm effectué par le professeur
         cms = trouver_ligne(nouvelle_feuille, "CM")
 
         ligne_insertion = cms + 1 + i
@@ -72,7 +74,6 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
         nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][2])
 
-        
         tds = trouver_ligne(nouvelle_feuille, "TD")
 
         #nombre de groupes en TD
@@ -84,7 +85,7 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
         tpsD = trouver_ligne(nouvelle_feuille, "TP dedoubles")
 
         #nombre de groupes en TP dédoublés
-        ligne_insertion = tps + 1 + i
+        ligne_insertion = tpsD + 1 + i
         nouvelle_feuille.insert_rows(ligne_insertion)
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
         nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][4])
@@ -121,12 +122,60 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
         else:
             nouvelle_feuille.cell(row=ligne_date, column=5, value=(liste_cours[i][2] * 2))
 
+    #Récupération des données pour remplir tableau titulaire
+    titu = "SELECT Intervenant FROM DONNEEPROF WHERE AlerteProf == 1 AND SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) = ?"
+    cursor.execute(titu, (res,))
+    liste_titu = cursor.fetchall()
+
+    ligne_titu = trouver_ligne(nouvelle_feuille, "Service previsionnel titulaires")
+
+
+    for i in range(len(liste_titu)):
+        ligne_insertion = ligne_titu + i + 3
+        nouvelle_feuille.insert_rows(ligne_insertion)
+        nouvelle_feuille.cell(row=ligne_insertion, column=1, value=(liste_titu[i][0]))
+
+    # Récupération des données pour remplir tableau vacataire
+    vac = "SELECT Intervenant FROM DONNEEPROF WHERE AlerteProf == 0 AND SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) = ?"
+    cursor.execute(vac, (res,))
+    liste_vac = cursor.fetchall()
+
+    ligne_vac = trouver_ligne(nouvelle_feuille, "Service previsionnel vacataires")
+
+    for i in range(len(liste_vac)):
+        ligne_insertion = ligne_vac + i + 3
+        nouvelle_feuille.insert_rows(ligne_insertion)
+        nouvelle_feuille.cell(row=ligne_insertion, column=1, value=(liste_vac[i][0]))
+
+
+
+
 #fonction qui trouve la première ligne dans laquelle se trouve une cellule possédant la donnée recherchée
 def trouver_ligne(feuille, contenu_cible):
     for row_number, row in enumerate(feuille.iter_rows(values_only=True), start=1):
         if contenu_cible in row:
             return row_number
     return None
+
+# fonction permettant de rajouter les mots en gras, ou les cellules fusionnées qui n'apparaissent pas dans la nouvelle feuille
+def applicationForme(feuille):
+    feuille['A1'].font = Font(bold=True)
+    feuille['F1'].font = Font(bold=True)
+    feuille['A6'].font = Font(bold=True)
+    feuille['A8'].font = Font(bold=True)
+    feuille['A17'].font = Font(bold=True)
+    feuille.merge_cells('A22:B23')
+    feuille.merge_cells('C22:C23')
+    feuille.merge_cells('D22:D23')
+    feuille.merge_cells('E22:E23')
+    feuille.merge_cells('F22:K22')
+    feuille.merge_cells('L22:Q22')
+    feuille.merge_cells('A26:B27')
+    feuille.merge_cells('C26:C27')
+    feuille.merge_cells('D26:D27')
+    feuille.merge_cells('E26:E27')
+    feuille.merge_cells('F26:K26')
+    feuille.merge_cells('L26:Q26')
 
 #recuperation des données pour chaque ressource existante
 requeteRemplissage = "SELECT Ressource, CM, TD, TP, Acronyme FROM PLANRESSOURCE WHERE Ressource NOT LIKE '%SAE%' GROUP BY Ressource ORDER BY Ressource "

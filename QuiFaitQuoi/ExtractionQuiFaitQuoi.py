@@ -90,11 +90,10 @@ def RecuperationProfMatiere(FeuilleActuelle,TableauDonnées):
         # On se rappel de remettre l'alerte à 0
         AlerteProf = False
 
-        """
-        print("Matière = ", MatiereActuelle,"," ,"Intervenant = ",Intervenant,"," ," Acronyme = ",Acronyme,"," ,
-              "Titulaire = ",Titulaire,",","NombreGroupes = ",NombreGroupes,",",
-              "TDNonD = ",TDNonD,",","TPD = ",TPD,",","Test = ",Test,)
-        """
+        print("Matière = ", MatiereActuelle, ",", "Intervenant = ", Intervenant, ",", " Acronyme = ", Acronyme, ",",
+              "Titulaire = ", Titulaire, ",", "CM = ", CM, ",", "TD = ", TD, ",", "NombreGroupes = ", NombreGroupes,",",
+              "TDNonD = ", TDNonD, ",", "TPD = ", TPD, ",", "Test = ", Test, )
+
 
 # On parcours toutes les feuilles
 def RecuperationParFeuille(ListeFeuilles):

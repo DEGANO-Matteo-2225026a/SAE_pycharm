@@ -97,7 +97,7 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
 
         ligne_date = trouver_ligne(nouvelle_feuille, liste_cours[i][0])
         if liste_cours[i][1] == "Cours" :
-            nouvelle_feuille.cell(row=ligne_date, column=2, value=(liste_cours[i][2]) * 1.5)
+            nouvelle_feuille.cell(row=ligne_date, column=2, value=(liste_cours[i][2]) * 2)
         elif liste_cours[i][1] == "TD":
             nouvelle_feuille.cell(row=ligne_date, column=3, value=(liste_cours[i][2] * 2))
         elif liste_cours[i][1] == "TP":

@@ -48,7 +48,7 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
     cellule_selectionnee.value = tptot
 
     #Récupération des donnees des intervenants
-    requete = "SELECT Intervenant, Acronyme, CM, TDNonD, TPD FROM DONNEEPROF WHERE SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) = ?"
+    requete = "SELECT Intervenant, Acronyme, CM, TD, TPD, TDNonD FROM DONNEEPROF WHERE SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) = ?"
     cursor.execute(requete, (res,))
     liste_inter = cursor.fetchall()
 
@@ -81,21 +81,22 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
         nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][3])
 
-        tps = trouver_ligne(nouvelle_feuille, "TP non dedoubles")
-
-        #nombre de groupes en TP non dédoublés
-        ligne_insertion = tps + 1 + i
-        nouvelle_feuille.insert_rows(ligne_insertion)
-        nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
-        nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][4])
-
         tpsD = trouver_ligne(nouvelle_feuille, "TP dedoubles")
 
         #nombre de groupes en TP dédoublés
         ligne_insertion = tps + 1 + i
         nouvelle_feuille.insert_rows(ligne_insertion)
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
+        nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][4])
+
+        tps = trouver_ligne(nouvelle_feuille, "TP non dedoubles")
+
+        #nombre de groupes en TP non dédoublés
+        ligne_insertion = tps + 1 + i
+        nouvelle_feuille.insert_rows(ligne_insertion)
+        nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
         nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][5])
+
 
     #Récupération des données de cours par semaine 
     cours = "SELECT Semaine, TypeCours, COUNT(*) AS NombreCours FROM PLANINFO WHERE Ressource = ? GROUP BY Semaine, TypeCours "

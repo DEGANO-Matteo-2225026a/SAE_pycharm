@@ -22,37 +22,71 @@ TableauDonnees = RecuperationParFeuille(PlanningInfo)
 
 
 # Fonction de fusion des ressources divisées
-def fusionRessourcesDivisees(dico_ress):
-    ressAFusionner = []
+def fusionRessourcesDivisees(dico_ress, mode):
 
+    ressAFusionner = []
 
     # Identification des ressources à fusionner
     for clef in dico_ress.keys():
         if clef[len(clef) - 2] == '-':
             ressAFusionner.append(clef[:len(clef) - 2])
 
+    aDetruire = []
+
     temp_cm = 0
     temp_td = 0
     temp_tp = 0
+    temp_resp = ""
 
-    aDetruire = []
+    """
+    CE QUI SUIT N'EST CLAIREMENT PAS OPTI ET FRANCHEMENT DEGUELASSE MAIS J'AI PAS EU LE TEMPS DE FAIRE MIEUX
+    LA FACTORISATION EST UN VESTIGE D'UNE CIVILISATION PASSEE
+    """
 
+    # Condition pour séparer le cas ou la fusion de ressource se fait sur le responsable, ressource ou planning.
+    if mode == "ressource":
+        # Fusion des ressources et mise à jour du dictionnaire
+        for ress in ressAFusionner:
+            for clef in dico_ress.keys():
+                if clef[:len(clef) - 2] == ress:
+                    temp_cm += dico_ress[clef][0]
+                    temp_td += dico_ress[clef][1]
+                    temp_tp += dico_ress[clef][2]
+                    temp_resp = dico_ress[clef][3]
+                    if clef not in aDetruire:
+                        aDetruire.append(clef)
 
-    # Fusion des ressources et mise à jour du dictionnaire
-    for ress in ressAFusionner:
-        for clef in dico_ress.keys():
-            if clef[:len(clef) - 2] == ress:
-                temp_cm += dico_ress[clef][0]
-                temp_td += dico_ress[clef][1]
-                temp_tp += dico_ress[clef][2]
-                if clef not in aDetruire:
-                    aDetruire.append(clef)
+            dico_ress[ress] = [temp_cm, temp_td, temp_tp, temp_resp]
+            temp_cm = 0
+            temp_td = 0
+            temp_tp = 0
+            temp_resp = ""
 
-        dico_ress[ress] = [temp_cm, temp_td, temp_tp]
-        temp_cm = 0
-        temp_td = 0
-        temp_tp = 0
+    elif mode == "planning":
+        for ress in ressAFusionner:
+            for clef in dico_ress.keys():
+                if clef[:len(clef) - 2] == ress:
+                    temp_cm += dico_ress[clef][0]
+                    temp_td += dico_ress[clef][1]
+                    temp_tp += dico_ress[clef][2]
+                    if clef not in aDetruire:
+                        aDetruire.append(clef)
 
+            dico_ress[ress] = [temp_cm, temp_td, temp_tp]
+            temp_cm = 0
+            temp_td = 0
+            temp_tp = 0
+
+    elif mode == "responsable":
+        for ress in ressAFusionner:
+            for clef in dico_ress.keys():
+                if clef[:len(clef) - 2] == ress:
+                    temp_resp = dico_ress[clef]
+                    if clef not in aDetruire:
+                        aDetruire.append(clef)
+
+            dico_ress[ress] = temp_resp
+            temp_resp = ""
 
     # Suppression des ressources fusionnées
     detruireElements(aDetruire, dico_ress)
@@ -81,11 +115,11 @@ for semestre in TableauDonnees[0]:
         if isinstance(ressource[3], str) or ressource[1][:3] == 'SAE':
             continue
         else:
-            ressourcesAComparer[ressource[1]] = [ressource[2], ressource[3], ressource[4]]
+            ressourcesAComparer[ressource[1]] = [ressource[2], ressource[3], ressource[4], ressource[5]]
 
 
 # Fusion des ressources divisées dans le dictionnaire à comparer
-fusionRessourcesDivisees(ressourcesAComparer)
+fusionRessourcesDivisees(ressourcesAComparer, "ressource")
 ressourcesAComparer = dict(sorted(ressourcesAComparer.items()))
 
 
@@ -120,16 +154,18 @@ else:
 # Calcul du total des heures pour chaque activité
 planningTotal = {}
 
-for activite in TableauDonnees[1]:
-    if activite[1] not in planningTotal:
-        planningTotal[activite[1]] = [0, 0, 0]
+cursor.execute("SELECT ressource, typecours FROM PLANINFO")
 
-    if activite[2] == 'Cours':
-        planningTotal[activite[1]][0] += 2
-    if activite[2] == 'TD':
-        planningTotal[activite[1]][1] += 2
-    if activite[2] == 'TP':
-        planningTotal[activite[1]][2] += 2
+for activite in cursor.fetchall():
+    if activite[0] not in planningTotal:
+        planningTotal[activite[0]] = [0, 0, 0]
+
+    if activite[1] == 'Cours':
+        planningTotal[activite[0]][0] += 2
+    if activite[1] == 'TD':
+        planningTotal[activite[0]][1] += 2
+    if activite[1] == 'TP':
+        planningTotal[activite[0]][2] += 2
 
 
 # Suppression des activités non pertinentes
@@ -139,11 +175,25 @@ for clef in planningTotal.keys():
         aDetruire.append(clef)
 
 detruireElements(aDetruire, planningTotal)
-fusionRessourcesDivisees(planningTotal)
+fusionRessourcesDivisees(planningTotal, "planning")
 planningTotal = dict(sorted(planningTotal.items()))
 
 
-# Comparaison des ressources et identification des warnings
+# Creation d'un dictionnaire contenant tout les responsables de matière
+cursor.execute("SELECT ressource, acronyme FROM PLANRESSOURCE")
+
+responsableMat = {}
+
+for row in cursor.fetchall():
+    if row[0][:3] != "SAE" and row[0] not in responsableMat.keys():
+        print(row[0], row[1])
+        responsableMat[row[0]] = row[1]
+
+fusionRessourcesDivisees(responsableMat, "responsable")
+responsableMat = dict(sorted(responsableMat.items()))
+
+
+# Comparaison des ressources ainsi que des responsables et identification des warnings
 warnings = {}
 totalWarnings = 0
 
@@ -159,9 +209,14 @@ for ressource in planningTotal:
         warnings[ressource + " total TP : "] = (planningTotal[ressource][2], ressourcesComparateur[ressource][2])
         totalWarnings += 1
 
+for ressource in responsableMat:
+    if responsableMat[ressource] != ressourcesAComparer[ressource][3]:
+        warnings[ressource + " responsable ressource : "] = (ressourcesAComparer[ressource][3], responsableMat[ressource])
+        totalWarnings += 1
+
 
 # Écriture du rapport de warning dans le fichier de sortie
-sb = "\n\nWarning(s) Incohérence entre planning et heures prévues : " + str(totalWarnings) + "\n\n"
+sb = "\n\nWarning(s) Incohérence planning / heures prévues, responsable de matière : " + str(totalWarnings) + "\n\n"
 fichierSortie.write(sb)
 
 if totalWarnings == 0:

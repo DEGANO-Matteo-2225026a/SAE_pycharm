@@ -19,9 +19,9 @@ else:
     classeur_existant = load_workbook('Ressources.xlsx')
 
 
-def Remplissage(res,resp):
+def Remplissage(res, cmtot, tdtot, tptot, resp):
     # Créer une nouvelle feuille pour chaque matière
-    nouvelle_feuille = classeur_existant.create_sheet(res.split(' ')[0])
+    nouvelle_feuille = classeur_existant.create_sheet(res)
 
     # Copier le contenu de la feuille existante dans la nouvelle feuille
     nom_feuille_base = "Sheet"  # ou spécifiez le nom de la feuille existante
@@ -35,12 +35,27 @@ def Remplissage(res,resp):
     cellule_selectionnee = nouvelle_feuille['C1']
     cellule_selectionnee.value = res
 
-    requete = "SELECT Intervenant, Acronyme, CM, TDNonD, TPD FROM DONNEEPROF WHERE MatiereActuelle = ?"
+    cellule_selectionnee = nouvelle_feuille['B4']
+    cellule_selectionnee.value = cmtot
+
+    cellule_selectionnee = nouvelle_feuille['C4']
+    cellule_selectionnee.value = tdtot
+
+    cellule_selectionnee = nouvelle_feuille['D4']
+    cellule_selectionnee.value = tptot
+
+
+
+    requete = "SELECT Intervenant, Acronyme, CM, TDNonD, TPD FROM DONNEEPROF WHERE SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) = ?"
     cursor.execute(requete, (res,))
     liste_inter = cursor.fetchall()
 
+
     # insertion des noms des profs dans la feuille
     for i in range(len(liste_inter)):
+
+        inter = trouver_ligne(nouvelle_feuille, "Intervenants")
+
         ligne_insertion = 7 + i
         nouvelle_feuille.insert_rows(ligne_insertion)
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][0])
@@ -67,14 +82,20 @@ def Remplissage(res,resp):
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
         nouvelle_feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][4])
 
-    cellule_selectionnee = nouvelle_feuille['B4']
-    cellule_selectionnee.value = "heures"
+    cours = "SELECT Semaine, TypeCours FROM PLANINFO WHERE Ressource = ?"
+    cursor.execute(cours, (res,))
+    liste_cours = cursor.fetchall()
 
-    cellule_selectionnee = nouvelle_feuille['C4']
-    cellule_selectionnee.value = "heures"
 
-    cellule_selectionnee = nouvelle_feuille['D4']
-    cellule_selectionnee.value = "heures"
+    #for i in liste_cours:
+
+
+    #hcm = trouver_ligne(nouvelle_feuille, "CM cours")
+
+
+
+
+
 
 def trouver_ligne(feuille, contenu_cible):
     for row_number, row in enumerate(feuille.iter_rows(values_only=True), start=1):
@@ -83,15 +104,12 @@ def trouver_ligne(feuille, contenu_cible):
 
     return None
 
+requeteRemplissage = "SELECT Ressource, CM, TD, TP, Acronyme FROM PLANRESSOURCE WHERE Ressource NOT LIKE '%SAE%' GROUP BY Ressource ORDER BY Ressource "
+cursor.execute(requeteRemplissage)
+liste_res = cursor.fetchall()
 
-cursor.execute("SELECT MatiereActuelle, Intervenant FROM DONNEEPROF GROUP BY MatiereActuelle")
-liste_resp = cursor.fetchall()
-
-
-
-for i in range(len(liste_resp)):
-     Remplissage(liste_resp[i][0], liste_resp[i][1])
-
+for i in range(len(liste_res)):
+     Remplissage(liste_res[i][0], liste_res[i][1], liste_res[i][2], liste_res[i][3], liste_res[i][4])
 
 
 # Enregistrer le classeur modifié dans un nouveau fichier

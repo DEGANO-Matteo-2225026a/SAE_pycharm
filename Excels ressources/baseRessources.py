@@ -27,9 +27,9 @@ feuille['A13'] = 'TP dedoubles'
 feuille['A15'] = 'TP non dedoubles'
 feuille['A17'] = 'Organisation detaillee'
 feuille['A17'].font = Font(bold=True)
-feuille['B19'] = 'CM'
-feuille['C19'] = 'TD'
-feuille['D19'] = 'TP'
+feuille['B19'] = 'CM cours'
+feuille['C19'] = 'TD cours'
+feuille['D19'] = 'TP cours'
 feuille['E19'] = 'Test'
 
 

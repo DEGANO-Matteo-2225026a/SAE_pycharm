@@ -40,30 +40,58 @@ feuille['E19'] = 'Test'
 feuille['A21'] = 'Service prévisionnel vacataires'
 feuille['A22'] = 'Nom'
 feuille['C22'] = 'BUT1/BUT2/BUT3'
-feuille['D22'] = 'ParcoursA \n ParcoursB'
-feuille['E22'] = 'FI \n FA'
-feuille['F22'] = 'Nombres d\'heures prévues\nde septembre à décembre'
-feuille['L22'] = 'Nombres d\'heures prévues\nde janvier à août'
+feuille['D22'] = 'ParcoursA  ParcoursB'
+feuille['E22'] = 'FI  FA'
+feuille['F22'] = 'Nombres d\'heures prévuesde septembre à décembre'
+feuille['L22'] = 'Nombres d\'heures prévuesde janvier à août'
 feuille['F23'] = 'CM'
 feuille['G23'] = 'TD'
-feuille['H23'] = 'TP\n(en 1/2 groupe)'
-feuille['I23'] = 'TP\n(non\ndédoublé)'
-feuille['J23'] = 'TP à\ndéclarer\nARES'
-feuille['K23'] = 'Total en\nHETD'
+feuille['H23'] = 'TP(en 1/2 groupe)'
+feuille['I23'] = 'TP(nondédoublé)'
+feuille['J23'] = 'TP àdéclarerARES'
+feuille['K23'] = 'Total enHETD'
 feuille['L23'] = 'CM'
 feuille['M23'] = 'TD'
-feuille['N23'] = 'TP\n(en 1/2 groupe)'
-feuille['O23'] = 'TP\n(non\ndédoublé)'
-feuille['P23'] = 'TP à\ndéclarer\nARES'
-feuille['Q23'] = 'Total en\nHETD'
-feuille['R23'] = 'Total en\nHETD'
+feuille['N23'] = 'TP(en 1/2 groupe)'
+feuille['O23'] = 'TP(nondédoublé)'
+feuille['P23'] = 'TP àdéclarerARES'
+feuille['Q23'] = 'Total enHETD'
+feuille['R23'] = 'Total enHETD'
 
-feuille.merge_cells('A22','A23','B22','B23')
-feuille.merge_cells('C22','C23')
-feuille.merge_cells('D22','D23')
-feuille.merge_cells('E22','E23')
-feuille.merge_cells('F22','G22','H22','I22')
-feuille.merge_cells('L22','M22','N22','O22')
+feuille.merge_cells('A22:B23')
+feuille.merge_cells('C22:C23')
+feuille.merge_cells('D22:D23')
+feuille.merge_cells('E22:E23')
+feuille.merge_cells('F22:K22')
+feuille.merge_cells('L22:Q22')
+
+feuille['A25'] = 'Service prévisionnel titulaires'
+feuille['A26'] = 'Nom'
+feuille['C26'] = 'BUT1/BUT2/BUT3'
+feuille['D26'] = 'ParcoursA  ParcoursB'
+feuille['E26'] = 'FI  FA'
+feuille['F26'] = "Nombres d'heures prévues de septembre à décembre"
+feuille['L26'] = "Nombres d'heures prévues de janvier à août"
+feuille['F27'] = 'CM'
+feuille['G27'] = 'TD'
+feuille['H27'] = 'TP(en 1/2 groupe)'
+feuille['I27'] = 'TP(nondédoublé)'
+feuille['J27'] = 'TP à déclarer ARES'
+feuille['K27'] = 'Total en HETD'
+feuille['L27'] = 'CM'
+feuille['M27'] = 'TD'
+feuille['N27'] = 'TP(en 1/2 groupe)'
+feuille['O27'] = 'TP(nondédoublé)'
+feuille['P27'] = 'TP à déclarer ARES'
+feuille['Q27'] = 'Total en HETD'
+feuille['R27'] = 'Total en HETD'
+
+feuille.merge_cells('A26:B27')
+feuille.merge_cells('C26:C27')
+feuille.merge_cells('D26:D27')
+feuille.merge_cells('E26:E27')
+feuille.merge_cells('F26:K26')
+feuille.merge_cells('L26:Q26')
 
 
 # Enregistrer le classeur dans un fichier

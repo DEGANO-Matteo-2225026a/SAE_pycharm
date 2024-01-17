@@ -1,7 +1,10 @@
 # Importation des modules nécessaires
 import sqlite3 as sql
 import sys
-sys.path.insert(0, '../Planning')  # Ajout du chemin d'accès pour le module ExtractionPlanning
+import openpyxl as op
+
+# Ajout du chemin d'accès pour le module ExtractionPlanning
+sys.path.insert(0, '../Planning')
 from ExtractionPlanning import *
 
 # Connexion à la base de données SQLite
@@ -19,13 +22,14 @@ TableauDonnees = RecuperationParFeuille(PlanningInfo)
 
 
 # Fonction de fusion des ressources divisées
-def fusionRessourcesDivisees(dict_ress):
+def fusionRessourcesDivisees(dico_ress):
     ressAFusionner = []
 
+
     # Identification des ressources à fusionner
-    for key in dict_ress.keys():
-        if key[len(key)-2] == '-':
-            ressAFusionner.append(key[:len(key)-2])
+    for clef in dico_ress.keys():
+        if clef[len(clef) - 2] == '-':
+            ressAFusionner.append(clef[:len(clef) - 2])
 
     temp_cm = 0
     temp_td = 0
@@ -33,37 +37,42 @@ def fusionRessourcesDivisees(dict_ress):
 
     aDetruire = []
 
+
     # Fusion des ressources et mise à jour du dictionnaire
     for ress in ressAFusionner:
-        for key in dict_ress.keys():
-            if key[:len(key)-2] == ress:
-                temp_cm += dict_ress[key][0]
-                temp_td += dict_ress[key][1]
-                temp_tp += dict_ress[key][2]
-                if (key not in aDetruire):
-                    aDetruire.append(key)
+        for clef in dico_ress.keys():
+            if clef[:len(clef) - 2] == ress:
+                temp_cm += dico_ress[clef][0]
+                temp_td += dico_ress[clef][1]
+                temp_tp += dico_ress[clef][2]
+                if clef not in aDetruire:
+                    aDetruire.append(clef)
 
-        dict_ress[ress] = [temp_cm, temp_td, temp_tp]
+        dico_ress[ress] = [temp_cm, temp_td, temp_tp]
         temp_cm = 0
         temp_td = 0
         temp_tp = 0
 
+
     # Suppression des ressources fusionnées
-    detruireElements(aDetruire, dict_ress)
+    detruireElements(aDetruire, dico_ress)
 
 
-def detruireElements(aDetruire, dict):
+# Fonction pour détruire des éléments dans un dictionnaire
+def detruireElements(aDetruire, dico):
     for detritus in aDetruire:
-        del dict[detritus]
+        del dico[detritus]
 
 
 # Exécution de la requête SQL pour récupérer les données de référence depuis la table 'BIBLE'
 cursor.execute("SELECT libelle_simple, total_cm, total_td, total_tp  FROM BIBLE;")
 
+
 # Création d'un dictionnaire avec les données de référence
 ressourcesComparateur = {}
 for row in cursor.fetchall():
     ressourcesComparateur[row[0]] = (row[1], row[2], row[3])
+
 
 # Création d'un dictionnaire avec les données à comparer
 ressourcesAComparer = {}
@@ -74,9 +83,11 @@ for semestre in TableauDonnees[0]:
         else:
             ressourcesAComparer[ressource[1]] = [ressource[2], ressource[3], ressource[4]]
 
+
 # Fusion des ressources divisées dans le dictionnaire à comparer
 fusionRessourcesDivisees(ressourcesAComparer)
 ressourcesAComparer = dict(sorted(ressourcesAComparer.items()))
+
 
 # Comparaison des ressources et identification des erreurs
 erreurs = {}
@@ -91,6 +102,8 @@ for ressource in ressourcesAComparer.keys():
         totalErreurs += 1
     if ressourcesAComparer[ressource][2] > ressourcesComparateur[ressource][2]:
         erreurs[ressource + " total TP : "] = (ressourcesAComparer[ressource][2], ressourcesComparateur[ressource][2])
+        totalErreurs += 1
+
 
 # Écriture du rapport d'erreurs dans le fichier de sortie
 sb = "\nErreur(s) Dépassements d'heures entre prévisions et actuelles : " + str(totalErreurs) + "\n\n"
@@ -104,35 +117,38 @@ else:
         fichierSortie.write(sb)
 
 
-
+# Calcul du total des heures pour chaque activité
 planningTotal = {}
 
 for activite in TableauDonnees[1]:
     if activite[1] not in planningTotal:
-        # print(activite[1])
         planningTotal[activite[1]] = [0, 0, 0]
 
     if activite[2] == 'Cours':
-        planningTotal[activite[1]][0] += 1.5
+        planningTotal[activite[1]][0] += 2
     if activite[2] == 'TD':
         planningTotal[activite[1]][1] += 2
     if activite[2] == 'TP':
         planningTotal[activite[1]][2] += 2
 
+
+# Suppression des activités non pertinentes
 aDetruire = []
-for key in planningTotal.keys():
-    if key[0] != 'R':
-        aDetruire.append(key)
+for clef in planningTotal.keys():
+    if clef[0] != 'R':
+        aDetruire.append(clef)
 
 detruireElements(aDetruire, planningTotal)
 fusionRessourcesDivisees(planningTotal)
 planningTotal = dict(sorted(planningTotal.items()))
-print(planningTotal)
 
+
+# Comparaison des ressources et identification des warnings
 warnings = {}
 totalWarnings = 0
 
 for ressource in planningTotal:
+
     if planningTotal[ressource][0] != ressourcesComparateur[ressource][0]:
         warnings[ressource + " total CM : "] = (planningTotal[ressource][0], ressourcesComparateur[ressource][0])
         totalWarnings += 1
@@ -142,6 +158,7 @@ for ressource in planningTotal:
     if planningTotal[ressource][2] != ressourcesComparateur[ressource][2]:
         warnings[ressource + " total TP : "] = (planningTotal[ressource][2], ressourcesComparateur[ressource][2])
         totalWarnings += 1
+
 
 # Écriture du rapport de warning dans le fichier de sortie
 sb = "\n\nWarning(s) Incohérence entre planning et heures prévues : " + str(totalWarnings) + "\n\n"

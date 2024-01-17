@@ -122,8 +122,9 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
         else:
             nouvelle_feuille.cell(row=ligne_date, column=5, value=(liste_cours[i][2] * 2))
 
+
     #Récupération des données pour remplir tableau titulaire
-    titu = "SELECT Intervenant FROM DONNEEPROF WHERE AlerteProf == 1 AND SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) = ?"
+    titu = "SELECT Intervenant, Feuille_title FROM DONNEEPROF WHERE AlerteProf == 1 AND SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) = ?"
     cursor.execute(titu, (res,))
     liste_titu = cursor.fetchall()
 
@@ -134,9 +135,19 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
         ligne_insertion = ligne_titu + i + 3
         nouvelle_feuille.insert_rows(ligne_insertion)
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=(liste_titu[i][0]))
+        if "S1" or "S2" in liste_titu[i][1]:
+            nouvelle_feuille.cell(row=ligne_insertion, column=3, value="BUT1")
+        elif "S3" or "S4" in liste_titu[i][1]:
+            nouvelle_feuille.cell(row=ligne_insertion, column=3, value="BUT2")
+        else:
+            nouvelle_feuille.cell(row=ligne_insertion, column=3, value="BUT3")
+        if "A" in liste_titu[i][1]:
+            nouvelle_feuille.cell(row=ligne_insertion, column=4, value="A")
+        elif "B" in liste_titu[i][1]:
+            nouvelle_feuille.cell(row=ligne_insertion, column=4, value="B")
 
     # Récupération des données pour remplir tableau vacataire
-    vac = "SELECT Intervenant FROM DONNEEPROF WHERE AlerteProf == 0 AND SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) = ?"
+    vac = "SELECT Intervenant, Feuille_title FROM DONNEEPROF WHERE AlerteProf == 0 AND SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) = ?"
     cursor.execute(vac, (res,))
     liste_vac = cursor.fetchall()
 
@@ -146,6 +157,16 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
         ligne_insertion = ligne_vac + i + 3
         nouvelle_feuille.insert_rows(ligne_insertion)
         nouvelle_feuille.cell(row=ligne_insertion, column=1, value=(liste_vac[i][0]))
+        if "S1" or "S2" in liste_titu[i][1]:
+            nouvelle_feuille.cell(row=ligne_insertion, column=3, value="BUT1")
+        elif "S3" or "S4" in liste_titu[i][1]:
+            nouvelle_feuille.cell(row=ligne_insertion, column=3, value="BUT2")
+        else:
+            nouvelle_feuille.cell(row=ligne_insertion, column=3, value="BUT3")
+        if "A" in liste_vac[i][1]:
+            nouvelle_feuille.cell(row=ligne_insertion, column=4, value="A")
+        elif "B" in liste_vac[i][1]:
+            nouvelle_feuille.cell(row=ligne_insertion, column=4, value="B")
 
 
 

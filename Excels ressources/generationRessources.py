@@ -104,6 +104,7 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
     cursor.execute(cours, (res,))
     liste_cours = cursor.fetchall()
 
+
     for i in range(len(liste_cours)):
 
         hcm = trouver_ligne(nouvelle_feuille, "CM heures")
@@ -122,14 +123,25 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
         else:
             nouvelle_feuille.cell(row=ligne_date, column=5, value=(liste_cours[i][2] * 2))
 
+    #nombre d'heures dans chaque matière entre septembre et decembre
+    cours_1erS = "SELECT TypeCours, COUNT(*) FROM PLANINFO WHERE (Semaine LIKE '%-09-%' OR Semaine LIKE '%-10-%' OR Semaine LIKE '%-11-%' OR Semaine LIKE '%-12-%') AND Ressource = ? GROUP BY TypeCours, Ressource"
+    cursor.execute(cours_1erS, (res,))
+    coursSemestre1 = cursor.fetchall()
+
+
+
+    # nombre d'heures dans chaque matière entre janvier et aout
+    cours_2emeS = "SELECT TypeCours, COUNT(*) FROM PLANINFO WHERE (Semaine NOT LIKE '%-09-%' OR Semaine NOT LIKE '%-10-%' OR Semaine NOT LIKE '%-11-%' OR Semaine NOT LIKE '%-12-%') AND Ressource = ? GROUP BY TypeCours, Ressource"
+    cursor.execute(cours_2emeS, (res,))
+    coursSemestre2 = cursor.fetchall()
+
 
     #Récupération des données pour remplir tableau titulaire
-    titu = "SELECT Intervenant, Feuille_title, SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) AS matiere FROM DONNEEPROF WHERE AlerteProf == 1 AND matiere = ?"
+    titu = "SELECT Intervenant, Feuille_title, SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) AS matiere,CM, TD, TDNonD, TPD, Test FROM DONNEEPROF WHERE AlerteProf == 1 AND matiere = ?"
     cursor.execute(titu, (res,))
     liste_titu = cursor.fetchall()
 
     ligne_titu = trouver_ligne(nouvelle_feuille, "Service previsionnel titulaires")
-
 
     for i in range(len(liste_titu)):
         ligne_insertion = ligne_titu + i + 3
@@ -146,8 +158,36 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
         elif "B" in liste_titu[i][1]:
             nouvelle_feuille.cell(row=ligne_insertion, column=4, value="B")
 
+        # Vérifiez si coursSemestre1 a des éléments
+        if coursSemestre1:
+            # Si "Cours" est présent dans la première colonne de coursSemestre1
+            if any(row[0] == "Cours" for row in coursSemestre1):
+                nouvelle_feuille.cell(row=ligne_insertion, column=6,
+                                      value=(liste_titu[i][3] * coursSemestre1[0][1] * 2))
+
+            # Si "TD" est présent dans la première ou la deuxième colonne de coursSemestre1
+            if any(row[0] == "TD" for row in coursSemestre1) or any(row[1] == "TD" for row in coursSemestre1):
+                index_td = next((j for j, row in enumerate(coursSemestre1) if row[0] == "TD" or row[1] == "TD"), None)
+                if index_td is not None:
+                    nouvelle_feuille.cell(row=ligne_insertion, column=7,
+                                          value=(liste_titu[i][4] * coursSemestre1[index_td][1] * 2))
+
+        # Vérifiez si coursSemestre2 a des éléments
+        if coursSemestre2:
+            # Si "Cours" est présent dans la première colonne de coursSemestre2
+            if any(row[0] == "Cours" for row in coursSemestre2):
+                nouvelle_feuille.cell(row=ligne_insertion, column=12,
+                                      value=(liste_titu[i][3] * coursSemestre2[0][1] * 2))
+
+            # Si "TD" est présent dans la première ou la deuxième colonne de coursSemestre2
+            if any(row[0] == "TD" for row in coursSemestre2) or any(row[1] == "TD" for row in coursSemestre2):
+                index_td = next((j for j, row in enumerate(coursSemestre2) if row[0] == "TD" or row[1] == "TD"), None)
+                if index_td is not None:
+                    nouvelle_feuille.cell(row=ligne_insertion, column=13,
+                                          value=(liste_titu[i][4] * coursSemestre2[index_td][1] * 2))
+
     # Récupération des données pour remplir tableau vacataire
-    vac = "SELECT Intervenant, Feuille_title, SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) AS matiere,d.CM, p.CM FROM DONNEEPROF d JOIN PLANRESSOURCE p ON matiere = Ressource WHERE AlerteProf == 0 AND matiere = ?"
+    vac = "SELECT Intervenant, Feuille_title, SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) AS matiere,CM, TD, TDNonD, TPD, Test FROM DONNEEPROF  WHERE AlerteProf == 0 AND matiere = ?"
     cursor.execute(vac, (res,))
     liste_vac = cursor.fetchall()
 
@@ -167,9 +207,33 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
             nouvelle_feuille.cell(row=ligne_insertion, column=4, value="A")
         elif "B" in liste_vac[i][1]:
             nouvelle_feuille.cell(row=ligne_insertion, column=4, value="B")
-        nouvelle_feuille.cell(row=ligne_insertion, column=6, value=((liste_vac[i][3]) * (liste_vac[i][4])))
 
+        # Vérifiez si coursSemestre1 a des éléments
+        if coursSemestre1:
+            # Si "Cours" est présent dans la première colonne de coursSemestre1
+            if any(row[0] == "Cours" for row in coursSemestre1):
+                nouvelle_feuille.cell(row=ligne_insertion, column=6, value=(liste_vac[i][3] * coursSemestre1[0][1] * 2))
 
+            # Si "TD" est présent dans la première ou la deuxième colonne de coursSemestre1
+            if any(row[0] == "TD" for row in coursSemestre1) or any(row[1] == "TD" for row in coursSemestre1):
+                index_td = next((j for j, row in enumerate(coursSemestre1) if row[0] == "TD" or row[1] == "TD"), None)
+                if index_td is not None:
+                    nouvelle_feuille.cell(row=ligne_insertion, column=7,
+                                          value=(liste_vac[i][4] * coursSemestre1[index_td][1] * 2))
+
+        # Vérifiez si coursSemestre2 a des éléments
+        if coursSemestre2:
+            # Si "Cours" est présent dans la première colonne de coursSemestre2
+            if any(row[0] == "Cours" for row in coursSemestre2):
+                nouvelle_feuille.cell(row=ligne_insertion, column=12,
+                                      value=(liste_vac[i][3] * coursSemestre2[0][1] * 2))
+
+            # Si "TD" est présent dans la première ou la deuxième colonne de coursSemestre2
+            if any(row[0] == "TD" for row in coursSemestre2) or any(row[1] == "TD" for row in coursSemestre2):
+                index_td = next((j for j, row in enumerate(coursSemestre2) if row[0] == "TD" or row[1] == "TD"), None)
+                if index_td is not None:
+                    nouvelle_feuille.cell(row=ligne_insertion, column=13,
+                                          value=(liste_vac[i][4] * coursSemestre2[index_td][1] * 2))
 
 
 #fonction qui trouve la première ligne dans laquelle se trouve une cellule possédant la donnée recherchée

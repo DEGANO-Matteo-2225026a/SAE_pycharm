@@ -10,7 +10,7 @@ cursor = sqlConnection.cursor()
 
 # Ouverture du fichier de sortie pour le rapport d'erreurs
 fichierSortie = open("../Sortie/rapportErreurs.txt", 'w')
-fichierSortie.write("Début rapport d'erreurs.\n\n\n")
+fichierSortie.write("Début rapport d'erreurs.\n\n")
 
 # Chargement des données depuis le fichier Excel
 PlanningInfo = op.load_workbook('../Documents/Planning_2023-2024-2.xlsx', data_only=True)
@@ -24,7 +24,7 @@ def fusionRessourcesDivisees(dict_ress):
 
     # Identification des ressources à fusionner
     for key in dict_ress.keys():
-        if key[len(key)-2:] == "-1":
+        if key[len(key)-2] == '-':
             ressAFusionner.append(key[:len(key)-2])
 
     temp_cm = 0
@@ -40,7 +40,8 @@ def fusionRessourcesDivisees(dict_ress):
                 temp_cm += dict_ress[key][0]
                 temp_td += dict_ress[key][1]
                 temp_tp += dict_ress[key][2]
-                aDetruire.append(key)
+                if (key not in aDetruire):
+                    aDetruire.append(key)
 
         dict_ress[ress] = [temp_cm, temp_td, temp_tp]
         temp_cm = 0
@@ -48,8 +49,7 @@ def fusionRessourcesDivisees(dict_ress):
         temp_tp = 0
 
     # Suppression des ressources fusionnées
-    for detritus in aDetruire:
-        del dict_ress[detritus]
+    detruireElements(aDetruire, dict_ress)
 
 
 def detruireElements(aDetruire, dict):
@@ -84,16 +84,16 @@ totalErreurs = 0
 
 for ressource in ressourcesAComparer.keys():
     if ressourcesAComparer[ressource][0] > ressourcesComparateur[ressource][0]:
-        erreurs[ressource + " total cm : "] = (ressourcesAComparer[ressource][0], ressourcesComparateur[ressource][0])
+        erreurs[ressource + " total CM : "] = (ressourcesAComparer[ressource][0], ressourcesComparateur[ressource][0])
         totalErreurs += 1
     if ressourcesAComparer[ressource][1] > ressourcesComparateur[ressource][1]:
-        erreurs[ressource + " total td : "] = (ressourcesAComparer[ressource][1], ressourcesComparateur[ressource][1])
+        erreurs[ressource + " total TD : "] = (ressourcesAComparer[ressource][1], ressourcesComparateur[ressource][1])
         totalErreurs += 1
     if ressourcesAComparer[ressource][2] > ressourcesComparateur[ressource][2]:
-        erreurs[ressource + " total tp : "] = (ressourcesAComparer[ressource][2], ressourcesComparateur[ressource][2])
+        erreurs[ressource + " total TP : "] = (ressourcesAComparer[ressource][2], ressourcesComparateur[ressource][2])
 
 # Écriture du rapport d'erreurs dans le fichier de sortie
-sb = "Erreur(s) Dépassements d'heures entre prévisions et actuelles : " + str(totalErreurs) + "\n\n"
+sb = "\nErreur(s) Dépassements d'heures entre prévisions et actuelles : " + str(totalErreurs) + "\n\n"
 fichierSortie.write(sb)
 
 if totalErreurs == 0:
@@ -106,9 +106,10 @@ else:
 
 
 planningTotal = {}
+
 for activite in TableauDonnees[1]:
     if activite[1] not in planningTotal:
-        print(activite[1])
+        # print(activite[1])
         planningTotal[activite[1]] = [0, 0, 0]
 
     if activite[2] == 'Cours':
@@ -128,15 +129,33 @@ fusionRessourcesDivisees(planningTotal)
 planningTotal = dict(sorted(planningTotal.items()))
 print(planningTotal)
 
-"""
-TODO :
-- Modifier la couleur de R2.13 a la couleur 51 51 255
-- Ajouter une fonction Mettre en forme
-- Compare la table QuiFaitQuoi et les infos de Planning si incohérences entre nombre d'heures que font profs de la matière et heures de matière
-"""
+warnings = {}
+totalWarnings = 0
+
+for ressource in planningTotal:
+    if planningTotal[ressource][0] != ressourcesComparateur[ressource][0]:
+        warnings[ressource + " total CM : "] = (planningTotal[ressource][0], ressourcesComparateur[ressource][0])
+        totalWarnings += 1
+    if planningTotal[ressource][1] != ressourcesComparateur[ressource][1]:
+        warnings[ressource + " total TD : "] = (planningTotal[ressource][1], ressourcesComparateur[ressource][1])
+        totalWarnings += 1
+    if planningTotal[ressource][2] != ressourcesComparateur[ressource][2]:
+        warnings[ressource + " total TP : "] = (planningTotal[ressource][2], ressourcesComparateur[ressource][2])
+        totalWarnings += 1
+
+# Écriture du rapport de warning dans le fichier de sortie
+sb = "\n\nWarning(s) Incohérence entre planning et heures prévues : " + str(totalWarnings) + "\n\n"
+fichierSortie.write(sb)
+
+if totalWarnings == 0:
+    fichierSortie.write("Rien à signaler.")
+else:
+    for warning in warnings.keys():
+        sb = warning + "Attendu : " + str(warnings[warning][1]) + ", Trouvé : " + str(warnings[warning][0]) + "\n"
+        fichierSortie.write(sb)
 
 
 # Fermeture du fichier de sortie, de la connexion à la base de données et du fichier Excel
-fichierSortie.write("\n\nFin rapport d'erreurs.\n")
+fichierSortie.write("\nFin rapport d'erreurs.\n")
 fichierSortie.close()
 sqlConnection.close()

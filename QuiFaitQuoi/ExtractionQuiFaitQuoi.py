@@ -66,14 +66,17 @@ def RecuperationProfMatiere(FeuilleActuelle,TableauDonnées):
         CM = Feuille.cell(IndexLigne, IndexColonne+4).internal_value
         if Feuille.cell(IndexLigne, IndexColonne+4).internal_value == None:
             CM = 0
-        TDNonD = Feuille.cell(IndexLigne, IndexColonne+5).internal_value
+        TD = Feuille.cell(IndexLigne, IndexColonne+5).internal_value
         if Feuille.cell(IndexLigne, IndexColonne+5).internal_value == None:
-            TDNonD = 0
-        TPD = Feuille.cell(IndexLigne, IndexColonne+6).internal_value
+            TD = 0
+        TDNonD = Feuille.cell(IndexLigne, IndexColonne+6).internal_value
         if Feuille.cell(IndexLigne, IndexColonne+6).internal_value == None:
-            TPD = 0
-        Test = Feuille.cell(IndexLigne, IndexColonne+7).internal_value
+            TDNonD = 0
+        TPD = Feuille.cell(IndexLigne, IndexColonne+7).internal_value
         if Feuille.cell(IndexLigne, IndexColonne+7).internal_value == None:
+            TPD = 0
+        Test = Feuille.cell(IndexLigne, IndexColonne+8).internal_value
+        if Feuille.cell(IndexLigne, IndexColonne+8).internal_value == None:
             Test = 0
 
         """
@@ -82,7 +85,7 @@ def RecuperationProfMatiere(FeuilleActuelle,TableauDonnées):
         """
 
         # On remplis le tableau avec les données sur notre nouveau prof
-        TableauDonnées.append([Feuille.title,MatiereActuelle,AlerteProf,Intervenant,Acronyme,Titulaire,NombreGroupes,CM,TDNonD,TPD,Test])
+        TableauDonnées.append([Feuille.title,MatiereActuelle,AlerteProf,Intervenant,Acronyme,Titulaire,NombreGroupes,CM,TD,TDNonD,TPD,Test])
 
         # On se rappel de remettre l'alerte à 0
         AlerteProf = False

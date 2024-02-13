@@ -174,7 +174,7 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
 
 
     #Récupération des données de cours par semaine 
-    cours = "SELECT Semaine, TypeCours, COUNT(*) AS NombreCours FROM PLANINFO WHERE Ressource = ? GROUP BY Semaine, TypeCours "
+    cours = "SELECT Semaine, TypeCours, COUNT(*) AS NombreCours FROM PLANINFO WHERE Ressource = ? AND TypeCours IS NOT NULL GROUP BY Semaine, TypeCours "
     cursor.execute(cours, (res,))
     liste_cours = cursor.fetchall()
 
@@ -182,6 +182,9 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
     for i in range(len(liste_cours)):
 
         hcm = trouver_ligne(feuille, "CM heures")
+
+        if liste_cours[i][0] == liste_cours[i-1][0]:
+            ++i
 
         ligne_insertion = hcm + 1 + i
         feuille.insert_rows(ligne_insertion)

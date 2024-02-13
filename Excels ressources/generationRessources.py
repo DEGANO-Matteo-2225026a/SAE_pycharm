@@ -105,9 +105,6 @@ def Remplissage(res, cmtot, tdtot, tptot, resp):
     feuille.merge_cells('L26:Q26')
 
 
-    for ligne in feuille.iter_rows(min_row=1, values_only=True):
-        feuille.append(ligne)
-
     #nom responsable de ressource
     cellule_selectionnee = feuille['H1']
     cellule_selectionnee.value = resp

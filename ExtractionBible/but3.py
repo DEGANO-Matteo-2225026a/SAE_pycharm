@@ -9,7 +9,7 @@ Created on Tue Dec 19 14:43:58 2023
 import pandas as pd
 
 
-BUT3Info = pd.read_excel('../Documents/BUT3 _INFO_AIX.xlsx', sheet_name=None)
+BUT3Info = pd.read_excel('Documents/BUT3 _INFO_AIX.xlsx', sheet_name=None)
 FeuilleInfoBut3a = 'BUT 3 Parcours A FI'
 FeuilleInfoBut3b = 'BUT 3 Parcours B FI'
 

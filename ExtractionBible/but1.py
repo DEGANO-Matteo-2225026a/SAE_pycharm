@@ -21,7 +21,7 @@ En l'occurrence on récupère :
 """
 
 # Indique le bon document et la bonne feuille du document
-BUT1Info = pd.read_excel('../Documents/BUT1_INFO_AIX.xlsx', sheet_name=None)
+BUT1Info = pd.read_excel('Documents/BUT1_INFO_AIX.xlsx', sheet_name=None)
 FeuilleInfoBut1 = 'BUT 1'
 
 # Récupère la feuille
@@ -110,7 +110,7 @@ S2Portfolio = S1But1Info.iloc[57, [0,2,17,18,19,22,23]]
 
 # ---- TEST ----
 
-#print(S1R101)
+print(S1R101)
 
 
 """

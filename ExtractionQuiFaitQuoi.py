@@ -10,8 +10,8 @@ TableauDonnées = [[S1][R1.01][Responsable Oui/Non][Nom + Prenom][Acronyme][Titu
 """
 
 # On charge le classeur Excel
-QuiFaitQuoi = pd.ExcelFile('../Documents/QuiFaitQuoiPOURTEST.xlsx')
-QuiFaitQuoiInfo = op.load_workbook('../Documents/QuiFaitQuoiPOURTEST.xlsx',data_only=True)
+QuiFaitQuoi = pd.ExcelFile('Documents/QuiFaitQuoiPOURTEST.xlsx')
+QuiFaitQuoiInfo = op.load_workbook('Documents/QuiFaitQuoiPOURTEST.xlsx',data_only=True)
 
 # On établie la liste des feuilles qui nous intéressent
 ListeFeuillesQuiFaitQuoi = sorted(QuiFaitQuoi.sheet_names)

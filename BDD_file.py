@@ -1,7 +1,7 @@
 import sqlite3
 
 #connection a la base de donnée SQLITE
-with sqlite3.connect("../SAE.db") as connection:
+with sqlite3.connect("SAE.db") as connection:
     cursor = connection.cursor()
 # Suppression des tables pour mettre a jour les données dedans si il y a des modifs
 cursor.execute(

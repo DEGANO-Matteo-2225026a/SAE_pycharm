@@ -43,7 +43,7 @@ ROUGE = SEMAINE MORTE DONC OSEF
 # On charge le classeur Excel
 # import pandas as pd
 # Planning = pd.ExcelFile('../Documents/Planning_2023-2024.xlsx')
-PlanningInfo = op.load_workbook('../Documents/Planning_2023-2024-2.xlsx',data_only=True)
+PlanningInfo = op.load_workbook('Documents/Planning_2023-2024-2.xlsx',data_only=True)
 
 
 

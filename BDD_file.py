@@ -36,7 +36,8 @@ cursor.execute(
        "TD FLOAT,"
        "TDNonD INTEGER,"
        "TPD INTEGER,"
-       "Test INTEGER)")
+       "Test INTEGER,"
+       "FOREIGN KEY (MatiereActuelle) REFERENCES BIBLE (libelle_complet))")
 
 #table PlanningRessource
 cursor.execute(
@@ -47,16 +48,19 @@ cursor.execute(
        "CM INTEGER,"
        "TD INTEGER,"
        "TP INTEGER,"
-       "Acronyme TEXT)")
+       "Acronyme TEXT,"
+       "FOREIGN KEY (Ressource) REFERENCES BIBLE (libelle_simple),"
+       "FOREIGN KEY (Acronyme) REFERENCES DONNEEPROF (Acronyme))")
 
 #table PlanningInformation
 cursor.execute(
    "CREATE TABLE IF NOT EXISTS PLANINFO ("
        "Id INTEGER PRIMARY KEY,"
-       "Semaine TEXT,"
+       "Semaine DATE,"
        "Ressource TEXT,"
        "TypeCours TEXT,"
-       "TypeSalle TEXT)")
+       "TypeSalle TEXT,"
+       "FOREIGN KEY (Ressource) REFERENCES PLANRESSOURCE (Ressource))")
 
 # table Bible
 cursor.execute(

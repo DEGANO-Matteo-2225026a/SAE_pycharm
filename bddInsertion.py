@@ -47,34 +47,34 @@ class BddInsertion:
 
         # Liste des colonnes de la tablea BIBLE
         column_list_BIBLE = ['code_apogee', 'libelle_simple', 'libelle_complet', 'total_cm', 'total_td', 'total_tp',
-                             'HETD', 'HETD_PACOME', 'NOMBRE_GROUPE', 'BUT']
+                             'HETD', 'HETD_PACOME', 'NOMBRE_GROUPE', 'BUT', 'groupe']
 
         # Fonction d'insertion qui ajoute les tuples disponible dans ligne_donnees (contient les données sous forme de ligne) et les insert 1 par 1, colonne par colonne.
-        def ajouterDonneesToBIBLE(ligne_donnees, GroupeTD, BUT, table_name):
+        def ajouterDonneesToBIBLE(ligne_donnees, GroupeTD, BUT, groupe, table_name):
             colonnes = ', '.join(column_list_BIBLE)
             valeurs = ', '.join(['?'] * len(column_list_BIBLE))
             libelle_simple = str(ligne_donnees[1]).split(' ')[0]
             ligne_donnees_complet = [ligne_donnees[0]] + [libelle_simple] + ligne_donnees[1:].tolist()
-            nouvelles_donnees = [GroupeTD, BUT]
+            nouvelles_donnees = [GroupeTD, BUT, groupe]
             ligne_donnees_complet.extend(nouvelles_donnees)
             cursor.execute(f"INSERT INTO {table_name} ({colonnes}) VALUES ({valeurs})", tuple(ligne_donnees_complet))
 
         # Fonction de remplissage pour éviter les répetitions de ligne
 
-        def remplissageInBIBLE(numeroListeSemestre, nombreGroupe, BUT):
+        def remplissageInBIBLE(numeroListeSemestre, nombreGroupe, BUT, groupe):
             for S1R1 in numeroListeSemestre:
-                ajouterDonneesToBIBLE(globals()[S1R1], nombreGroupe, BUT, 'BIBLE')
+                ajouterDonneesToBIBLE(globals()[S1R1], nombreGroupe, BUT, groupe, 'BIBLE')
 
-        remplissageInBIBLE(liste_S1R1, S1nbGroupeTD, 'BUT1')
-        remplissageInBIBLE(liste_S2R2, S2nbGroupeTD, 'BUT1')
-        remplissageInBIBLE(liste_S3R3A, S3nbGroupeTDA, 'BUT2')
-        remplissageInBIBLE(liste_S3R3B, S3nbGroupeTDB, 'BUT2')
-        remplissageInBIBLE(liste_S4R4A, S4nbGroupeTDA, 'BUT2')
-        remplissageInBIBLE(liste_S4R4B, S4nbGroupeTDB, 'BUT2')
-        remplissageInBIBLE(liste_S5R5A, S5nbGroupeTDA, 'BUT3')
-        remplissageInBIBLE(liste_S5R5B, S5nbGroupeTDB, 'BUT3')
-        remplissageInBIBLE(liste_S6R6A, S6nbGroupeTDA, 'BUT3')
-        remplissageInBIBLE(liste_S6R6B, S6nbGroupeTDB, 'BUT3')
+        remplissageInBIBLE(liste_S1R1, S1nbGroupeTD, 'BUT1', None)
+        remplissageInBIBLE(liste_S2R2, S2nbGroupeTD, 'BUT1', None)
+        remplissageInBIBLE(liste_S3R3A, S3nbGroupeTDA, 'BUT2', 'A')
+        remplissageInBIBLE(liste_S3R3B, S3nbGroupeTDB, 'BUT2', 'B')
+        remplissageInBIBLE(liste_S4R4A, S4nbGroupeTDA, 'BUT2', 'A')
+        remplissageInBIBLE(liste_S4R4B, S4nbGroupeTDB, 'BUT2', 'B')
+        remplissageInBIBLE(liste_S5R5A, S5nbGroupeTDA, 'BUT3', 'A')
+        remplissageInBIBLE(liste_S5R5B, S5nbGroupeTDB, 'BUT3', 'B')
+        remplissageInBIBLE(liste_S6R6A, S6nbGroupeTDA, 'BUT3', 'A')
+        remplissageInBIBLE(liste_S6R6B, S6nbGroupeTDB, 'BUT3', 'B')
 
         # PARTIE QuiFaitQuoi
 

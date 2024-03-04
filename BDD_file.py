@@ -74,6 +74,8 @@ cursor.execute(
        "HETD INTEGER,"
        "HETD_PACOME INTEGER,"
        "NOMBRE_GROUPE INTEGER,"
-       "BUT TEXT)")
+       "BUT TEXT,"
+       "groupe TEXT,"
+       "PRIMARY KEY (libelle_simple, groupe))")
 
 # Récuperation des données depuis les import des fichiers disponible dans le dossier CriteresRessources

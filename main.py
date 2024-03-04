@@ -12,9 +12,10 @@ def main():
     insertion_bdd = BddInsertion()
 
     # Appelez la méthode run_entire_file() pour exécuter tout le code du fichier generationRapport.py
+    insertion_bdd.run()
     rapport_generator.run()
     ressource_generator.run()
-    insertion_bdd.run()
+
 
 # Vérifiez si le script est exécuté en tant que programme principal
 if __name__ == "__main__":

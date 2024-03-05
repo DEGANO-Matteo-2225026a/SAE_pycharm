@@ -7,17 +7,13 @@ from tkinter import filedialog
 import sys
 import os
 
-# Fonction pour exécuter le contenu de a.py
 def executer_code():
-    # Effacer le contenu actuel de la page principale
     for widget in page_principale.winfo_children():
         widget.destroy()
 
-    # Créer un widget Text pour afficher la sortie
     sortie_texte = tk.Text(page_principale)
     sortie_texte.pack(fill=tk.BOTH, expand=True)
 
-    # Rediriger stdout vers le widget Text
     sys.stdout = TextRedirector(sortie_texte, "stdout")
 
     # Exécuter le contenu de bdd_file.py
@@ -50,7 +46,6 @@ def executer_code():
 
 
 
-# Classe pour rediriger stdout vers un widget Text
 class TextRedirector(object):
     def __init__(self, widget, tag="stdout"):
         self.widget = widget
@@ -62,7 +57,6 @@ class TextRedirector(object):
     def flush(self):
         pass
 
-# Fonction pour afficher la sélection des fichiers
 def afficher_selection_fichiers():
     # Effacer le contenu de la page principale
     for widget in page_principale.winfo_children():
@@ -100,7 +94,6 @@ def selectionner_fichiers():
 
 # Fonction pour afficher la page principale
 def afficher_page_principale():
-    # Effacer le contenu actuel de la page principale
     for widget in page_principale.winfo_children():
         widget.destroy()
     
@@ -114,19 +107,15 @@ def afficher_page_principale():
 # Création de la fenêtre principale
 fenetre = tk.Tk()
 fenetre.title("Gestion des fichiers")
-fenetre.geometry("400x300")  # Définir la taille de la fenêtre
+fenetre.geometry("400x300")
 
 # Création de la page principale
 page_principale = tk.Frame(fenetre)
-page_principale.pack(fill=tk.BOTH, expand=True)  # Remplir la fenêtre principale
+page_principale.pack(fill=tk.BOTH, expand=True)  
 
-# Afficher la page principale au démarrage
 afficher_page_principale()
 
-# Si le script est exécuté directement en Python, exécuter la boucle principale d'événements
 if __name__ == "__main__":
-    # Si un fichier exécutable est créé à partir de ce script
     if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-        # Définir le répertoire de travail sur le répertoire contenant le fichier exécutable
         os.chdir(sys._MEIPASS)
     fenetre.mainloop()

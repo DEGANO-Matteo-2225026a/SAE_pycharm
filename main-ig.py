@@ -41,7 +41,10 @@ def executer_code():
     print("Génération Ressources")
     print("-----------------")
     try:
-        exec(open("generationRessources.py").read())
+        exec(open("generationRessources.py"))
+        with open("rapportErreur.txt", "r") as rapport_file:
+            contenu_rapport = rapport_file.read()
+            print(contenu_rapport)
     except Exception as e:
         print(f"Erreur lors de l'exécution du fichier : {e}")
 
@@ -73,12 +76,27 @@ def afficher_selection_fichiers():
     bouton_selectionner = tk.Button(page_principale, text="Sélectionner des fichiers", command=selectionner_fichiers)
     bouton_selectionner.pack()
 
+def executer_fichiers_selectionnes():
+    for fichier in fichiers_selectionnes:
+        try:
+            contenu_resultat = ''
+            with open(fichier, "r") as file:
+                contenu_resultat = file.read()
+            # Afficher le nom du fichier
+            label_nom_fichier = tk.Label(page_principale, text=f"Fichier : {fichier}")
+            label_nom_fichier.pack()
+            # Afficher le contenu du fichier
+            label_contenu_resultat = tk.Label(page_principale, text=contenu_resultat)
+            label_contenu_resultat.pack()
+            print(f"Succès : {fichier}")
+        except Exception as e:
+            print(f"Erreur lors de l'exécution du fichier {fichier} : {e}")
 # Fonction pour sélectionner les fichiers
 def selectionner_fichiers():
+    global fichiers_selectionnes
     fichiers = filedialog.askopenfilenames()
-    for fichier in fichiers:
-        label_fichier = tk.Label(page_principale, text=fichier)
-        label_fichier.pack()
+    fichiers_selectionnes = list(fichiers)  # Stocker les chemins des fichiers sélectionnés
+    executer_fichiers_selectionnes()  # Exécuter les fichiers sélectionnés après la sélection
 
 # Fonction pour afficher la page principale
 def afficher_page_principale():

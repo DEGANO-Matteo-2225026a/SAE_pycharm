@@ -11,14 +11,15 @@ class GenerationRessources:
         cursor = db_connection.cursor()
 
         # Creer un nouveau classeur Excel
-        classeur = load_workbook("Excels ressources/FichierRessources.xlsx")
+        classeur = load_workbook("./Excels ressources/FichierRessources.xlsx")
 
         # Selectionner la feuille active
-        # feuille = classeur.active
+        ancienne_feuille = classeur.active
 
         def Remplissage(res, cmtot, tdtot, tptot, resp):
             # Créer une nouvelle feuille pour chaque matière
-            feuille = classeur.create_sheet(res)
+            feuille = classeur.copy_worksheet(ancienne_feuille)
+            feuille.title = res
 
             # nom responsable de ressource
             cellule_selectionnee = feuille['H1']
@@ -46,7 +47,7 @@ class GenerationRessources:
             # insertion données dans la feuille
             for i in range(len(liste_inter)):
                 # nom et acronyme
-                inter = trouver_ligne(feuille, "Intervenants")
+                inter = trouver_ligne(feuille,"Intervenants")
 
                 ligne_insertion = 7 + i
                 feuille.insert_rows(ligne_insertion)
@@ -54,7 +55,7 @@ class GenerationRessources:
                 feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][1])
 
                 # pourcentage du total de cm effectué par le professeur
-                cms = trouver_ligne(feuille, "CM")
+                cms = trouver_ligne(feuille, "CM ")
                 print(cms)
 
                 ligne_insertion = cms + 1 + i
@@ -62,7 +63,7 @@ class GenerationRessources:
                 feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
                 feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][2])
 
-                tds = trouver_ligne(feuille, "TD")
+                tds = trouver_ligne(feuille, "TD ")
 
                 # nombre de groupes en TD
                 ligne_insertion = tds + 1 + i
@@ -70,7 +71,7 @@ class GenerationRessources:
                 feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
                 feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][3])
 
-                tpsD = trouver_ligne(feuille, "TP dedoubles")
+                tpsD = trouver_ligne(feuille,"TP dedoubles")
 
                 # nombre de groupes en TP dédoublés
                 ligne_insertion = tpsD + 1 + i
@@ -93,7 +94,7 @@ class GenerationRessources:
 
             for i in range(len(liste_cours)):
 
-                hcm = trouver_ligne(feuille, "CM heures")
+                hcm = trouver_ligne(feuille, "CM (h)")
 
                 if liste_cours[i][0] == liste_cours[i - 1][0]:
                     ++i
@@ -102,7 +103,11 @@ class GenerationRessources:
                 feuille.insert_rows(ligne_insertion)
                 feuille.cell(row=ligne_insertion, column=1, value=liste_cours[i][0])
 
-                ligne_date = trouver_ligne(feuille, liste_cours[i][0])
+                ligne_date = trouver_ligne(feuille,liste_cours[i][0])
+                if ligne_date is None:
+                    # Handle the case where the content was not found
+                    # For example, you might want to continue to the next iteration of the loop
+                    continue
                 if liste_cours[i][1] == "Cours":
                     feuille.cell(row=ligne_date, column=2, value=(liste_cours[i][2]) * 2)
                 elif liste_cours[i][1] == "TD":
@@ -117,7 +122,7 @@ class GenerationRessources:
             cursor.execute(titu, (res,))
             liste_titu = cursor.fetchall()
 
-            ligne_titu = trouver_ligne(feuille, "Service previsionnel titulaires")
+            ligne_titu = trouver_ligne(feuille,"Service previsionnel titulaires")
 
             for i in range(len(liste_titu)):
                 ligne_insertion = ligne_titu + i + 3
@@ -237,6 +242,7 @@ class GenerationRessources:
             for row_number, row in enumerate(feuille.iter_rows(values_only=True), start=1):
                 if contenu_cible in row:
                     return row_number
+
             return None
 
         # recuperation des données pour chaque ressource existante
@@ -248,7 +254,7 @@ class GenerationRessources:
             Remplissage(liste_res[i][0], liste_res[i][1], liste_res[i][2], liste_res[i][3], liste_res[i][4])
 
         # Enregistrer le classeur modifié dans un nouveau fichier
-        classeur.save('Excels ressources/FichierRessources.xlsx')
+        classeur.save('Ressources.xlsx')
 
 def main():
     # Instanciation de la classe RapportErreurGenerator

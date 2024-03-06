@@ -1,11 +1,12 @@
 from ExtractionPlanning import *
+
+
 class RapportErreurGenerator:
     def run(self):
         # Importation des modules nécessaires
         import sqlite3 as sql
         import sys
         import openpyxl as op
-
 
         # Connexion à la base de données SQLite
         sqlConnection = sql.connect("SAE.db")
@@ -116,8 +117,6 @@ class RapportErreurGenerator:
         fusionRessourcesDivisees(ressourcesAComparer, "ressource")
         ressourcesAComparer = dict(sorted(ressourcesAComparer.items()))
 
-
-
         # Calcul du total des heures pour chaque activité
         planningTotal = {}
 
@@ -156,99 +155,157 @@ class RapportErreurGenerator:
         fusionRessourcesDivisees(responsableMat, "responsable")
         responsableMat = dict(sorted(responsableMat.items()))
 
-
-##################################################################
-
+        ##################################################################
 
         # Comparaison des ressources et identification des erreurs
-        erreurs = {}
-        totalErreurs = 0
+        erreursPlanningBible = {}
+
+        totalErreursPlanningBible = 0
 
         for ressource in ressourcesAComparer.keys():
             if ressourcesAComparer[ressource][0] > ressourcesComparateur[ressource][0]:
-                erreurs[ressource + " total CM : "] = (
-                ressourcesAComparer[ressource][0], ressourcesComparateur[ressource][0])
-                totalErreurs += 1
+                erreursPlanningBible[ressource + " total CM : "] = (
+                    ressourcesAComparer[ressource][0], ressourcesComparateur[ressource][0])
+                totalErreursPlanningBible += 1
 
             if ressourcesAComparer[ressource][1] > ressourcesComparateur[ressource][1]:
-                erreurs[ressource + " total TD : "] = (
-                ressourcesAComparer[ressource][1], ressourcesComparateur[ressource][1])
-                totalErreurs += 1
+                erreursPlanningBible[ressource + " total TD : "] = (
+                    ressourcesAComparer[ressource][1], ressourcesComparateur[ressource][1])
+                totalErreursPlanningBible += 1
 
             if ressourcesAComparer[ressource][2] > ressourcesComparateur[ressource][2]:
-                erreurs[ressource + " total TP : "] = (
-                ressourcesAComparer[ressource][2], ressourcesComparateur[ressource][2])
-                totalErreurs += 1
-
-
+                erreursPlanningBible[ressource + " total TP : "] = (
+                    ressourcesAComparer[ressource][2], ressourcesComparateur[ressource][2])
+                totalErreursPlanningBible += 1
 
         # Comparaison des ressources ainsi que des responsables et identification des warnings
-        warnings = {}
-        totalWarnings = 0
+        warningsPlanningPrevisions = {}
+        erreursPlanningPrevisions = {}
+
+        totalWarningsPlanningPrevisions = 0
+        totalErreursPlanningPrevisions = 0
 
         for ressource in planningTotal:
 
             if planningTotal[ressource][0] != ressourcesComparateur[ressource][0]:
+                if planningTotal[ressource][0] > ressourcesComparateur[ressource][0]:
+                    erreursPlanningPrevisions[ressource + " total CM : "] = (
+                        planningTotal[ressource][0], ressourcesComparateur[ressource][0])
+                    totalErreursPlanningPrevisions += 1
 
-                    warnings[ressource + " total CM : "] = (
-                    planningTotal[ressource][0], ressourcesComparateur[ressource][0])
-                    totalWarnings += 1
+                else:
+                    warningsPlanningPrevisions[ressource + " total CM : "] = (
+                        planningTotal[ressource][0], ressourcesComparateur[ressource][0])
+                    totalWarningsPlanningPrevisions += 1
 
             if planningTotal[ressource][1] != ressourcesComparateur[ressource][1]:
-                warnings[ressource + " total TD : "] = (
-                planningTotal[ressource][1], ressourcesComparateur[ressource][1])
-                totalWarnings += 1
+                if planningTotal[ressource][1] > ressourcesComparateur[ressource][1]:
+                    erreursPlanningPrevisions[ressource + " total TD : "] = (
+                        planningTotal[ressource][1], ressourcesComparateur[ressource][1])
+                    totalErreursPlanningPrevisions += 1
+
+                else:
+                    warningsPlanningPrevisions[ressource + " total TD : "] = (
+                        planningTotal[ressource][1], ressourcesComparateur[ressource][1])
+                    totalWarningsPlanningPrevisions += 1
 
             if planningTotal[ressource][2] != ressourcesComparateur[ressource][2]:
-                warnings[ressource + " total TP : "] = (
-                planningTotal[ressource][2], ressourcesComparateur[ressource][2])
-                totalWarnings += 1
+                if planningTotal[ressource][2] > ressourcesComparateur[ressource][2]:
+                    erreursPlanningPrevisions[ressource + " total TP : "] = (
+                        planningTotal[ressource][2], ressourcesComparateur[ressource][2])
+                    totalErreursPlanningPrevisions += 1
+
+                else:
+                    warningsPlanningPrevisions[ressource + " total TP : "] = (
+                        planningTotal[ressource][2], ressourcesComparateur[ressource][2])
+                    totalWarningsPlanningPrevisions += 1
+
+
+        warningRespMat = {}
+
+        totalWarningRespMat = 0
 
         for ressource in responsableMat:
             if responsableMat[ressource] != ressourcesAComparer[ressource][3]:
-                warnings[ressource + " responsable ressource : "] = (
-                ressourcesAComparer[ressource][3], responsableMat[ressource])
-                totalWarnings += 1
-
-
+                warningRespMat[ressource + " responsable ressource : "] = (
+                    ressourcesAComparer[ressource][3], responsableMat[ressource])
+                totalWarningRespMat += 1
 
         # Écriture du rapport d'erreurs dans le fichier de sortie
-        sb = "\nErreur(s) Dépassements d'heures entre prévisions et actuelles : " + str(totalErreurs) + "\n\n"
+        totalErreurs = totalErreursPlanningBible + totalErreursPlanningPrevisions
+
+        sb = "\nTotal erreurs trouvées : " + str(totalErreurs) + "\n"
         fichierSortie.write(sb)
 
-        if totalErreurs == 0:
+        sb = "\nErreur(s) Dépassements d'heures entre prévisions et actuelles : " + str(
+            totalErreursPlanningBible) + "\n\n"
+        fichierSortie.write(sb)
+
+        if totalErreursPlanningBible == 0:
             fichierSortie.write("Rien à signaler.")
         else:
-            for erreur in erreurs.keys():
-                sb = erreur + "Attendu : " + str(erreurs[erreur][1]) + ", Trouvé :" + str(erreurs[erreur][0]) + "\n"
+            for erreur in erreursPlanningBible.keys():
+                sb = (erreur + "Attendu : " + str(erreursPlanningBible[erreur][1]) +
+                      ", Trouvé :" + str(erreursPlanningBible[erreur][0]) + "\n")
+                fichierSortie.write(sb)
+
+
+        sb = "\nErreur(s) Dépassements d'heures planning / heures prévues : " + str(
+            totalErreursPlanningPrevisions) + "\n\n"
+        fichierSortie.write(sb)
+
+        if totalErreursPlanningPrevisions == 0:
+            fichierSortie.write("Rien à signaler.")
+        else:
+            for erreur in erreursPlanningPrevisions.keys():
+                sb = (erreur + "Attendu : " + str(erreursPlanningPrevisions[erreur][1]) +
+                      ", Trouvé :" + str(erreursPlanningPrevisions[erreur][0]) + "\n")
                 fichierSortie.write(sb)
 
 
         # Écriture du rapport de warning dans le fichier de sortie
-        sb = "\n\nWarning(s) Incohérence planning / heures prévues, responsable de matière : " + str(
-            totalWarnings) + "\n\n"
+        totalWarnings = totalWarningsPlanningPrevisions + totalWarningRespMat
+
+        sb = "\n\nTotal avertissements trouvées : " + str(totalWarnings)
         fichierSortie.write(sb)
 
-        if totalWarnings == 0:
+        sb = "\n\nWarning(s) Incohérence planning / heures prévues : " + str(
+            totalWarningsPlanningPrevisions) + "\n\n"
+        fichierSortie.write(sb)
+
+        if totalWarningsPlanningPrevisions == 0:
             fichierSortie.write("Rien à signaler.")
         else:
-            for warning in warnings.keys():
-                sb = warning + "Attendu : " + str(warnings[warning][1]) + ", Trouvé : " + str(
-                    warnings[warning][0]) + "\n"
+            for warning in warningsPlanningPrevisions.keys():
+                sb = warning + "Attendu : " + str(warningsPlanningPrevisions[warning][1]) + ", Trouvé : " + str(
+                    warningsPlanningPrevisions[warning][0]) + "\n"
                 fichierSortie.write(sb)
 
 
+        sb = "\n\nWarning(s) Incohérence responsable matière : " + str(
+            totalWarningRespMat) + "\n\n"
+        fichierSortie.write(sb)
+
+        if totalWarningRespMat == 0:
+            fichierSortie.write("Rien à signaler.")
+        else:
+            for warning in warningRespMat.keys():
+                sb = warning + "Attendu : " + str(warningRespMat[warning][1]) + ", Trouvé : " + str(
+                    warningRespMat[warning][0]) + "\n"
+                fichierSortie.write(sb)
 
         # Fermeture du fichier de sortie, de la connexion à la base de données et du fichier Excel
-        fichierSortie.write("\nFin rapport d'erreurs.\n")
+        fichierSortie.write("\n\nFin rapport d'erreurs.\n")
         fichierSortie.close()
         sqlConnection.close()
+
 
 def main():
     # Instanciation de la classe RapportErreurGenerator
     rapport_generator = RapportErreurGenerator()
     # Appel de la méthode run()
     rapport_generator.run()
+
 
 if __name__ == "__main__":
     main()

@@ -4,6 +4,7 @@
 
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import filedialog, messagebox
 import sys
 import os
 import sys
@@ -42,7 +43,7 @@ def executer_code():
     except Exception as e:
         print(f"Erreur lors de l'exécution du fichier : {e}")
         print("-----------------")
-
+ 
     print("Contenu du fichier rapportErreurs.txt : ")
     print("-----------------")
     try:
@@ -90,28 +91,104 @@ def afficher_selection_fichiers():
     bouton_selectionner.pack()
 
 def executer_fichiers_selectionnes():
-    for fichier in fichiers_selectionnes:
-        try:
-            contenu_resultat = ''
-            with open(fichier, "r") as file:
-                contenu_resultat = file.read()
-            # Afficher le nom du fichier
-            label_nom_fichier = tk.Label(page_principale, text=f"Fichier : {fichier}")
-            label_nom_fichier.pack()
-            # Afficher le contenu du fichier
-            label_contenu_resultat = tk.Label(page_principale, text=contenu_resultat)
-            label_contenu_resultat.pack()
-            print(f"Succès : {fichier}")
-        except Exception as e:
-            print(f"Erreur lors de l'exécution du fichier {fichier} : {e}")
-# Fonction pour sélectionner les fichiers
+    # Effacer le contenu de la page principale
+    for widget in page_principale.winfo_children():
+        widget.destroy()
+
+    # Afficher le résultat dans le widget Text
+    sortie_texte = tk.Text(page_principale)
+    sortie_texte.pack(fill=tk.BOTH, expand=True)
+
+    sys.stdout = TextRedirector(sortie_texte, "stdout")
+
+    # Parcourir les fichiers sélectionnés
+    for fichier, coche in zip(fichiers_disponibles, fichiers_coche):
+        if coche.get():
+            try:
+                if fichier == "bddInsertion.py":
+                    print("Base de donnée : ")
+                    print("-----------------")
+                    try:
+                        exec(open("bddInsertion.py").read())
+                        print("Succès")
+                    except Exception as e:
+                        print(f"Erreur lors de l'exécution du fichier : {e}")
+                elif fichier == "generationRapport.py":
+                    print("-----------------")
+                    print("Génération Rapport Erreur : ")
+                    print("-----------------")
+                    try:
+                        exec(open("generationRapport.py").read())
+                        print("Succès ")
+                        print("-----------------")
+
+                    except Exception as e:
+                        print(f"Erreur lors de l'exécution du fichier : {e}")
+                        print("-----------------")
+
+                    print("Contenu du fichier rapportErreurs.txt : ")
+                    print("-----------------")
+                    try:
+                        with open("rapportErreurs.txt", "r") as rapport_file:
+                            contenu_rapport = rapport_file.read()
+                        print(contenu_rapport)
+                    except Exception as e:
+                        print(f"Erreur lors de la lecture du fichier : {e}")
+                elif fichier == "generationRessources.py":
+                    print("-----------------")
+                    print("Génération Ressources")
+                    print("-----------------")
+                    try:
+                        exec(open("generationRessources.py"))
+                        with open("rapportErreur.txt", "r") as rapport_file:
+                            contenu_rapport = rapport_file.read()
+                            print(contenu_rapport)
+                    except Exception as e:
+                        print(f"Erreur lors de l'exécution du fichier : {e}")
+            except Exception as e:
+                print(f"Erreur lors de l'exécution du fichier {fichier} : {e}")
+
+    # Ajouter un bouton "Valider" pour afficher le résultat
+    bouton_valider = tk.Button(page_principale, text="Valider", command=lambda: afficher_resultat(sortie_texte))
+    bouton_valider.pack()
+
+def afficher_resultat(sortie_texte):
+    # Afficher le résultat dans le widget Text
+    contenu_resultat = sortie_texte.get("1.0", tk.END)
+    print("Résultat : ")
+    print("-----------------")
+    print(contenu_resultat)
+
 def selectionner_fichiers():
     global fichiers_selectionnes
-    fichiers = filedialog.askopenfilenames()
-    fichiers_selectionnes = list(fichiers)  # Stocker les chemins des fichiers sélectionnés
-    executer_fichiers_selectionnes()  # Exécuter les fichiers sélectionnés après la sélection
+    fichiers_selectionnes = []
 
-# Fonction pour afficher la page principale
+    # Création de la fenêtre de sélection de fichiers
+    fenetre_selection = tk.Toplevel()
+    fenetre_selection.title("Sélectionner les fichiers à lancer")
+
+    # Création des cases à cocher pour les fichiers
+    check_bdd = tk.Checkbutton(fenetre_selection, text="bddInsertion.py", command=lambda: ajouter_fichier("bddInsertion.py"))
+    check_bdd.pack()
+
+    check_rapport = tk.Checkbutton(fenetre_selection, text="generationRapport.py", command=lambda: ajouter_fichier("generationRapport.py"))
+    check_rapport.pack()
+
+    check_ressources = tk.Checkbutton(fenetre_selection, text="generationRessources.py", command=lambda: ajouter_fichier("generationRessources.py"))
+    check_ressources.pack()
+
+    def ajouter_fichier(nom_fichier):
+        if nom_fichier in fichiers_selectionnes:
+            fichiers_selectionnes.remove(nom_fichier)
+        else:
+            fichiers_selectionnes.append(nom_fichier)
+
+    # Bouton pour valider la sélection
+    bouton_valider = tk.Button(fenetre_selection, text="Valider", command=fenetre_selection.destroy)
+    bouton_valider.pack()
+
+    fenetre_selection.mainloop()
+
 def afficher_page_principale():
     for widget in page_principale.winfo_children():
         widget.destroy()

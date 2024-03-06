@@ -21,6 +21,7 @@ class GenerationRessources:
             feuille = classeur.copy_worksheet(ancienne_feuille)
             feuille.title = res
 
+
             # nom responsable de ressource
             cellule_selectionnee = feuille['H1']
             cellule_selectionnee.value = resp
@@ -50,40 +51,38 @@ class GenerationRessources:
                 inter = trouver_ligne(feuille,"Intervenants")
 
                 ligne_insertion = 7 + i
-                feuille.insert_rows(ligne_insertion)
                 feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][0])
                 feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][1])
 
                 # pourcentage du total de cm effectué par le professeur
                 cms = trouver_ligne(feuille, "CM ")
-                print(cms)
+
 
                 ligne_insertion = cms + 1 + i
-                feuille.insert_rows(ligne_insertion)
                 feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
                 feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][2])
 
                 tds = trouver_ligne(feuille, "TD ")
 
+
                 # nombre de groupes en TD
                 ligne_insertion = tds + 1 + i
-                feuille.insert_rows(ligne_insertion)
                 feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
                 feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][3])
 
                 tpsD = trouver_ligne(feuille,"TP dedoubles")
 
+
                 # nombre de groupes en TP dédoublés
                 ligne_insertion = tpsD + 1 + i
-                feuille.insert_rows(ligne_insertion)
                 feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
                 feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][3])
 
-                tps = trouver_ligne(feuille, "TP non dedoubles")
+                tps = trouver_ligne(feuille, "TP non  dedoubles")
+
 
                 # nombre de groupes en TP non dédoublés
                 ligne_insertion = tps + 1 + i
-                feuille.insert_rows(ligne_insertion)
                 feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
                 feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][3])
 
@@ -92,12 +91,14 @@ class GenerationRessources:
             cursor.execute(cours, (res,))
             liste_cours = cursor.fetchall()
 
+
+
             for i in range(len(liste_cours)):
 
                 hcm = trouver_ligne(feuille, "CM (h)")
 
-                if liste_cours[i][0] == liste_cours[i - 1][0]:
-                    ++i
+                #if i != 0 and liste_cours[i][0] == liste_cours[i - 1][0]:
+                #    i += 1
 
                 ligne_insertion = hcm + 1 + i
                 feuille.insert_rows(ligne_insertion)
@@ -105,8 +106,6 @@ class GenerationRessources:
 
                 ligne_date = trouver_ligne(feuille,liste_cours[i][0])
                 if ligne_date is None:
-                    # Handle the case where the content was not found
-                    # For example, you might want to continue to the next iteration of the loop
                     continue
                 if liste_cours[i][1] == "Cours":
                     feuille.cell(row=ligne_date, column=2, value=(liste_cours[i][2]) * 2)
@@ -126,7 +125,6 @@ class GenerationRessources:
 
             for i in range(len(liste_titu)):
                 ligne_insertion = ligne_titu + i + 3
-                feuille.insert_rows(ligne_insertion)
                 feuille.cell(row=ligne_insertion, column=1, value=(liste_titu[i][0]))
                 if "S1" or "S2" in liste_titu[i][1]:
                     feuille.cell(row=ligne_insertion, column=3, value="BUT1")
@@ -185,7 +183,6 @@ class GenerationRessources:
 
             for i in range(len(liste_vac)):
                 ligne_insertion = ligne_vac + i + 3
-                feuille.insert_rows(ligne_insertion)
                 feuille.cell(row=ligne_insertion, column=1, value=(liste_vac[i][0]))
                 if "S1" in liste_vac[i][1] or "S2" in liste_vac[i][1]:
                     feuille.cell(row=ligne_insertion, column=3, value="BUT1")

@@ -116,34 +116,7 @@ class RapportErreurGenerator:
         fusionRessourcesDivisees(ressourcesAComparer, "ressource")
         ressourcesAComparer = dict(sorted(ressourcesAComparer.items()))
 
-        # Comparaison des ressources et identification des erreurs
-        erreurs = {}
-        totalErreurs = 0
 
-        for ressource in ressourcesAComparer.keys():
-            if ressourcesAComparer[ressource][0] > ressourcesComparateur[ressource][0]:
-                erreurs[ressource + " total CM : "] = (
-                ressourcesAComparer[ressource][0], ressourcesComparateur[ressource][0])
-                totalErreurs += 1
-            if ressourcesAComparer[ressource][1] > ressourcesComparateur[ressource][1]:
-                erreurs[ressource + " total TD : "] = (
-                ressourcesAComparer[ressource][1], ressourcesComparateur[ressource][1])
-                totalErreurs += 1
-            if ressourcesAComparer[ressource][2] > ressourcesComparateur[ressource][2]:
-                erreurs[ressource + " total TP : "] = (
-                ressourcesAComparer[ressource][2], ressourcesComparateur[ressource][2])
-                totalErreurs += 1
-
-        # Écriture du rapport d'erreurs dans le fichier de sortie
-        sb = "\nErreur(s) Dépassements d'heures entre prévisions et actuelles : " + str(totalErreurs) + "\n\n"
-        fichierSortie.write(sb)
-
-        if totalErreurs == 0:
-            fichierSortie.write("Rien à signaler.")
-        else:
-            for erreur in erreurs.keys():
-                sb = erreur + "Attendu : " + str(erreurs[erreur][1]) + ", Trouvé :" + str(erreurs[erreur][0]) + "\n"
-                fichierSortie.write(sb)
 
         # Calcul du total des heures pour chaque activité
         planningTotal = {}
@@ -178,11 +151,36 @@ class RapportErreurGenerator:
 
         for row in cursor.fetchall():
             if row[0][:3] != "SAE" and row[0] not in responsableMat.keys():
-                print(row[0], row[1])
                 responsableMat[row[0]] = row[1]
 
         fusionRessourcesDivisees(responsableMat, "responsable")
         responsableMat = dict(sorted(responsableMat.items()))
+
+
+##################################################################
+
+
+        # Comparaison des ressources et identification des erreurs
+        erreurs = {}
+        totalErreurs = 0
+
+        for ressource in ressourcesAComparer.keys():
+            if ressourcesAComparer[ressource][0] > ressourcesComparateur[ressource][0]:
+                erreurs[ressource + " total CM : "] = (
+                ressourcesAComparer[ressource][0], ressourcesComparateur[ressource][0])
+                totalErreurs += 1
+
+            if ressourcesAComparer[ressource][1] > ressourcesComparateur[ressource][1]:
+                erreurs[ressource + " total TD : "] = (
+                ressourcesAComparer[ressource][1], ressourcesComparateur[ressource][1])
+                totalErreurs += 1
+
+            if ressourcesAComparer[ressource][2] > ressourcesComparateur[ressource][2]:
+                erreurs[ressource + " total TP : "] = (
+                ressourcesAComparer[ressource][2], ressourcesComparateur[ressource][2])
+                totalErreurs += 1
+
+
 
         # Comparaison des ressources ainsi que des responsables et identification des warnings
         warnings = {}
@@ -191,13 +189,16 @@ class RapportErreurGenerator:
         for ressource in planningTotal:
 
             if planningTotal[ressource][0] != ressourcesComparateur[ressource][0]:
-                warnings[ressource + " total CM : "] = (
-                planningTotal[ressource][0], ressourcesComparateur[ressource][0])
-                totalWarnings += 1
+
+                    warnings[ressource + " total CM : "] = (
+                    planningTotal[ressource][0], ressourcesComparateur[ressource][0])
+                    totalWarnings += 1
+
             if planningTotal[ressource][1] != ressourcesComparateur[ressource][1]:
                 warnings[ressource + " total TD : "] = (
                 planningTotal[ressource][1], ressourcesComparateur[ressource][1])
                 totalWarnings += 1
+
             if planningTotal[ressource][2] != ressourcesComparateur[ressource][2]:
                 warnings[ressource + " total TP : "] = (
                 planningTotal[ressource][2], ressourcesComparateur[ressource][2])
@@ -208,6 +209,20 @@ class RapportErreurGenerator:
                 warnings[ressource + " responsable ressource : "] = (
                 ressourcesAComparer[ressource][3], responsableMat[ressource])
                 totalWarnings += 1
+
+
+
+        # Écriture du rapport d'erreurs dans le fichier de sortie
+        sb = "\nErreur(s) Dépassements d'heures entre prévisions et actuelles : " + str(totalErreurs) + "\n\n"
+        fichierSortie.write(sb)
+
+        if totalErreurs == 0:
+            fichierSortie.write("Rien à signaler.")
+        else:
+            for erreur in erreurs.keys():
+                sb = erreur + "Attendu : " + str(erreurs[erreur][1]) + ", Trouvé :" + str(erreurs[erreur][0]) + "\n"
+                fichierSortie.write(sb)
+
 
         # Écriture du rapport de warning dans le fichier de sortie
         sb = "\n\nWarning(s) Incohérence planning / heures prévues, responsable de matière : " + str(
@@ -221,6 +236,8 @@ class RapportErreurGenerator:
                 sb = warning + "Attendu : " + str(warnings[warning][1]) + ", Trouvé : " + str(
                     warnings[warning][0]) + "\n"
                 fichierSortie.write(sb)
+
+
 
         # Fermeture du fichier de sortie, de la connexion à la base de données et du fichier Excel
         fichierSortie.write("\nFin rapport d'erreurs.\n")

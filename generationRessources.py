@@ -97,9 +97,6 @@ class GenerationRessources:
 
                 hcm = trouver_ligne(feuille, "CM (h)")
 
-                #if i != 0 and liste_cours[i][0] == liste_cours[i - 1][0]:
-                #    i += 1
-
                 ligne_insertion = hcm + 1 + i
                 feuille.insert_rows(ligne_insertion)
                 feuille.cell(row=ligne_insertion, column=1, value=liste_cours[i][0])
@@ -115,6 +112,8 @@ class GenerationRessources:
                     feuille.cell(row=ligne_date, column=4, value=(liste_cours[i][2] * 2))
                 else:
                     feuille.cell(row=ligne_date, column=5, value=(liste_cours[i][2] * 2))
+                #if feuille.cell(row=ligne_insertion, column=1).value == feuille.cell(row=ligne_insertion - 1, column=1).value or feuille.cell(row=ligne_insertion - 1, column=1).value == 0:
+                #    feuille.delete_rows(ligne_insertion)
 
             # Récupération des données pour remplir tableau titulaire
             titu = "SELECT Intervenant, Feuille_title, SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) AS matiere,d.CM, d.TD, TPD, TDNonD, Test, p.CM FROM DONNEEPROF d JOIN PLANRESSOURCE p ON matiere = Ressource WHERE AlerteProf == 1 AND matiere = ?"

@@ -6,6 +6,12 @@ import tkinter as tk
 from tkinter import filedialog
 import sys
 import os
+import sys
+
+from generationRapport import RapportErreurGenerator
+from generationRessources import GenerationRessources
+from bddInsertion import BddInsertion
+from ExtractionPlanning import *
 
 def executer_code():
     for widget in page_principale.winfo_children():
@@ -20,7 +26,7 @@ def executer_code():
     print("Base de donnée : ")
     print("-----------------")
     try:
-        exec(open("BDD_file.py").read())
+        exec(open("bddInsertion.py").read())
         print("Succès")
     except Exception as e:
         print(f"Erreur lors de l'exécution du fichier : {e}")
@@ -30,8 +36,21 @@ def executer_code():
     print("-----------------")
     try:
         exec(open("generationRapport.py").read())
+        print("Succès ")
+        print("-----------------")
+
     except Exception as e:
         print(f"Erreur lors de l'exécution du fichier : {e}")
+        print("-----------------")
+
+    print("Contenu du fichier rapportErreurs.txt : ")
+    print("-----------------")
+    try:
+        with open("rapportErreurs.txt", "r") as rapport_file:
+            contenu_rapport = rapport_file.read()
+            print(contenu_rapport)
+    except Exception as e:
+        print(f"Erreur lors de la lecture du fichier : {e}")
      # Exécuter le contenu de Ressources.py
     print("-----------------")
     print("Génération Ressources")

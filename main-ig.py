@@ -6,6 +6,7 @@ import shutil
 
 from generationRapport import RapportErreurGenerator
 from generationRessources import GenerationRessources
+from generationFicheProf import GenerationFicheProf
 from bddInsertion import BddInsertion
 from ExtractionPlanning import *
 from io import StringIO
@@ -67,7 +68,13 @@ def executer_code():
         print("Succès : Génération Ressource")
         print("-----------------")
     except Exception as e:
-        print(f"Erreur lors de l'exécution du fichier generationRessources.py : {e}")   
+        print(f"Erreur lors de l'exécution du fichier generationRessources.py : {e}")
+    try:
+        exec(open("generationFicheProf.py").read())
+        print("Succès : Génération FicheProf")
+        print("-----------------")
+    except Exception as e:
+        print(f"Erreur lors de l'exécution du fichier generationFicheProf.py : {e}")
         
     bouton_telecharger = tk.Button(page_principale, text="Télécharger les fichiers", command=telecharger_fichiers, bg="green", fg="white", font=("Helvetica", 12, "bold"), padx=20, pady=10)
     bouton_telecharger.pack(pady=20)
@@ -124,13 +131,18 @@ def selectionner_fichiers():
     check_ressources.config(variable=fichiers_coche[-1])
     check_ressources.pack()
 
+    check_ressources = tk.Checkbutton(fenetre_selection, text="generationFicheProf.py")
+    fichiers_coche.append(tk.BooleanVar())
+    check_ressources.config(variable=fichiers_coche[-1])
+    check_ressources.pack()
+
     def ajouter_fichier(nom_fichier):
         if nom_fichier in fichiers_selectionnes:
             fichiers_selectionnes.remove(nom_fichier)
         else:
             fichiers_selectionnes.append(nom_fichier)
 
-    bouton_valider = tk.Button(fenetre_selection, text="Valider", command=lambda: [ajouter_fichier("bddInsertion.py" if fichiers_coche[0].get() else ""), ajouter_fichier("generationRapport.py" if fichiers_coche[1].get() else ""), ajouter_fichier("generationRessources.py" if fichiers_coche[2].get() else ""), fenetre_selection.destroy()], bg="blue", fg="white", font=("Helvetica", 12, "bold"), padx=20, pady=10)
+    bouton_valider = tk.Button(fenetre_selection, text="Valider", command=lambda: [ajouter_fichier("bddInsertion.py" if fichiers_coche[0].get() else ""), ajouter_fichier("generationRapport.py" if fichiers_coche[1].get() else ""), ajouter_fichier("generationRessources.py" if fichiers_coche[2].get() else ""), ajouter_fichier("generationFicheProf.py" if fichiers_coche[3].get() else ""), fenetre_selection.destroy()], bg="blue", fg="white", font=("Helvetica", 12, "bold"), padx=20, pady=10)
     bouton_valider.pack(pady=20)
 
     fenetre_selection.mainloop()
@@ -179,6 +191,17 @@ def executer_fichiers_selectionnes():
         elif fichier == "generationRessources.py":
             print("-----------------")
             print("Lancement de generationRessources.py")
+            print("-----------------")
+            try:
+                exec(open(fichier).read())
+                print(f"Succès : {fichier}")
+                print("-----------------")
+            except Exception as e:
+                print(f"Erreur lors de l'exécution du fichier {fichier} : {e}")
+
+        elif fichier == "generationFicheProf.py":
+            print("-----------------")
+            print("Lancement de generationFicheProf.py")
             print("-----------------")
             try:
                 exec(open(fichier).read())

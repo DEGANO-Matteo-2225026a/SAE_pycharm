@@ -1,20 +1,16 @@
 from ExtractionPlanning import *
 
+# Importation des modules nécessaires
+import sqlite3 as sql
+import sys
+import openpyxl as op
+
 
 class RapportErreurGenerator:
-    def run(self):
-        # Importation des modules nécessaires
-        import sqlite3 as sql
-        import sys
-        import openpyxl as op
-
+    def genRapport(self):
         # Connexion à la base de données SQLite
         sqlConnection = sql.connect("SAE.db")
         cursor = sqlConnection.cursor()
-
-        # Ouverture du fichier de sortie pour le rapport d'erreurs
-        fichierSortie = open("rapportErreurs.txt", 'w')
-        fichierSortie.write("Début rapport d'erreurs.\n\n")
 
         # Chargement des données depuis le fichier Excel
         PlanningInfo = op.load_workbook("Documents/Planning_2023-2024-2.xlsx", data_only=True)
@@ -39,8 +35,10 @@ class RapportErreurGenerator:
             temp_resp = ""
 
             """
-            CE QUI SUIT N'EST CLAIREMENT PAS OPTI ET FRANCHEMENT DEGUELASSE MAIS J'AI PAS EU LE TEMPS DE FAIRE MIEUX
-            LA FACTORISATION EST UN VESTIGE D'UNE CIVILISATION PASSEE
+            CE QUI SUIT N'EST CLAIREMENT PAS OPTI,
+            VOS YEUX RISQUES DE SAIGNER EN REGARDANT CE BOUT DE CODE
+            CONTINUEZ A VOS RISQUES ET PERILES
+            LA FACTORISATION DE CODE EST UN VESTIGE D'UNE CIVILISATION PASSEE
             """
 
             # Condition pour séparer le cas ou la fusion de ressource se fait sur le responsable, ressource ou planning.
@@ -220,24 +218,70 @@ class RapportErreurGenerator:
                         planningTotal[ressource][2], ressourcesComparateur[ressource][2])
                     totalWarningsPlanningPrevisions += 1
 
-
-        warningRespMat = {}
+        warningsRespMat = {}
 
         totalWarningRespMat = 0
 
         for ressource in responsableMat:
             if responsableMat[ressource] != ressourcesAComparer[ressource][3]:
-                warningRespMat[ressource + " responsable ressource : "] = (
+                warningsRespMat[ressource + " responsable ressource : "] = (
                     ressourcesAComparer[ressource][3], responsableMat[ressource])
                 totalWarningRespMat += 1
+
+        sqlConnection.close()
+
+        out = {"totalErreursPlanningBible" : totalErreursPlanningBible,
+               "totalErreursPlanningPrevisions" : totalErreursPlanningPrevisions,
+
+               "totalWarningsPlanningPrevisions" : totalWarningsPlanningPrevisions,
+               "totalWarningRespMat" : totalWarningRespMat,
+
+               "erreursPlanningBible": erreursPlanningBible,
+               "erreursPlanningPrevisions":erreursPlanningPrevisions,
+
+               "warningsPlanningPrevisions": warningsPlanningPrevisions,
+               "warningsRespMat": warningsRespMat}
+
+        return out
+
+
+    def writeRapport(self):
+        rep = self.genRapport()
+
+        totalErreursPlanningBible = rep["totalErreursPlanningBible"]
+        totalErreursPlanningPrevisions = rep["totalErreursPlanningPrevisions"]
+
+        totalWarningsPlanningPrevisions = rep["totalWarningsPlanningPrevisions"]
+        totalWarningRespMat = rep["totalWarningRespMat"]
+
+        erreursPlanningBible = rep["erreursPlanningBible"]
+        erreursPlanningPrevisions = rep["erreursPlanningPrevisions"]
+
+        warningsPlanningPrevisions = rep["warningsPlanningPrevisions"]
+        warningsRespMat = rep["warningsRespMat"]
+
+        # Ouverture du fichier de sortie pour le rapport d'erreurs
+        fichierSortie = open("rapportErreurs.txt", 'w')
+        fichierSortie.write("Début rapport d'erreurs.")
+
+        sb = "\n\nErreurs : Tout dépassement d'heures trouvées sur le planning en comparaison :"
+        sb += "\n   - aux heures définies par le programme de l'Etat,"
+        sb += "\n   - aux heures prévues par le département"
+        fichierSortie.write(sb)
+
+        sb = "\n\nWarnings : Toute incohérence du planning n'étant pas une erreur :"
+        sb += "\n   - incohérence entre les heures trouvées sur le planning et les heures prévues par le département,"
+        sb += "\n   - incohérence entre le responsable de matière décrit par le planning et celui "
+        sb += "\n     stocké en base de donnée"
+        fichierSortie.write(sb)
 
         # Écriture du rapport d'erreurs dans le fichier de sortie
         totalErreurs = totalErreursPlanningBible + totalErreursPlanningPrevisions
 
-        sb = "\nTotal erreurs trouvées : " + str(totalErreurs) + "\n"
+        sb = "\n\n\nTotal erreurs trouvées : " + str(totalErreurs)
         fichierSortie.write(sb)
 
-        sb = "\nErreur(s) Dépassements d'heures entre prévisions et actuelles : " + str(
+        sb = "\n\nErreur(s) Dépassements d'heures entre prévisions et actuelles : " + str(
             totalErreursPlanningBible) + "\n\n"
         fichierSortie.write(sb)
 
@@ -248,7 +292,6 @@ class RapportErreurGenerator:
                 sb = (erreur + "Attendu : " + str(erreursPlanningBible[erreur][1]) +
                       ", Trouvé :" + str(erreursPlanningBible[erreur][0]) + "\n")
                 fichierSortie.write(sb)
-
 
         sb = "\nErreur(s) Dépassements d'heures planning / heures prévues : " + str(
             totalErreursPlanningPrevisions) + "\n\n"
@@ -262,11 +305,10 @@ class RapportErreurGenerator:
                       ", Trouvé :" + str(erreursPlanningPrevisions[erreur][0]) + "\n")
                 fichierSortie.write(sb)
 
-
         # Écriture du rapport de warning dans le fichier de sortie
         totalWarnings = totalWarningsPlanningPrevisions + totalWarningRespMat
 
-        sb = "\n\nTotal avertissements trouvées : " + str(totalWarnings)
+        sb = "\n\nTotal warnings trouvées : " + str(totalWarnings)
         fichierSortie.write(sb)
 
         sb = "\n\nWarning(s) Incohérence planning / heures prévues : " + str(
@@ -281,7 +323,6 @@ class RapportErreurGenerator:
                     warningsPlanningPrevisions[warning][0]) + "\n"
                 fichierSortie.write(sb)
 
-
         sb = "\n\nWarning(s) Incohérence responsable matière : " + str(
             totalWarningRespMat) + "\n\n"
         fichierSortie.write(sb)
@@ -289,15 +330,17 @@ class RapportErreurGenerator:
         if totalWarningRespMat == 0:
             fichierSortie.write("Rien à signaler.")
         else:
-            for warning in warningRespMat.keys():
-                sb = warning + "Attendu : " + str(warningRespMat[warning][1]) + ", Trouvé : " + str(
-                    warningRespMat[warning][0]) + "\n"
+            for warning in warningsRespMat.keys():
+                sb = warning + "Attendu : " + str(warningsRespMat[warning][1]) + ", Trouvé : " + str(
+                    warningsRespMat[warning][0]) + "\n"
                 fichierSortie.write(sb)
 
         # Fermeture du fichier de sortie, de la connexion à la base de données et du fichier Excel
         fichierSortie.write("\n\nFin rapport d'erreurs.\n")
         fichierSortie.close()
-        sqlConnection.close()
+
+    def run(self):
+        self.writeRapport()
 
 
 def main():

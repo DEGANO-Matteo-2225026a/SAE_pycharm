@@ -15,7 +15,6 @@ class GenerationFicheProf:
         f = recherche.active
 
         def ficheProf(prof):
-            print(prof)
 
             # Créer une nouvelle feuille pour chaque professeur
             feuille = classeur.copy_worksheet(ancienne_feuille)
@@ -49,13 +48,15 @@ class GenerationFicheProf:
                     continue
                 ligneH = trouver_ligne(feuille, "Matieres", 1)
                 feuille.insert_rows(ligneH + 1)
-
-                for i in range(6, 10):
+                for i in range(6, 12):
                     cellule_selectionnee = f.cell(row=horaires, column=i).value
                     if cellule_selectionnee is None:
-                        cellule_selectionnee = 0
+                        cellule_selectionnee = f.cell(row=horaires, column=i+6).value
                     feuille.cell(row=ligneH + 1, column=1, value=f.title)
-                    feuille.cell(row=ligneH + 1, column=i-4, value=cellule_selectionnee)
+                    feuille.cell(row=ligneH + 1, column=i-3, value=cellule_selectionnee)
+                    # On insère l'année
+                    cellule_selectionnee = f.cell(row=horaires, column=3).value
+                    feuille.cell(row=ligneH + 1, column=2, value=cellule_selectionnee)
 
 
 

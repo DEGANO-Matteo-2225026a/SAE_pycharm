@@ -7,6 +7,7 @@ from generationRapport import RapportErreurGenerator
 from generationRessources import GenerationRessources
 from bddInsertion import BddInsertion
 from ExtractionPlanning import *
+from io import StringIO
 
 class TextRedirector(object):
     def __init__(self, widget, tag="stdout"):
@@ -67,7 +68,8 @@ def executer_code():
             print(contenu_rapport)
     except Exception as e:
         print(f"Erreur lors de l'exécution du fichier generationRessources.py : {e}")   
-
+fichiers_selectionnes = []
+fichiers_coche = []
 def afficher_selection_fichiers():
     for widget in page_principale.winfo_children():
         widget.destroy()
@@ -80,6 +82,7 @@ def afficher_selection_fichiers():
 
     bouton_executer = tk.Button(page_principale, text="Exécuter les fichiers sélectionnés", command=executer_fichiers_selectionnes, bg="orange", fg="white", font=("Helvetica", 12, "bold"), padx=20, pady=10)
     bouton_executer.pack(pady=20)
+
 def executer_fichiers_selectionnes():
     for widget in page_principale.winfo_children():
         widget.destroy()
@@ -87,7 +90,9 @@ def executer_fichiers_selectionnes():
     sortie_texte = tk.Text(page_principale, bg="white", fg="black", font=("Helvetica", 10))
     sortie_texte.pack(fill=tk.BOTH, expand=True)
 
-    sys.stdout = TextRedirector(sortie_texte, "stdout")
+    # Redirection de la sortie standard vers un objet de capture
+    capture_sortie = StringIO()
+    sys.stdout = capture_sortie
 
     for fichier, coche in zip(fichiers_selectionnes, fichiers_coche):
         if coche.get():
@@ -131,28 +136,40 @@ def executer_fichiers_selectionnes():
                 except Exception as e:
                     print(f"Erreur lors de l'exécution du fichier {fichier} : {e}")
 
-    bouton_valider = tk.Button(page_principale, text="Valider", command=lambda: afficher_resultat(sortie_texte), bg="green", fg="white", font=("Helvetica", 12, "bold"), padx=20, pady=10)
-    bouton_valider.pack(pady=20)
-def afficher_resultat(sortie_texte):
-    contenu_resultat = sortie_texte.get("1.0", tk.END)
-    print("Résultat : ")
-    print("-----------------")  
-    print(contenu_resultat)
+    # Restaurer la sortie standard
+    sys.stdout = sys.__stdout__
+
+    # Récupérer le contenu de la sortie capturée
+    contenu_resultat = capture_sortie.getvalue()
+
+    # Afficher le contenu dans le widget texte en utilisant la fonction afficher_resultat
+    afficher_resultat(sortie_texte, contenu_resultat)
+
+
+def afficher_resultat(sortie_texte, contenu_resultat):
+    sortie_texte.insert(tk.END, contenu_resultat)
 
 def selectionner_fichiers():
-    global fichiers_selectionnes
+    global fichiers_selectionnes, fichiers_coche
     fichiers_selectionnes = []
+    fichiers_coche = []
 
     fenetre_selection = tk.Toplevel()
     fenetre_selection.title("Sélectionner les fichiers à lancer")
 
-    check_bdd = tk.Checkbutton(fenetre_selection, text="bddInsertion.py", command=lambda: ajouter_fichier("bddInsertion.py"))
+    check_bdd = tk.Checkbutton(fenetre_selection, text="bddInsertion.py")
+    fichiers_coche.append(tk.BooleanVar())
+    check_bdd.config(variable=fichiers_coche[-1])
     check_bdd.pack()
 
-    check_rapport = tk.Checkbutton(fenetre_selection, text="generationRapport.py", command=lambda: ajouter_fichier("generationRapport.py"))
+    check_rapport = tk.Checkbutton(fenetre_selection, text="generationRapport.py")
+    fichiers_coche.append(tk.BooleanVar())
+    check_rapport.config(variable=fichiers_coche[-1])
     check_rapport.pack()
 
-    check_ressources = tk.Checkbutton(fenetre_selection, text="generationRessources.py", command=lambda: ajouter_fichier("generationRessources.py"))
+    check_ressources = tk.Checkbutton(fenetre_selection, text="generationRessources.py")
+    fichiers_coche.append(tk.BooleanVar())
+    check_ressources.config(variable=fichiers_coche[-1])
     check_ressources.pack()
 
     def ajouter_fichier(nom_fichier):
@@ -165,6 +182,8 @@ def selectionner_fichiers():
     bouton_valider.pack(pady=20)
 
     fenetre_selection.mainloop()
+
+
 
 def afficher_page_principale():
     for widget in page_principale.winfo_children():

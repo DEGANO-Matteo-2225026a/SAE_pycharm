@@ -69,10 +69,6 @@ def executer_code():
         print("-----------------")
     except Exception as e:
         print(f"Erreur lors de l'exécution du fichier generationRessources.py : {e}")
-
-    print("-----------------")
-    print("Génération Ressources")
-    print("-----------------")
     try:
         exec(open("generationFicheProf.py").read())
         print("Succès : Génération FicheProf")
@@ -230,6 +226,18 @@ def executer_fichiers_selectionnes():
 def afficher_resultat(sortie_texte, contenu_resultat):
     sortie_texte.insert(tk.END, contenu_resultat)
     fenetre.update()
+def telecharger_fichiers():
+    try:
+        destination_folder = filedialog.askdirectory(title="Sélectionner le dossier de destination")
+
+        if destination_folder:
+            # Copie des fichiers FicheProf.xlsx et Ressources.xlsx vers le dossier de destination
+            shutil.copy("Excels ressources/FicheProf.xlsx", destination_folder)
+            shutil.copy("Excels ressources/Ressources.xlsx", destination_folder)
+
+            messagebox.showinfo("Téléchargement réussi", "Les fichiers ont été téléchargés avec succès.")
+    except Exception as e:
+        messagebox.showerror("Erreur de téléchargement", f"Une erreur est survenue lors du téléchargement des fichiers : {e}")
 
 def afficher_page_principale():
     for widget in page_principale.winfo_children():

@@ -1,136 +1,131 @@
-Début rapport d'erreurs.
+Dï¿½but rapport d'erreurs.
+
+Erreurs : Tout dï¿½passement d'heures trouvï¿½es sur le planning en comparaison :
+   - aux heures dï¿½finies par le programme de l'Etat,
+   - aux heures prï¿½vues par le dï¿½partement
+
+Warnings : Toute incohï¿½rence du planning n'ï¿½tant pas une erreur :
+   - incohï¿½rence entre les heures trouvï¿½es sur le planning et les heures prï¿½vues par le dï¿½partement,
+   - incohï¿½rence entre le responsable de matiï¿½re dï¿½crit par le planning et celui 
+     stockï¿½ en base de donnï¿½e
 
 
-Total erreurs trouvées : 46
+Total erreurs trouvï¿½es : 46
 
-Erreur(s) Dépassements d'heures entre prévisions et actuelles : 2
+Erreur(s) Dï¿½passements d'heures entre prï¿½visions et actuelles : 2
 
-R3.09 total TP : Attendu : 7, Trouvé :8
-R5.A.06 total CM : Attendu : 0, Trouvé :2
+R3.09 total TP : Attendu : 7, Trouvï¿½ :8
+R5.A.06 total CM : Attendu : 0, Trouvï¿½ :2
 
-Erreur(s) Dépassements d'heures planning / heures prévues : 44
+Erreur(s) Dï¿½passements d'heures planning / heures prï¿½vues : 44
 
-R1.01 total CM : Attendu : 18, Trouvé :24
-R1.06 total CM : Attendu : 12, Trouvé :16
-R1.06 total TP : Attendu : 7, Trouvé :8
-R1.10 total TP : Attendu : 25, Trouvé :26
-R2.02 total CM : Attendu : 6, Trouvé :8
-R2.07 total CM : Attendu : 9, Trouvé :12
-R2.09 total CM : Attendu : 3, Trouvé :4
-R2.14 total TD : Attendu : 11, Trouvé :12
-R3.02 total CM : Attendu : 3, Trouvé :4
-R3.08 total TD : Attendu : 14, Trouvé :18
-R3.09 total CM : Attendu : 6, Trouvé :8
-R3.09 total TD : Attendu : 10, Trouvé :14
-R3.13 total TP : Attendu : 7, Trouvé :8
-R3.14 total TD : Attendu : 7, Trouvé :8
-R4.01 total CM : Attendu : 8, Trouvé :16
-R4.01 total TD : Attendu : 9, Trouvé :20
-R4.01 total TP : Attendu : 16, Trouvé :24
-R4.02 total TP : Attendu : 10, Trouvé :24
-R4.03 total TD : Attendu : 11, Trouvé :20
-R4.03 total TP : Attendu : 8, Trouvé :16
-R4.04 total TD : Attendu : 0, Trouvé :12
-R4.04 total TP : Attendu : 10, Trouvé :12
-R4.05 total TP : Attendu : 13, Trouvé :28
-R4.06 total TD : Attendu : 13, Trouvé :24
-R4.07 total TD : Attendu : 7, Trouvé :16
-R4.A.11 total TD : Attendu : 8, Trouvé :10
-R4.B.12 total TD : Attendu : 7, Trouvé :8
-R5.01 total TD : Attendu : 12, Trouvé :24
-R5.02 total CM : Attendu : 0, Trouvé :6
-R5.02 total TD : Attendu : 6, Trouvé :8
-R5.03 total CM : Attendu : 0, Trouvé :28
-R5.A.07 total TD : Attendu : 3, Trouvé :4
-R5.A.07 total TP : Attendu : 6, Trouvé :8
-R5.A.09 total TD : Attendu : 11, Trouvé :12
-R5.A.09 total TP : Attendu : 3, Trouvé :4
-R5.A.12 total TD : Attendu : 26, Trouvé :28
-R5.B.06 total TD : Attendu : 16, Trouvé :20
-R5.B.07 total TP : Attendu : 3, Trouvé :4
-R5.B.11 total TD : Attendu : 9, Trouvé :10
-R6.01 total TD : Attendu : 12, Trouvé :24
-R6.02 total TD : Attendu : 12, Trouvé :24
-R6.03 total TD : Attendu : 6, Trouvé :12
-R6.04 total TD : Attendu : 6, Trouvé :12
-R6.A.05 total TD : Attendu : 8, Trouvé :12
-
-
-Total avertissements trouvées : 67
-
-Warning(s) Incohérence planning / heures prévues : 65
-
-R1.02 total TD : Attendu : 2, Trouvé : 0
-R1.03 total TD : Attendu : 8, Trouvé : 4
-R1.05 total TP : Attendu : 20, Trouvé : 16
-R1.06 total TD : Attendu : 17, Trouvé : 16
-R1.07 total TP : Attendu : 9, Trouvé : 6
-R1.08 total TP : Attendu : 3, Trouvé : 2
-R1.11 total TP : Attendu : 1, Trouvé : 0
-R1.12 total TP : Attendu : 3, Trouvé : 2
-R2.01 total TD : Attendu : 21, Trouvé : 20
-R2.01 total TP : Attendu : 21, Trouvé : 20
-R2.02 total TD : Attendu : 22, Trouvé : 20
-R2.02 total TP : Attendu : 10, Trouvé : 8
-R2.03 total TD : Attendu : 5, Trouvé : 4
-R2.03 total TP : Attendu : 13, Trouvé : 12
-R2.06 total CM : Attendu : 7, Trouvé : 6
-R2.06 total TP : Attendu : 21, Trouvé : 20
-R2.07 total TP : Attendu : 6, Trouvé : 4
-R2.09 total TP : Attendu : 6, Trouvé : 4
-R2.10 total TD : Attendu : 13, Trouvé : 12
-R2.10 total TP : Attendu : 11, Trouvé : 8
-R2.13 total TP : Attendu : 7, Trouvé : 6
-R2.14 total TP : Attendu : 3, Trouvé : 2
-R3.01 total TP : Attendu : 18, Trouvé : 16
-R3.03 total TD : Attendu : 10, Trouvé : 8
-R3.04 total TD : Attendu : 14, Trouvé : 8
-R3.05 total TD : Attendu : 14, Trouvé : 12
-R3.06 total TD : Attendu : 5, Trouvé : 4
-R3.07 total TD : Attendu : 14, Trouvé : 12
-R3.08 total TP : Attendu : 6, Trouvé : 0
-R3.09 total TP : Attendu : 7, Trouvé : 0
-R3.10 total TD : Attendu : 13, Trouvé : 12
-R3.11 total TD : Attendu : 20, Trouvé : 18
-R3.A.L1 total TD : Attendu : 20, Trouvé : 18
-R3.B.L1 total TD : Attendu : 20, Trouvé : 18
-R4.02 total CM : Attendu : 3, Trouvé : 0
-R4.04 total CM : Attendu : 4, Trouvé : 0
-R4.A.08 total TP : Attendu : 6, Trouvé : 4
-R4.A.09 total TP : Attendu : 3, Trouvé : 2
-R4.A.10 total TP : Attendu : 14, Trouvé : 12
-R4.A.11 total CM : Attendu : 4, Trouvé : 0
-R4.A.12 total TP : Attendu : 4, Trouvé : 2
-R4.A.L1 total TD : Attendu : 20, Trouvé : 18
-R4.B.08 total TP : Attendu : 6, Trouvé : 4
-R4.B.09 total TP : Attendu : 3, Trouvé : 2
-R4.B.L1 total TD : Attendu : 20, Trouvé : 18
-R5.03 total TD : Attendu : 18, Trouvé : 8
-R5.A.04 total TD : Attendu : 18, Trouvé : 16
-R5.A.05 total CM : Attendu : 4, Trouvé : 0
-R5.A.05 total TD : Attendu : 16, Trouvé : 8
-R5.A.05 total TP : Attendu : 8, Trouvé : 6
-R5.A.06 total TD : Attendu : 12, Trouvé : 10
-R5.A.08 total TD : Attendu : 10, Trouvé : 8
-R5.A.10 total TP : Attendu : 8, Trouvé : 6
-R5.A.11 total TP : Attendu : 3, Trouvé : 2
-R5.A.12 total TP : Attendu : 4, Trouvé : 0
-R5.A.14 total TP : Attendu : 24, Trouvé : 20
-R5.B.04 total CM : Attendu : 6, Trouvé : 0
-R5.B.04 total TD : Attendu : 16, Trouvé : 10
-R5.B.04 total TP : Attendu : 8, Trouvé : 4
-R5.B.06 total TP : Attendu : 16, Trouvé : 12
-R5.B.09 total TD : Attendu : 10, Trouvé : 8
-R5.B.12 total TP : Attendu : 24, Trouvé : 20
-R5.B.L1 total TD : Attendu : 24, Trouvé : 12
-R6.A.05 total CM : Attendu : 6, Trouvé : 0
-R6.B.06 total TD : Attendu : 14, Trouvé : 12
+R1.01 total CM : Attendu : 18, Trouvï¿½ :24
+R1.06 total CM : Attendu : 12, Trouvï¿½ :16
+R1.06 total TP : Attendu : 7, Trouvï¿½ :8
+R1.10 total TP : Attendu : 25, Trouvï¿½ :26
+R2.02 total CM : Attendu : 6, Trouvï¿½ :8
+R2.07 total CM : Attendu : 9, Trouvï¿½ :12
+R2.09 total CM : Attendu : 3, Trouvï¿½ :4
+R2.14 total TD : Attendu : 11, Trouvï¿½ :12
+R3.02 total CM : Attendu : 3, Trouvï¿½ :4
+R3.08 total TD : Attendu : 14, Trouvï¿½ :18
+R3.09 total CM : Attendu : 6, Trouvï¿½ :8
+R3.09 total TD : Attendu : 10, Trouvï¿½ :14
+R3.13 total TP : Attendu : 7, Trouvï¿½ :8
+R3.14 total TD : Attendu : 7, Trouvï¿½ :8
+R4.01 total CM : Attendu : 8, Trouvï¿½ :16
+R4.01 total TD : Attendu : 9, Trouvï¿½ :20
+R4.01 total TP : Attendu : 16, Trouvï¿½ :24
+R4.02 total TP : Attendu : 10, Trouvï¿½ :24
+R4.03 total TD : Attendu : 11, Trouvï¿½ :20
+R4.03 total TP : Attendu : 8, Trouvï¿½ :16
+R4.04 total TD : Attendu : 0, Trouvï¿½ :12
+R4.04 total TP : Attendu : 10, Trouvï¿½ :12
+R4.05 total TP : Attendu : 13, Trouvï¿½ :28
+R4.06 total TD : Attendu : 13, Trouvï¿½ :24
+R4.07 total TD : Attendu : 7, Trouvï¿½ :16
+R4.A.11 total TD : Attendu : 8, Trouvï¿½ :10
+R4.B.12 total TD : Attendu : 7, Trouvï¿½ :8
+R5.01 total TD : Attendu : 12, Trouvï¿½ :24
+R5.02 total CM : Attendu : 0, Trouvï¿½ :6
+R5.02 total TD : Attendu : 6, Trouvï¿½ :8
+R5.03 total CM : Attendu : 0, Trouvï¿½ :28
+R5.A.07 total TD : Attendu : 3, Trouvï¿½ :4
+R5.A.07 total TP : Attendu : 6, Trouvï¿½ :8
+R5.A.09 total TD : Attendu : 11, Trouvï¿½ :12
+R5.A.09 total TP : Attendu : 3, Trouvï¿½ :4
+R5.A.12 total TD : Attendu : 26, Trouvï¿½ :28
+R5.B.06 total TD : Attendu : 16, Trouvï¿½ :20
+R5.B.07 total TP : Attendu : 3, Trouvï¿½ :4
+R5.B.11 total TD : Attendu : 9, Trouvï¿½ :10
+R6.01 total TD : Attendu : 12, Trouvï¿½ :24
+R6.02 total TD : Attendu : 12, Trouvï¿½ :24
+R6.03 total TD : Attendu : 6, Trouvï¿½ :12
+R6.04 total TD : Attendu : 6, Trouvï¿½ :12
+R6.A.05 total TD : Attendu : 8, Trouvï¿½ :12
 
 
-Warning(s) Incohérence responsable matière : 2
+Total warnings trouvï¿½es : 67
 
-R4.05 responsable ressource : Attendu : JV, Trouvé : ES
-R5.01 responsable ressource : Attendu : ??, Trouvé : ChM
+Warning(s) Incohï¿½rence planning / heures prï¿½vues : 65
 
-
-Fin rapport d'erreurs.
+R1.02 total TD : Attendu : 2, Trouvï¿½ : 0
+R1.03 total TD : Attendu : 8, Trouvï¿½ : 4
+R1.05 total TP : Attendu : 20, Trouvï¿½ : 16
+R1.06 total TD : Attendu : 17, Trouvï¿½ : 16
+R1.07 total TP : Attendu : 9, Trouvï¿½ : 6
+R1.08 total TP : Attendu : 3, Trouvï¿½ : 2
+R1.11 total TP : Attendu : 1, Trouvï¿½ : 0
+R1.12 total TP : Attendu : 3, Trouvï¿½ : 2
+R2.01 total TD : Attendu : 21, Trouvï¿½ : 20
+R2.01 total TP : Attendu : 21, Trouvï¿½ : 20
+R2.02 total TD : Attendu : 22, Trouvï¿½ : 20
+R2.02 total TP : Attendu : 10, Trouvï¿½ : 8
+R2.03 total TD : Attendu : 5, Trouvï¿½ : 4
+R2.03 total TP : Attendu : 13, Trouvï¿½ : 12
+R2.06 total CM : Attendu : 7, Trouvï¿½ : 6
+R2.06 total TP : Attendu : 21, Trouvï¿½ : 20
+R2.07 total TP : Attendu : 6, Trouvï¿½ : 4
+R2.09 total TP : Attendu : 6, Trouvï¿½ : 4
+R2.10 total TD : Attendu : 13, Trouvï¿½ : 12
+R2.10 total TP : Attendu : 11, Trouvï¿½ : 8
+R2.13 total TP : Attendu : 7, Trouvï¿½ : 6
+R2.14 total TP : Attendu : 3, Trouvï¿½ : 2
+R3.01 total TP : Attendu : 18, Trouvï¿½ : 16
+R3.03 total TD : Attendu : 10, Trouvï¿½ : 8
+R3.04 total TD : Attendu : 14, Trouvï¿½ : 8
+R3.05 total TD : Attendu : 14, Trouvï¿½ : 12
+R3.06 total TD : Attendu : 5, Trouvï¿½ : 4
+R3.07 total TD : Attendu : 14, Trouvï¿½ : 12
+R3.08 total TP : Attendu : 6, Trouvï¿½ : 0
+R3.09 total TP : Attendu : 7, Trouvï¿½ : 0
+R3.10 total TD : Attendu : 13, Trouvï¿½ : 12
+R3.11 total TD : Attendu : 20, Trouvï¿½ : 18
+R3.A.L1 total TD : Attendu : 20, Trouvï¿½ : 18
+R3.B.L1 total TD : Attendu : 20, Trouvï¿½ : 18
+R4.02 total CM : Attendu : 3, Trouvï¿½ : 0
+R4.04 total CM : Attendu : 4, Trouvï¿½ : 0
+R4.A.08 total TP : Attendu : 6, Trouvï¿½ : 4
+R4.A.09 total TP : Attendu : 3, Trouvï¿½ : 2
+R4.A.10 total TP : Attendu : 14, Trouvï¿½ : 12
+R4.A.11 total CM : Attendu : 4, Trouvï¿½ : 0
+R4.A.12 total TP : Attendu : 4, Trouvï¿½ : 2
+R4.A.L1 total TD : Attendu : 20, Trouvï¿½ : 18
+R4.B.08 total TP : Attendu : 6, Trouvï¿½ : 4
+R4.B.09 total TP : Attendu : 3, Trouvï¿½ : 2
+R4.B.L1 total TD : Attendu : 20, Trouvï¿½ : 18
+R5.03 total TD : Attendu : 18, Trouvï¿½ : 8
+R5.A.04 total TD : Attendu : 18, Trouvï¿½ : 16
+R5.A.05 total CM : Attendu : 4, Trouvï¿½ : 0
+R5.A.05 total TD : Attendu : 16, Trouvï¿½ : 8
+R5.A.05 total TP : Attendu : 8, Trouvï¿½ : 6
+R5.A.06 total TD : Attendu : 12, Trouvï¿½ : 10
+R5.A.08 total TD : Attendu : 10, Trouvï¿½ : 8
+R5.A.10 total TP : Attendu : 8, Trouvï¿½ : 6
+R5.A.11 total TP : Attendu : 3, Trouvï¿½ : 2
+R5.A.12 total TP : Attendu : 4, Trouvï¿½ : 0
+R5.A.14 total TP : Attendu : 24, Trouvï¿½ : 20
+R5.B.04 total CM : Attendu : 6, Trouvï¿½ : 0
+R5.B.04 total TD : Attendu : 16, Trouvï¿½ : 10
+R5.B.04 total TP : Attendu : 8, Trouvï¿½ : 4
+R5.B.06 tota

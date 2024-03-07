@@ -22,7 +22,7 @@ class GenerationFicheProf:
             for i in classeur.worksheets:
                 if i.title == prof:
                     classeur.remove(classeur[prof])
-            """
+
             # Créer une nouvelle feuille pour chaque professeur
             feuille = classeur.copy_worksheet(ancienne_feuille)
             feuille.title = prof
@@ -63,7 +63,7 @@ class GenerationFicheProf:
                     feuille.cell(row=ligneH + 1, column=i-3, value=cellule_selectionnee)
                     # On insère l'année
                     cellule_selectionnee = f.cell(row=horaires, column=3).value
-                    feuille.cell(row=ligneH + 1, column=2, value=cellule_selectionnee)"""
+                    feuille.cell(row=ligneH + 1, column=2, value=cellule_selectionnee)
 
 
 

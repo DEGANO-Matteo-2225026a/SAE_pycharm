@@ -110,38 +110,7 @@ class GenerationRessources:
                 else:
                     feuille.cell(row=ligne_date, column=5, value=(liste_cours[i][2] * 2))
 
-            """
-            # Récupération des données pour remplir tableau titulaire
-            titu = "SELECT Intervenant, Feuille_title, SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) AS matiere,d.CM, d.TD, TPD, TDNonD, Test, p.CM FROM DONNEEPROF d JOIN PLANRESSOURCE p ON matiere = Ressource WHERE AlerteProf == 1 AND matiere = ?"
-            cursor.execute(titu, (res,))
-            liste_titu = cursor.fetchall()
 
-            ligne_titu = trouver_ligne(feuille, "Service previsionnel titulaires")
-
-            for i in range(len(liste_titu)):
-                ligne_insertion = ligne_titu + i + 3
-                feuille.cell(row=ligne_insertion, column=1, value=(liste_titu[i][0]))
-                if "S1" or "S2" in liste_titu[i][1]:
-                    feuille.cell(row=ligne_insertion, column=3, value="BUT1")
-                elif "S3" or "S4" in liste_titu[i][1]:
-                    feuille.cell(row=ligne_insertion, column=3, value="BUT2")
-                else:
-                    feuille.cell(row=ligne_insertion, column=3, value="BUT3")
-                if "A" in liste_titu[i][1]:
-                    feuille.cell(row=ligne_insertion, column=4, value="A")
-                elif "B" in liste_titu[i][1]:
-                    feuille.cell(row=ligne_insertion, column=4, value="B")
-                if "S1" in liste_titu[i][1] or "S3" in liste_titu[i][1] or "S6" in liste_titu[i][1]:
-                    feuille.cell(row=ligne_insertion, column=6, value=(liste_titu[i][3] * liste_titu[i][8]) * 2)
-                    feuille.cell(row=ligne_insertion, column=7, value=liste_titu[i][4] * 2)
-                    feuille.cell(row=ligne_insertion, column=8, value=liste_titu[i][5] * 2)
-                    feuille.cell(row=ligne_insertion, column=9, value=liste_titu[i][6] * 2)
-                else:
-                    feuille.cell(row=ligne_insertion, column=12, value=(liste_titu[i][3] * liste_titu[i][8]) * 2)
-                    feuille.cell(row=ligne_insertion, column=13, value=liste_titu[i][4] * 2)
-                    feuille.cell(row=ligne_insertion, column=14, value=liste_titu[i][5] * 2)
-                    feuille.cell(row=ligne_insertion, column=15, value=liste_titu[i][6] * 2)
-                """
             # Récupération des données pour remplir les tableaux titulaire de septembre à décembre
             cours = "SELECT TypeCours, COUNT(*) FROM PLANINFO WHERE Ressource = ? AND (Semaine LIKE '%-09-%' OR Semaine LIKE '%-10-%' OR Semaine LIKE '%-11-%' OR Semaine LIKE '%-12-%') GROUP BY TypeCours"
             cursor.execute(cours, (res,))

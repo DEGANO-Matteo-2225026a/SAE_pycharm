@@ -176,7 +176,7 @@ def GetInfoPlanning(Feuille,ColonneDate,LimiteGauche,LimiteDroite,LimiteBoucle,T
             if Feuille.cell(i,ColonneDate).fill.start_color.index not in TableauRessource[k][0]:
                 continue
 
-        SemaineActuelle = Feuille.cell(i, ColonneDate).value.strftime('%d-%m-%Y')
+        SemaineActuelle = Feuille.cell(i, ColonneDate).value.strftime('%Y-%m-%d')
 
         # On parcours toutes les cellules de la ligne
         for j in range(LimiteGauche,LimiteDroite + 1):

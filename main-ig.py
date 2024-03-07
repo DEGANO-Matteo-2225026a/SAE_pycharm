@@ -69,6 +69,10 @@ def executer_code():
         print("-----------------")
     except Exception as e:
         print(f"Erreur lors de l'exécution du fichier generationRessources.py : {e}")
+
+    print("-----------------")
+    print("Génération Ressources")
+    print("-----------------")
     try:
         exec(open("generationFicheProf.py").read())
         print("Succès : Génération FicheProf")

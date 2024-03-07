@@ -3,6 +3,7 @@ from tkinter import filedialog, messagebox
 import sys
 import os
 import shutil
+import subprocess
 
 from generationRapport import RapportErreurGenerator
 from generationRessources import GenerationRessources
@@ -229,6 +230,7 @@ def executer_fichiers_selectionnes():
 def afficher_resultat(sortie_texte, contenu_resultat):
     sortie_texte.insert(tk.END, contenu_resultat)
     fenetre.update()
+
 def telecharger_fichiers():
     try:
         destination_folder = filedialog.askdirectory(title="Sélectionner le dossier de destination")
@@ -251,6 +253,15 @@ def afficher_page_principale():
 
     bouton_lancer_selection = tk.Button(page_principale, text="Lancer les fichiers sélectionnés", command=afficher_selection_fichiers, bg="blue", fg="white", font=("Helvetica", 12, "bold"), padx=20, pady=10)
     bouton_lancer_selection.pack(pady=20)
+
+    bouton_guide_utilisation = tk.Button(page_principale, text="Guide Utilisation", command=afficher_guide_utilisation, bg="orange", fg="white", font=("Helvetica", 12, "bold"), padx=20, pady=10)
+    bouton_guide_utilisation.pack(pady=20)
+
+def afficher_guide_utilisation():
+    try:
+        subprocess.Popen(["guide.pdf"], shell=True)
+    except Exception as e:
+        messagebox.showerror("Erreur d'ouverture", f"Une erreur est survenue lors de l'ouverture du guide : {e}")
 
 fenetre = tk.Tk()
 fenetre.title("Gestion des fichiers")

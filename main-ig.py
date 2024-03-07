@@ -237,8 +237,8 @@ def telecharger_fichiers():
 
         if destination_folder:
             # Copie des fichiers FicheProf.xlsx et Ressources.xlsx vers le dossier de destination
-            shutil.copy("FicheProf.xlsx", destination_folder)
-            shutil.copy("Ressources.xlsx", destination_folder)
+            shutil.copy("Excels ressources/FicheProf.xlsx", destination_folder)
+            shutil.copy("Excels ressources/Ressources.xlsx", destination_folder)
 
             messagebox.showinfo("Téléchargement réussi", "Les fichiers ont été téléchargés avec succès.")
     except Exception as e:

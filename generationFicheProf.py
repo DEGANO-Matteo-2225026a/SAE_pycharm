@@ -7,8 +7,6 @@ class GenerationFicheProf:
 
         # Creer un nouveau classeur Excel
         classeur = load_workbook("./Excels ressources/FicheProf.xlsx")
-        for r in classeur:
-            print(r.title)
 
         # Selectionner la feuille active
         ancienne_feuille = classeur['Exemple']
@@ -23,16 +21,32 @@ class GenerationFicheProf:
             cellule_selectionnee = feuille['B1']
             cellule_selectionnee.value = prof
 
-            """
+
             recherche = load_workbook("Ressources.xlsx")
             f = recherche.active
             
             for f in recherche:
+                print(f.title)
                 nomprof = trouver_ligne(f, prof)
                 if nomprof is None:
                     continue
                 print(nomprof)
-                """
+                # On cherche si le professeur est responsable de la matière
+                respounon = f.cell(row=nomprof - 1, column=1).value
+                print(respounon)
+
+                # Si oui on la place responsable
+                if respounon == "Intervenants":
+                    f.insert_rows(4)
+                    f.cell(row=4, column=1, value=f.title)
+                # Sinon on la place intervenant
+                else:
+                    rowInter = trouver_ligne(f, "Interventions")
+                    f.insert_rows(rowInter + 1)
+                    f.cell(row=rowInter + 1, column=1, value=f.title)
+
+
+
 
         def trouver_ligne(feuille, contenu_cible):
             for row_number, row in enumerate(feuille.iter_rows(values_only=True), start=1):

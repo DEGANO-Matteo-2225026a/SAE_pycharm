@@ -9,10 +9,12 @@ class GenerationFicheProf:
         classeur = load_workbook("./Excels ressources/FicheProf.xlsx")
 
         # Selectionner la feuille active
-        ancienne_feuille = classeur['Exemple']
+        ancienne_feuille = classeur.active
 
-        recherche = load_workbook("Ressources.xlsx")
+        recherche = load_workbook("./Excels ressources/FichierRessources.xlsx")
         f = recherche.active
+
+
 
         def ficheProf(prof):
 
@@ -20,7 +22,7 @@ class GenerationFicheProf:
             for i in classeur.worksheets:
                 if i.title == prof:
                     classeur.remove(classeur[prof])
-
+            """
             # Créer une nouvelle feuille pour chaque professeur
             feuille = classeur.copy_worksheet(ancienne_feuille)
             feuille.title = prof
@@ -61,7 +63,7 @@ class GenerationFicheProf:
                     feuille.cell(row=ligneH + 1, column=i-3, value=cellule_selectionnee)
                     # On insère l'année
                     cellule_selectionnee = f.cell(row=horaires, column=3).value
-                    feuille.cell(row=ligneH + 1, column=2, value=cellule_selectionnee)
+                    feuille.cell(row=ligneH + 1, column=2, value=cellule_selectionnee)"""
 
 
 
@@ -85,6 +87,7 @@ class GenerationFicheProf:
                 else:
                     liste_prof.append(prof)
                     ficheProf(prof)
+
 
         classeur.save("./Excels ressources/FicheProf.xlsx")
 

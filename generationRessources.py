@@ -112,8 +112,9 @@ class GenerationRessources:
                     feuille.cell(row=ligne_date, column=4, value=(liste_cours[i][2] * 2))
                 else:
                     feuille.cell(row=ligne_date, column=5, value=(liste_cours[i][2] * 2))
-                #if feuille.cell(row=ligne_insertion, column=1).value == feuille.cell(row=ligne_insertion - 1, column=1).value or feuille.cell(row=ligne_insertion - 1, column=1).value == 0:
+                #if feuille.cell(row=ligne_insertion, column=1).value == feuille.cell(row=ligne_insertion - 1, column=1).value:
                 #    feuille.delete_rows(ligne_insertion)
+
 
             # Récupération des données pour remplir tableau titulaire
             titu = "SELECT Intervenant, Feuille_title, SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) AS matiere,d.CM, d.TD, TPD, TDNonD, Test, p.CM FROM DONNEEPROF d JOIN PLANRESSOURCE p ON matiere = Ressource WHERE AlerteProf == 1 AND matiere = ?"
@@ -253,7 +254,7 @@ class GenerationRessources:
         classeur.save('Ressources.xlsx')
 
 def main():
-    # Instanciation de la classe RapportErreurGenerator
+    # Instanciation de la classe GenerationRessources
     ressource_generator = GenerationRessources()
     # Appel de la méthode run()
     ressource_generator.run()

@@ -110,7 +110,7 @@ S2Portfolio = S1But1Info.iloc[57, [0,2,17,18,19,22,23]]
 
 # ---- TEST ----
 
-print(S1R101)
+#print(S1R101)
 
 
 """

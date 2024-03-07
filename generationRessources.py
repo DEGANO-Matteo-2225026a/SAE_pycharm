@@ -91,19 +91,22 @@ class GenerationRessources:
             cursor.execute(cours, (res,))
             liste_cours = cursor.fetchall()
 
-
-
+            dates = []
             for i in range(len(liste_cours)):
 
                 hcm = trouver_ligne(feuille, "CM (h)")
-
                 ligne_insertion = hcm + 1 + i
                 feuille.insert_rows(ligne_insertion)
                 feuille.cell(row=ligne_insertion, column=1, value=liste_cours[i][0])
 
+
+                #feuille.insert_rows(ligne_insertion)
+                #feuille.cell(row=ligne_insertion, column=1, value=liste_cours[i][0])
+
                 ligne_date = trouver_ligne(feuille,liste_cours[i][0])
                 if ligne_date is None:
                     continue
+
                 if liste_cours[i][1] == "Cours":
                     feuille.cell(row=ligne_date, column=2, value=(liste_cours[i][2]) * 2)
                 elif liste_cours[i][1] == "TD":
@@ -112,14 +115,13 @@ class GenerationRessources:
                     feuille.cell(row=ligne_date, column=4, value=(liste_cours[i][2] * 2))
                 else:
                     feuille.cell(row=ligne_date, column=5, value=(liste_cours[i][2] * 2))
-                #if feuille.cell(row=ligne_insertion, column=1).value == feuille.cell(row=ligne_insertion - 1, column=1).value:
-                #    feuille.delete_rows(ligne_insertion)
 
 
             # Récupération des données pour remplir tableau titulaire
             titu = "SELECT Intervenant, Feuille_title, SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) AS matiere,d.CM, d.TD, TPD, TDNonD, Test, p.CM FROM DONNEEPROF d JOIN PLANRESSOURCE p ON matiere = Ressource WHERE AlerteProf == 1 AND matiere = ?"
             cursor.execute(titu, (res,))
             liste_titu = cursor.fetchall()
+
 
             ligne_titu = trouver_ligne(feuille,"Service previsionnel titulaires")
 

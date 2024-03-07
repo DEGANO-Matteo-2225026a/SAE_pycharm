@@ -209,6 +209,9 @@ def executer_fichiers_selectionnes():
                 print("-----------------")
             except Exception as e:
                 print(f"Erreur lors de l'exécution du fichier {fichier} : {e}")
+            
+    bouton_telecharger = tk.Button(page_principale, text="Télécharger les fichiers", command=telecharger_fichiers, bg="green", fg="white", font=("Helvetica", 12, "bold"), padx=20, pady=10)
+    bouton_telecharger.pack(pady=20)
 
     # Restaurer la sortie standard
     sys.stdout = sys.__stdout__

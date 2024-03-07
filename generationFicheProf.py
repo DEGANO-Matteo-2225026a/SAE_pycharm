@@ -16,6 +16,11 @@ class GenerationFicheProf:
 
         def ficheProf(prof):
 
+            # Supprimer les feuilles existantes
+            for i in classeur.worksheets:
+                if i.title == prof:
+                    classeur.remove(classeur[prof])
+
             # Créer une nouvelle feuille pour chaque professeur
             feuille = classeur.copy_worksheet(ancienne_feuille)
             feuille.title = prof
@@ -81,7 +86,7 @@ class GenerationFicheProf:
                     liste_prof.append(prof)
                     ficheProf(prof)
 
-        classeur.save("FicheProf.xlsx")
+        classeur.save("./Excels ressources/FicheProf.xlsx")
 
 def main():
     # Instanciation de la classe GenerationFicheProf

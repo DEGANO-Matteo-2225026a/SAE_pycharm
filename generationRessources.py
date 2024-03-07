@@ -17,6 +17,12 @@ class GenerationRessources:
         ancienne_feuille = classeur.active
 
         def Remplissage(res, cmtot, tdtot, tptot, resp):
+
+            # Supprimer les feuilles existantes
+            for i in classeur.worksheets:
+                if i.title == res:
+                    classeur.remove(classeur[res])
+
             # Créer une nouvelle feuille pour chaque matière
             feuille = classeur.copy_worksheet(ancienne_feuille)
             feuille.title = res
@@ -387,7 +393,7 @@ class GenerationRessources:
             Remplissage(liste_res[i][0], liste_res[i][1], liste_res[i][2], liste_res[i][3], liste_res[i][4])
 
         # Enregistrer le classeur modifié dans un nouveau fichier
-        classeur.save('Ressources.xlsx')
+        classeur.save("./Excels ressources/FichierRessources.xlsx")
 
 
 def main():

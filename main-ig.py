@@ -23,6 +23,9 @@ def executer_code():
     for widget in page_principale.winfo_children():
         widget.destroy()
 
+    bouton_retour = tk.Button(page_principale, text="Retour au Menu Principal", command=afficher_page_principale, bg="blue", fg="white", font=("Helvetica", 12, "bold"), padx=20, pady=10)
+    bouton_retour.pack(pady=20)
+
     sortie_texte = tk.Text(page_principale, bg="white", fg="black", font=("Helvetica", 10))
     sortie_texte.pack(fill=tk.BOTH, expand=True)
 
@@ -63,7 +66,7 @@ def executer_code():
             contenu_rapport = rapport_file.read()
             print(contenu_rapport)
     except Exception as e:
-        print(f"Erreur lors de l'exécution du fichier generationRessources.py : {e}")
+        print(f"Erreur lors de l'exécution du fichier generationRessources.py : {e}")   
 
 def afficher_selection_fichiers():
     for widget in page_principale.winfo_children():
@@ -75,6 +78,8 @@ def afficher_selection_fichiers():
     bouton_selectionner = tk.Button(page_principale, text="Sélectionner des fichiers", command=selectionner_fichiers, bg="green", fg="white", font=("Helvetica", 12, "bold"), padx=20, pady=10)
     bouton_selectionner.pack(pady=20)
 
+    bouton_executer = tk.Button(page_principale, text="Exécuter les fichiers sélectionnés", command=executer_fichiers_selectionnes, bg="orange", fg="white", font=("Helvetica", 12, "bold"), padx=20, pady=10)
+    bouton_executer.pack(pady=20)
 def executer_fichiers_selectionnes():
     for widget in page_principale.winfo_children():
         widget.destroy()
@@ -84,17 +89,50 @@ def executer_fichiers_selectionnes():
 
     sys.stdout = TextRedirector(sortie_texte, "stdout")
 
-    for fichier, coche in zip(fichiers_disponibles, fichiers_coche):
+    for fichier, coche in zip(fichiers_selectionnes, fichiers_coche):
         if coche.get():
-            try:
-                exec(open(fichier).read())
-                print(f"Succès : {fichier}")
-            except Exception as e:
-                print(f"Erreur lors de l'exécution du fichier {fichier} : {e}")
+            if fichier == "bddInsertion.py":
+                print("-----------------")
+                print("Lancement de bddInsertion.py")
+                print("-----------------")
+                try:
+                    exec(open(fichier).read())
+                    print(f"Succès : {fichier}")
+                except Exception as e:
+                    print(f"Erreur lors de l'exécution du fichier {fichier} : {e}")
+
+            elif fichier == "generationRapport.py":
+                print("-----------------")
+                print("Lancement de generationRapport.py")
+                print("-----------------")
+                try:
+                    exec(open(fichier).read())
+                    print(f"Succès : {fichier}")
+                    print("-----------------")
+                except Exception as e:
+                    print(f"Erreur lors de l'exécution du fichier {fichier} : {e}")
+                print("Contenu du fichier rapportErreurs.txt : ")
+                print("-----------------")
+                try:
+                    with open("rapportErreurs.txt", "r") as rapport_file:
+                        contenu_rapport = rapport_file.read()
+                        print(contenu_rapport)
+                except Exception as e:
+                    print(f"Erreur lors de la lecture du fichier rapportErreurs.txt : {e}")
+
+            elif fichier == "generationRessources.py":
+                print("-----------------")
+                print("Lancement de generationRessources.py")
+                print("-----------------")
+                try:
+                    exec(open(fichier).read())
+                    print(f"Succès : {fichier}")
+                    print("-----------------")
+                except Exception as e:
+                    print(f"Erreur lors de l'exécution du fichier {fichier} : {e}")
 
     bouton_valider = tk.Button(page_principale, text="Valider", command=lambda: afficher_resultat(sortie_texte), bg="green", fg="white", font=("Helvetica", 12, "bold"), padx=20, pady=10)
     bouton_valider.pack(pady=20)
-
 def afficher_resultat(sortie_texte):
     contenu_resultat = sortie_texte.get("1.0", tk.END)
     print("Résultat : ")

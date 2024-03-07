@@ -48,7 +48,7 @@ class GenerationFicheProf:
                     continue
                 ligneH = trouver_ligne(feuille, "Matieres", 1)
                 feuille.insert_rows(ligneH + 1)
-                for i in range(6, 12):
+                for i in range(6, 13):
                     cellule_selectionnee = f.cell(row=horaires, column=i).value
                     if cellule_selectionnee is None:
                         cellule_selectionnee = f.cell(row=horaires, column=i+6).value

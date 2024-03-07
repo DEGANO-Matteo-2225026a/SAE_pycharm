@@ -117,7 +117,7 @@ class GenerationRessources:
             cours_s1 = cursor.fetchall()
 
             # Récupération des données pour remplir les tableaux vacataire de janvier à aout
-            cours = "SELECT TypeCours, COUNT(*) FROM PLANINFO WHERE Ressource = ? AND (Semaine NOT LIKE '%-09-%' OR Semaine NOT LIKE '%-10-%' OR Semaine NOT LIKE '%-11-%' OR Semaine NOT LIKE '%-12-%') GROUP BY TypeCours"
+            cours = "SELECT TypeCours, COUNT(*) FROM PLANINFO WHERE Ressource = ? AND (Semaine NOT LIKE '%-09-%' AND Semaine NOT LIKE '%-10-%' AND Semaine NOT LIKE '%-11-%' AND Semaine NOT LIKE '%-12-%') GROUP BY TypeCours"
             cursor.execute(cours, (res,))
             cours_s2 = cursor.fetchall()
 
@@ -169,24 +169,24 @@ class GenerationRessources:
 
                 if len(cours_s2) > 0:
                     if cours_s2[0][0] == "Cours":
-                        feuille.cell(row=ligne_insertion, column=6, value=(cours_s2[0][1] * 2 * liste_titu[0][3]))
+                        feuille.cell(row=ligne_insertion, column=12, value=(cours_s2[0][1] * 2 * liste_titu[0][3]))
                     elif cours_s2[0][0] == "TD":
-                        feuille.cell(row=ligne_insertion, column=7, value=(cours_s2[0][1] * 2 * liste_titu[0][4]))
+                        feuille.cell(row=ligne_insertion, column=13, value=(cours_s2[0][1] * 2 * liste_titu[0][4]))
                     elif cours_s2[0][0] == "TP":
-                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s2[0][1] * 2 * liste_titu[0][5]))
-                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s2[0][1] * 2 * liste_titu[0][6]))
+                        feuille.cell(row=ligne_insertion, column=14, value=(cours_s2[0][1] * 2 * liste_titu[0][5]))
+                        feuille.cell(row=ligne_insertion, column=15, value=(cours_s2[0][1] * 2 * liste_titu[0][6]))
 
                 if len(cours_s2) > 1:
                     if cours_s2[1][0] == "TD":
-                        feuille.cell(row=ligne_insertion, column=7, value=(cours_s2[1][1] * 2 * liste_titu[0][4]))
+                        feuille.cell(row=ligne_insertion, column=13, value=(cours_s2[1][1] * 2 * liste_titu[0][4]))
                     elif cours_s2[1][0] == "TP":
-                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s2[1][1] * 2 * liste_titu[0][5]))
-                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s2[1][1] * 2 * liste_titu[0][6]))
+                        feuille.cell(row=ligne_insertion, column=14, value=(cours_s2[1][1] * 2 * liste_titu[0][5]))
+                        feuille.cell(row=ligne_insertion, column=15, value=(cours_s2[1][1] * 2 * liste_titu[0][6]))
 
                 if len(cours_s2) > 2:
                     if cours_s2[2][0] == "TP":
-                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s2[2][1] * 2 * liste_titu[0][5]))
-                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s2[2][1] * 2 * liste_titu[0][6]))
+                        feuille.cell(row=ligne_insertion, column=14, value=(cours_s2[2][1] * 2 * liste_titu[0][5]))
+                        feuille.cell(row=ligne_insertion, column=15, value=(cours_s2[2][1] * 2 * liste_titu[0][6]))
 
                 valeur_cellule_8 = feuille.cell(row=ligne_insertion, column=8).value
                 valeur_cellule_9 = feuille.cell(row=ligne_insertion, column=9).value
@@ -201,19 +201,39 @@ class GenerationRessources:
 
                 valeur_cellule_6 = feuille.cell(row=ligne_insertion, column=6).value
                 valeur_cellule_7 = feuille.cell(row=ligne_insertion, column=7).value
+
                 # Vérification si les cellules ne sont pas vides
                 if valeur_cellule_6 is not None and valeur_cellule_7 is not None and valeur_cellule_8 is not None and valeur_cellule_9 is not None:
                     hetd_total_1 = valeur_cellule_6 * 1.5 + valeur_cellule_7 + valeur_cellule_8 + valeur_cellule_9
                     feuille.cell(row=ligne_insertion, column=11, value=hetd_total_1)
 
-                valeur_cellule_11 = feuille.cell(row=ligne_insertion, column=11).value
-                valeur_cellule_16 = feuille.cell(row=ligne_insertion, column=16).value
+                valeur_cellule_14 = feuille.cell(row=ligne_insertion, column=14).value
+                valeur_cellule_15 = feuille.cell(row=ligne_insertion, column=15).value
 
-                if valeur_cellule_11 is not None and valeur_cellule_16 is not None:
-                    hetd_final = valeur_cellule_11 + valeur_cellule_16
+                # Vérification si les cellules ne sont pas vides
+                if valeur_cellule_14 is not None and valeur_cellule_15 is not None:
+                    # Calcul de hetd_ares_1
+                    hetd_ares_2 = valeur_cellule_14 + valeur_cellule_15
+
+                    # Assignation de la valeur à la cellule 16
+                    feuille.cell(row=ligne_insertion, column=16, value=hetd_ares_2)
+
+                valeur_cellule_12 = feuille.cell(row=ligne_insertion, column=12).value
+                valeur_cellule_13 = feuille.cell(row=ligne_insertion, column=13).value
+
+                # Vérification si les cellules ne sont pas vides
+                if valeur_cellule_12 is not None and valeur_cellule_13 is not None and valeur_cellule_14 is not None and valeur_cellule_15 is not None:
+                    hetd_total_1 = valeur_cellule_12 * 1.5 + valeur_cellule_13 + valeur_cellule_14 + valeur_cellule_15
+                    feuille.cell(row=ligne_insertion, column=17, value=hetd_total_1)
+
+                valeur_cellule_11 = feuille.cell(row=ligne_insertion, column=11).value
+                valeur_cellule_17 = feuille.cell(row=ligne_insertion, column=17).value
+
+                if valeur_cellule_11 is not None and valeur_cellule_17 is not None:
+                    hetd_final = valeur_cellule_11 + valeur_cellule_17
                 else:
-                    hetd_final = valeur_cellule_11 if valeur_cellule_11 is not None else valeur_cellule_16
-                    feuille.cell(row=ligne_insertion, column=17, value=hetd_final)
+                    hetd_final = valeur_cellule_11 if valeur_cellule_11 is not None else valeur_cellule_17
+                    feuille.cell(row=ligne_insertion, column=18, value=hetd_final)
 
             # Récupération des données des vacataires
             prof = "SELECT Feuille_title,  SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) AS matiere, Intervenant, CM, TD, TDNonD, TPD FROM DONNEEPROF WHERE matiere = ? AND AlerteProf = 0"
@@ -262,24 +282,24 @@ class GenerationRessources:
 
                 if len(cours_s2) > 0:
                     if cours_s2[0][0] == "Cours":
-                        feuille.cell(row=ligne_insertion, column=6, value=(cours_s2[0][1] * 2 * liste_vac[i][3]))
+                        feuille.cell(row=ligne_insertion, column=12, value=(cours_s2[0][1] * 2 * liste_vac[i][3]))
                     elif cours_s2[0][0] == "TD":
-                        feuille.cell(row=ligne_insertion, column=7, value=(cours_s2[0][1] * 2 * liste_vac[i][4]))
+                        feuille.cell(row=ligne_insertion, column=13, value=(cours_s2[0][1] * 2 * liste_vac[i][4]))
                     elif cours_s2[0][0] == "TP":
-                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s2[0][1] * 2 * liste_vac[i][5]))
-                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s2[0][1] * 2 * liste_vac[i][6]))
+                        feuille.cell(row=ligne_insertion, column=14, value=(cours_s2[0][1] * 2 * liste_vac[i][5]))
+                        feuille.cell(row=ligne_insertion, column=15, value=(cours_s2[0][1] * 2 * liste_vac[i][6]))
 
                 if len(cours_s2) > 1:
                     if cours_s2[1][0] == "TD":
-                        feuille.cell(row=ligne_insertion, column=7, value=(cours_s2[1][1] * 2 * liste_vac[i][4]))
+                        feuille.cell(row=ligne_insertion, column=13, value=(cours_s2[1][1] * 2 * liste_vac[i][4]))
                     elif cours_s2[1][0] == "TP":
-                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s2[1][1] * 2 * liste_vac[i][5]))
-                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s2[1][1] * 2 * liste_vac[i][6]))
+                        feuille.cell(row=ligne_insertion, column=14, value=(cours_s2[1][1] * 2 * liste_vac[i][5]))
+                        feuille.cell(row=ligne_insertion, column=15, value=(cours_s2[1][1] * 2 * liste_vac[i][6]))
 
                 if len(cours_s2) > 2:
                     if cours_s2[2][0] == "TP":
-                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s2[2][1] * 2 * liste_vac[i][5]))
-                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s2[2][1] * 2 * liste_vac[i][6]))
+                        feuille.cell(row=ligne_insertion, column=14, value=(cours_s2[2][1] * 2 * liste_vac[i][5]))
+                        feuille.cell(row=ligne_insertion, column=15, value=(cours_s2[2][1] * 2 * liste_vac[i][6]))
 
                 valeur_cellule_8 = feuille.cell(row=ligne_insertion, column=8).value
                 valeur_cellule_9 = feuille.cell(row=ligne_insertion, column=9).value
@@ -287,26 +307,49 @@ class GenerationRessources:
                 # Vérification si les cellules ne sont pas vides
                 if valeur_cellule_8 is not None and valeur_cellule_9 is not None:
                     # Calcul de hetd_ares_1
-                    hetd_ares_1 = valeur_cellule_8 + valeur_cellule_9 * 2 / 3
+                    hetd_ares_1 = valeur_cellule_8 + valeur_cellule_9
 
                     # Assignation de la valeur à la cellule 10
                     feuille.cell(row=ligne_insertion, column=10, value=hetd_ares_1)
 
                 valeur_cellule_6 = feuille.cell(row=ligne_insertion, column=6).value
                 valeur_cellule_7 = feuille.cell(row=ligne_insertion, column=7).value
+
                 # Vérification si les cellules ne sont pas vides
                 if valeur_cellule_6 is not None and valeur_cellule_7 is not None and valeur_cellule_8 is not None and valeur_cellule_9 is not None:
-                    hetd_total = valeur_cellule_6 * 1.5 + valeur_cellule_7 + valeur_cellule_8 * 2 / 3 + valeur_cellule_9
-                    feuille.cell(row=ligne_insertion, column=11, value=hetd_total)
+                    hetd_total_1 = valeur_cellule_6 * 1.5 + valeur_cellule_7 + valeur_cellule_8 + valeur_cellule_9
+                    feuille.cell(row=ligne_insertion, column=11, value=hetd_total_1)
+
+                valeur_cellule_14 = feuille.cell(row=ligne_insertion, column=14).value
+                valeur_cellule_15 = feuille.cell(row=ligne_insertion, column=15).value
+
+                # Vérification si les cellules ne sont pas vides
+                if valeur_cellule_14 is not None and valeur_cellule_15 is not None:
+                    # Calcul de hetd_ares_1
+                    hetd_ares_2 = valeur_cellule_14 + valeur_cellule_15
+
+                    # Assignation de la valeur à la cellule 16
+                    feuille.cell(row=ligne_insertion, column=16, value=hetd_ares_2)
+                elif valeur_cellule_14 is None or valeur_cellule_15 is not None:
+                    feuille.cell(row=ligne_insertion, column=16, value=valeur_cellule_14 if valeur_cellule_14 is not None else valeur_cellule_15)
+
+
+                valeur_cellule_12 = feuille.cell(row=ligne_insertion, column=12).value
+                valeur_cellule_13 = feuille.cell(row=ligne_insertion, column=13).value
+
+                # Vérification si les cellules ne sont pas vides
+                if valeur_cellule_12 is not None and valeur_cellule_13 is not None and valeur_cellule_14 is not None and valeur_cellule_15 is not None:
+                    hetd_total_1 = valeur_cellule_12 * 1.5 + valeur_cellule_13 + valeur_cellule_14 + valeur_cellule_15
+                    feuille.cell(row=ligne_insertion, column=17, value=hetd_total_1)
 
                 valeur_cellule_11 = feuille.cell(row=ligne_insertion, column=11).value
-                valeur_cellule_16 = feuille.cell(row=ligne_insertion, column=16).value
+                valeur_cellule_17 = feuille.cell(row=ligne_insertion, column=17).value
 
-                if valeur_cellule_11 is not None and valeur_cellule_16 is not None:
-                    hetd_final = valeur_cellule_11 + valeur_cellule_16
+                if valeur_cellule_11 is not None and valeur_cellule_17 is not None:
+                    hetd_final = valeur_cellule_11 + valeur_cellule_17
                 else:
-                    hetd_final = valeur_cellule_11 if valeur_cellule_11 is not None else valeur_cellule_16
-                    feuille.cell(row=ligne_insertion, column=17, value=hetd_final)
+                    hetd_final = valeur_cellule_11 if valeur_cellule_11 is not None else valeur_cellule_17
+                    feuille.cell(row=ligne_insertion, column=18, value=hetd_final)
 
         # fonction qui trouve la première ligne dans laquelle se trouve une cellule possédant la donnée recherchée
         def trouver_ligne(feuille, contenu_cible):

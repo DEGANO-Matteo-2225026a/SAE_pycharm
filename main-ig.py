@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import sys
 import os
+import shutil
 
 from generationRapport import RapportErreurGenerator
 from generationRessources import GenerationRessources
@@ -67,8 +68,26 @@ def executer_code():
         print("-----------------")
     except Exception as e:
         print(f"Erreur lors de l'exécution du fichier generationRessources.py : {e}")   
+        
+    bouton_telecharger = tk.Button(page_principale, text="Télécharger les fichiers", command=telecharger_fichiers, bg="green", fg="white", font=("Helvetica", 12, "bold"), padx=20, pady=10)
+    bouton_telecharger.pack(pady=20)
+
 fichiers_selectionnes = []
 fichiers_coche = []
+
+def telecharger_fichiers():
+    try:
+        destination_folder = filedialog.askdirectory(title="Sélectionner le dossier de destination")
+
+        if destination_folder:
+            # Copie des fichiers vers le dossier de destination
+            shutil.copy("Excels ressources/FicheProf.xlsx", destination_folder)
+            shutil.copy("Excels ressources/FichierRessources.xlsx", destination_folder)
+
+            messagebox.showinfo("Téléchargement réussi", "Les fichiers ont été téléchargés avec succès.")
+    except Exception as e:
+        messagebox.showerror("Erreur de téléchargement", f"Une erreur est survenue lors du téléchargement des fichiers : {e}")
+
 def afficher_selection_fichiers():
     for widget in page_principale.winfo_children():
         widget.destroy()
@@ -181,15 +200,9 @@ def executer_fichiers_selectionnes():
     bouton_retour = tk.Button(page_principale, text="Retour", command=afficher_selection_fichiers, bg="blue", fg="white", font=("Helvetica", 12, "bold"), padx=20, pady=10)
     bouton_retour.pack(pady=20)
 
-
-def afficher_resultat(sortie_texte, contenu_resultat):
-    sortie_texte.insert("1.0", contenu_resultat)
-    fenetre.update()
-
 def afficher_resultat(sortie_texte, contenu_resultat):
     sortie_texte.insert(tk.END, contenu_resultat)
     fenetre.update()
-
 
 def afficher_page_principale():
     for widget in page_principale.winfo_children():

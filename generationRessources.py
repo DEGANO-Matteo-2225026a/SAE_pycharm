@@ -21,7 +21,6 @@ class GenerationRessources:
             feuille = classeur.copy_worksheet(ancienne_feuille)
             feuille.title = res
 
-
             # nom responsable de ressource
             cellule_selectionnee = feuille['H1']
             cellule_selectionnee.value = resp
@@ -48,7 +47,7 @@ class GenerationRessources:
             # insertion données dans la feuille
             for i in range(len(liste_inter)):
                 # nom et acronyme
-                inter = trouver_ligne(feuille,"Intervenants")
+                inter = trouver_ligne(feuille, "Intervenants")
 
                 ligne_insertion = 7 + i
                 feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][0])
@@ -57,21 +56,18 @@ class GenerationRessources:
                 # pourcentage du total de cm effectué par le professeur
                 cms = trouver_ligne(feuille, "CM ")
 
-
                 ligne_insertion = cms + 1 + i
                 feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
                 feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][2])
 
                 tds = trouver_ligne(feuille, "TD ")
 
-
                 # nombre de groupes en TD
                 ligne_insertion = tds + 1 + i
                 feuille.cell(row=ligne_insertion, column=1, value=liste_inter[i][1])
                 feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][3])
 
-                tpsD = trouver_ligne(feuille,"TP dedoubles")
-
+                tpsD = trouver_ligne(feuille, "TP dedoubles")
 
                 # nombre de groupes en TP dédoublés
                 ligne_insertion = tpsD + 1 + i
@@ -79,7 +75,6 @@ class GenerationRessources:
                 feuille.cell(row=ligne_insertion, column=2, value=liste_inter[i][3])
 
                 tps = trouver_ligne(feuille, "TP non  dedoubles")
-
 
                 # nombre de groupes en TP non dédoublés
                 ligne_insertion = tps + 1 + i
@@ -99,11 +94,10 @@ class GenerationRessources:
                 feuille.insert_rows(ligne_insertion)
                 feuille.cell(row=ligne_insertion, column=1, value=liste_cours[i][0])
 
+                # feuille.insert_rows(ligne_insertion)
+                # feuille.cell(row=ligne_insertion, column=1, value=liste_cours[i][0])
 
-                #feuille.insert_rows(ligne_insertion)
-                #feuille.cell(row=ligne_insertion, column=1, value=liste_cours[i][0])
-
-                ligne_date = trouver_ligne(feuille,liste_cours[i][0])
+                ligne_date = trouver_ligne(feuille, liste_cours[i][0])
                 if ligne_date is None:
                     continue
 
@@ -116,14 +110,13 @@ class GenerationRessources:
                 else:
                     feuille.cell(row=ligne_date, column=5, value=(liste_cours[i][2] * 2))
 
-
+            """
             # Récupération des données pour remplir tableau titulaire
             titu = "SELECT Intervenant, Feuille_title, SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) AS matiere,d.CM, d.TD, TPD, TDNonD, Test, p.CM FROM DONNEEPROF d JOIN PLANRESSOURCE p ON matiere = Ressource WHERE AlerteProf == 1 AND matiere = ?"
             cursor.execute(titu, (res,))
             liste_titu = cursor.fetchall()
 
-
-            ligne_titu = trouver_ligne(feuille,"Service previsionnel titulaires")
+            ligne_titu = trouver_ligne(feuille, "Service previsionnel titulaires")
 
             for i in range(len(liste_titu)):
                 ligne_insertion = ligne_titu + i + 3
@@ -148,6 +141,83 @@ class GenerationRessources:
                     feuille.cell(row=ligne_insertion, column=13, value=liste_titu[i][4] * 2)
                     feuille.cell(row=ligne_insertion, column=14, value=liste_titu[i][5] * 2)
                     feuille.cell(row=ligne_insertion, column=15, value=liste_titu[i][6] * 2)
+                """
+            # Récupération des données pour remplir les tableaux titulaire de septembre à décembre
+            cours = "SELECT TypeCours, COUNT(*) FROM PLANINFO WHERE Ressource = ? AND (Semaine LIKE '%-09-%' OR Semaine LIKE '%-10-%' OR Semaine LIKE '%-11-%' OR Semaine LIKE '%-12-%') GROUP BY TypeCours"
+            cursor.execute(cours, (res,))
+            cours_s1 = cursor.fetchall()
+
+            # Récupération des données pour remplir les tableaux vacataire de janvier à aout
+            cours = "SELECT TypeCours, COUNT(*) FROM PLANINFO WHERE Ressource = ? AND (Semaine NOT LIKE '%-09-%' OR Semaine NOT LIKE '%-10-%' OR Semaine NOT LIKE '%-11-%' OR Semaine NOT LIKE '%-12-%') GROUP BY TypeCours"
+            cursor.execute(cours, (res,))
+            cours_s2 = cursor.fetchall()
+
+            # Récupération des données du titulaire
+            prof = "SELECT Feuille_title,  SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) AS matiere, Intervenant, CM, TD, TDNonD, TPD FROM DONNEEPROF WHERE matiere = ? AND AlerteProf = 1"
+            cursor.execute(prof, (res,))
+            liste_titu = cursor.fetchall()
+
+            ligne_titu = trouver_ligne(feuille, "Service previsionnel titulaires")
+
+            ligne_insertion = ligne_titu + 3
+
+            if len(liste_titu) > 0:
+                feuille.cell(row=ligne_insertion, column=1, value=(liste_titu[0][2]))
+                if "S1" in liste_titu[0][0] or "S2" in liste_titu[0][0]:
+                    feuille.cell(row=ligne_insertion, column=3, value="BUT1")
+                elif "S3" in liste_titu[0][0] or "S4" in liste_titu[0][0]:
+                    feuille.cell(row=ligne_insertion, column=3, value="BUT2")
+                else:
+                    feuille.cell(row=ligne_insertion, column=3, value="BUT3")
+                if "A" in liste_titu[0][1]:
+                    feuille.cell(row=ligne_insertion, column=4, value="A")
+                elif "B" in liste_titu[0][1]:
+                    feuille.cell(row=ligne_insertion, column=4, value="B")
+
+                # On remplie les bonnes cases de septembre à décembre
+                if len(cours_s1) > 0:
+                    if cours_s1[0][0] == "Cours":
+                        feuille.cell(row=ligne_insertion, column=6, value=(cours_s1[0][1] * 2 * liste_titu[0][3]))
+                    elif cours_s1[0][0] == "TD":
+                        feuille.cell(row=ligne_insertion, column=7, value=(cours_s1[0][1] * 2 * liste_titu[0][4]))
+                    elif cours_s1[0][0] == "TP":
+                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s1[0][1] * 2 * liste_titu[0][5]))
+                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s1[0][1] * 2 * liste_titu[0][6]))
+
+                if len(cours_s1) > 1:
+                    if cours_s1[1][0] == "TD":
+                        feuille.cell(row=ligne_insertion, column=7, value=(cours_s1[1][1] * 2 * liste_titu[0][4]))
+                    elif cours_s1[1][0] == "TP":
+                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s1[1][1] * 2 * liste_titu[0][5]))
+                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s1[1][1] * 2 * liste_titu[0][6]))
+
+                if len(cours_s1) > 2:
+                    if cours_s1[2][0] == "TP":
+                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s1[2][1] * 2 * liste_titu[0][5]))
+                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s1[2][1] * 2 * liste_titu[0][6]))
+
+                # On remplie les bonnes cases de janvier à aout
+
+                if len(cours_s2) > 0:
+                    if cours_s2[0][0] == "Cours":
+                        feuille.cell(row=ligne_insertion, column=6, value=(cours_s2[0][1] * 2 * liste_titu[0][3]))
+                    elif cours_s2[0][0] == "TD":
+                        feuille.cell(row=ligne_insertion, column=7, value=(cours_s2[0][1] * 2 * liste_titu[0][4]))
+                    elif cours_s2[0][0] == "TP":
+                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s2[0][1] * 2 * liste_titu[0][5]))
+                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s2[0][1] * 2 * liste_titu[0][6]))
+
+                if len(cours_s2) > 1:
+                    if cours_s2[1][0] == "TD":
+                        feuille.cell(row=ligne_insertion, column=7, value=(cours_s2[1][1] * 2 * liste_titu[0][4]))
+                    elif cours_s2[1][0] == "TP":
+                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s2[1][1] * 2 * liste_titu[0][5]))
+                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s2[1][1] * 2 * liste_titu[0][6]))
+
+                if len(cours_s2) > 2:
+                    if cours_s2[2][0] == "TP":
+                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s2[2][1] * 2 * liste_titu[0][5]))
+                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s2[2][1] * 2 * liste_titu[0][6]))
 
                 valeur_cellule_8 = feuille.cell(row=ligne_insertion, column=8).value
                 valeur_cellule_9 = feuille.cell(row=ligne_insertion, column=9).value
@@ -163,32 +233,32 @@ class GenerationRessources:
                 valeur_cellule_6 = feuille.cell(row=ligne_insertion, column=6).value
                 valeur_cellule_7 = feuille.cell(row=ligne_insertion, column=7).value
                 # Vérification si les cellules ne sont pas vides
-                if valeur_cellule_8 is not None and valeur_cellule_9 is not None:
+                if valeur_cellule_6 is not None and valeur_cellule_7 is not None and valeur_cellule_8 is not None and valeur_cellule_9 is not None:
                     hetd_total_1 = valeur_cellule_6 * 1.5 + valeur_cellule_7 + valeur_cellule_8 + valeur_cellule_9
                     feuille.cell(row=ligne_insertion, column=11, value=hetd_total_1)
 
                 valeur_cellule_11 = feuille.cell(row=ligne_insertion, column=11).value
-                valeur_cellule_17 = feuille.cell(row=ligne_insertion, column=17).value
+                valeur_cellule_16 = feuille.cell(row=ligne_insertion, column=16).value
 
-                if valeur_cellule_11 is not None and valeur_cellule_17 is not None:
-                    hetd_final = valeur_cellule_11 + valeur_cellule_17
+                if valeur_cellule_11 is not None and valeur_cellule_16 is not None:
+                    hetd_final = valeur_cellule_11 + valeur_cellule_16
                 else:
-                    hetd_final = valeur_cellule_11 if valeur_cellule_11 is not None else valeur_cellule_17
-                    feuille.cell(row=ligne_insertion, column=18, value=hetd_final)
+                    hetd_final = valeur_cellule_11 if valeur_cellule_11 is not None else valeur_cellule_16
+                    feuille.cell(row=ligne_insertion, column=17, value=hetd_final)
 
-            # Récupération des données pour remplir tableau vacataire
-            vac = "SELECT Intervenant, Feuille_title, SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) AS matiere,d.CM, d.TD, TDNonD, TPD, Test, p.CM FROM DONNEEPROF d JOIN PLANRESSOURCE p ON matiere = Ressource WHERE AlerteProf == 0 AND matiere = ?"
-            cursor.execute(vac, (res,))
+            # Récupération des données des vacataires
+            prof = "SELECT Feuille_title,  SUBSTR(MatiereActuelle, 1, INSTR(MatiereActuelle, ' ') - 1) AS matiere, Intervenant, CM, TD, TDNonD, TPD FROM DONNEEPROF WHERE matiere = ? AND AlerteProf = 0"
+            cursor.execute(prof, (res,))
             liste_vac = cursor.fetchall()
 
             ligne_vac = trouver_ligne(feuille, "Service previsionnel vacataires")
 
             for i in range(len(liste_vac)):
                 ligne_insertion = ligne_vac + i + 3
-                feuille.cell(row=ligne_insertion, column=1, value=(liste_vac[i][0]))
-                if "S1" in liste_vac[i][1] or "S2" in liste_vac[i][1]:
+                feuille.cell(row=ligne_insertion, column=1, value=(liste_vac[i][2]))
+                if "S1" in liste_vac[i][0] or "S2" in liste_vac[i][0]:
                     feuille.cell(row=ligne_insertion, column=3, value="BUT1")
-                elif "S3" in liste_vac[i][1] or "S4" in liste_vac[i][1]:
+                elif "S3" in liste_vac[i][0] or "S4" in liste_vac[i][0]:
                     feuille.cell(row=ligne_insertion, column=3, value="BUT2")
                 else:
                     feuille.cell(row=ligne_insertion, column=3, value="BUT3")
@@ -197,17 +267,50 @@ class GenerationRessources:
                 elif "B" in liste_vac[i][1]:
                     feuille.cell(row=ligne_insertion, column=4, value="B")
 
-                if "S1" in liste_vac[i][1] or "S3" in liste_vac[i][1] or "S6" in liste_vac[i][1]:
-                    feuille.cell(row=ligne_insertion, column=6, value=(liste_vac[i][3] * liste_vac[i][8]) * 2)
-                    feuille.cell(row=ligne_insertion, column=7, value=liste_vac[i][4] * 2)
-                    feuille.cell(row=ligne_insertion, column=8, value=liste_vac[i][5] * 2)
-                    feuille.cell(row=ligne_insertion, column=9, value=liste_vac[i][6] * 2)
+                # On remplie les bonnes cases de septembre à décembre
+                if len(cours_s1) > 0:
+                    if cours_s1[0][0] == "Cours":
+                        feuille.cell(row=ligne_insertion, column=6, value=(cours_s1[0][1] * 2 * liste_vac[i][3]))
+                    elif cours_s1[0][0] == "TD":
+                        feuille.cell(row=ligne_insertion, column=7, value=(cours_s1[0][1] * 2 * liste_vac[i][4]))
+                    elif cours_s1[0][0] == "TP":
+                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s1[0][1] * 2 * liste_vac[i][5]))
+                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s1[0][1] * 2 * liste_vac[i][6]))
 
-                else:
-                    feuille.cell(row=ligne_insertion, column=12, value=(liste_vac[i][3] * liste_vac[i][8]) * 2)
-                    feuille.cell(row=ligne_insertion, column=13, value=liste_vac[i][4] * 2)
-                    feuille.cell(row=ligne_insertion, column=14, value=liste_vac[i][5] * 2)
-                    feuille.cell(row=ligne_insertion, column=15, value=liste_vac[i][6] * 2)
+                if len(cours_s1) > 1:
+                    if cours_s1[1][0] == "TD":
+                        feuille.cell(row=ligne_insertion, column=7, value=(cours_s1[1][1] * 2 * liste_vac[i][4]))
+                    elif cours_s1[1][0] == "TP":
+                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s1[1][1] * 2 * liste_vac[i][5]))
+                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s1[1][1] * 2 * liste_vac[i][6]))
+
+                if len(cours_s1) > 2:
+                    if cours_s1[2][0] == "TP":
+                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s1[2][1] * 2 * liste_vac[i][5]))
+                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s1[2][1] * 2 * liste_vac[i][6]))
+
+                # On remplie les bonnes cases de janvier à aout
+
+                if len(cours_s2) > 0:
+                    if cours_s2[0][0] == "Cours":
+                        feuille.cell(row=ligne_insertion, column=6, value=(cours_s2[0][1] * 2 * liste_vac[i][3]))
+                    elif cours_s2[0][0] == "TD":
+                        feuille.cell(row=ligne_insertion, column=7, value=(cours_s2[0][1] * 2 * liste_vac[i][4]))
+                    elif cours_s2[0][0] == "TP":
+                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s2[0][1] * 2 * liste_vac[i][5]))
+                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s2[0][1] * 2 * liste_vac[i][6]))
+
+                if len(cours_s2) > 1:
+                    if cours_s2[1][0] == "TD":
+                        feuille.cell(row=ligne_insertion, column=7, value=(cours_s2[1][1] * 2 * liste_vac[i][4]))
+                    elif cours_s2[1][0] == "TP":
+                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s2[1][1] * 2 * liste_vac[i][5]))
+                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s2[1][1] * 2 * liste_vac[i][6]))
+
+                if len(cours_s2) > 2:
+                    if cours_s2[2][0] == "TP":
+                        feuille.cell(row=ligne_insertion, column=8, value=(cours_s2[2][1] * 2 * liste_vac[i][5]))
+                        feuille.cell(row=ligne_insertion, column=9, value=(cours_s2[2][1] * 2 * liste_vac[i][6]))
 
                 valeur_cellule_8 = feuille.cell(row=ligne_insertion, column=8).value
                 valeur_cellule_9 = feuille.cell(row=ligne_insertion, column=9).value
@@ -223,18 +326,18 @@ class GenerationRessources:
                 valeur_cellule_6 = feuille.cell(row=ligne_insertion, column=6).value
                 valeur_cellule_7 = feuille.cell(row=ligne_insertion, column=7).value
                 # Vérification si les cellules ne sont pas vides
-                if valeur_cellule_8 is not None and valeur_cellule_9 is not None:
+                if valeur_cellule_6 is not None and valeur_cellule_7 is not None and valeur_cellule_8 is not None and valeur_cellule_9 is not None:
                     hetd_total = valeur_cellule_6 * 1.5 + valeur_cellule_7 + valeur_cellule_8 * 2 / 3 + valeur_cellule_9
                     feuille.cell(row=ligne_insertion, column=11, value=hetd_total)
 
                 valeur_cellule_11 = feuille.cell(row=ligne_insertion, column=11).value
-                valeur_cellule_17 = feuille.cell(row=ligne_insertion, column=17).value
+                valeur_cellule_16 = feuille.cell(row=ligne_insertion, column=16).value
 
-                if valeur_cellule_11 is not None and valeur_cellule_17 is not None:
-                    hetd_final = valeur_cellule_11 + valeur_cellule_17
+                if valeur_cellule_11 is not None and valeur_cellule_16 is not None:
+                    hetd_final = valeur_cellule_11 + valeur_cellule_16
                 else:
-                    hetd_final = valeur_cellule_11 if valeur_cellule_11 is not None else valeur_cellule_17
-                    feuille.cell(row=ligne_insertion, column=18, value=hetd_final)
+                    hetd_final = valeur_cellule_11 if valeur_cellule_11 is not None else valeur_cellule_16
+                    feuille.cell(row=ligne_insertion, column=17, value=hetd_final)
 
         # fonction qui trouve la première ligne dans laquelle se trouve une cellule possédant la donnée recherchée
         def trouver_ligne(feuille, contenu_cible):
@@ -255,11 +358,13 @@ class GenerationRessources:
         # Enregistrer le classeur modifié dans un nouveau fichier
         classeur.save('Ressources.xlsx')
 
+
 def main():
     # Instanciation de la classe GenerationRessources
     ressource_generator = GenerationRessources()
     # Appel de la méthode run()
     ressource_generator.run()
+
 
 if __name__ == "__main__":
     main()
